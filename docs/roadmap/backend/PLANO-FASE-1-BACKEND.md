@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,13 +33,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 1 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **1.1** | Inicialização do Projeto NestJS 10 & Dependências Base | ⏳ Pendente | `backend/package.json`, `backend/tsconfig.json` |
-| **1.2** | Prisma ORM, Model User, Migrations & Seed de Gerente | ⏳ Pendente | `backend/prisma/schema.prisma`, `backend/prisma/seed.ts` |
+| **1.1** | Inicialização do Projeto NestJS 10 & Dependências Base | ✅ Concluída | `backend/package.json`, `backend/tsconfig.json` |
+| **1.2** | Prisma ORM, Model User, Migrations & Seed de Gerente | ✅ Concluída | `backend/prisma/schema.prisma`, `backend/prisma/seed.ts` |
 | **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ⏳ Pendente | `backend/src/common/filters/http-exception.filter.ts` |
 | **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ⏳ Pendente | `backend/src/modules/auth/*` |
 | **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ⏳ Pendente | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
@@ -52,7 +52,7 @@ Progresso da Fase 1 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⏳ Tarefa 1.1: Inicialização do Projeto NestJS 10 & Dependências Base
+### ✅ Tarefa 1.1: Inicialização do Projeto NestJS 10 & Dependências Base
 - **Objetivo:** Criar a estrutura base do projeto NestJS na pasta `backend/` com TypeScript estrito, scripts de compilação e dependências necessárias para autenticação e banco.
 - **Arquivos a Modificar / Criar:**
   - `backend/package.json`
@@ -65,16 +65,16 @@ Progresso da Fase 1 (Backend): [--------------------------------] 0% Concluído 
   - `class-validator`, `class-transformer`
   - `@prisma/client`, `prisma` (devDependencies)
 - **Checklist de Execução Detalhado:**
-  - [ ] Inicializar projeto NestJS com configuração de porta via `process.env.PORT || 3001`
-  - [ ] Habilitar CORS para permitir requisições da LAN e prefixo global `/api`
-  - [ ] Habilitar `ValidationPipe` global com `{ whitelist: true, forbidNonWhitelisted: true, transform: true }`
+  - [x] Inicializar projeto NestJS com configuração de porta via `process.env.PORT || 3001`
+  - [x] Habilitar CORS para permitir requisições da LAN e prefixo global `/api`
+  - [x] Habilitar `ValidationPipe` global com `{ whitelist: true, forbidNonWhitelisted: true, transform: true }`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npm run start:dev` inicia o servidor na porta 3001 e responde no endpoint raiz.
-  - [ ] **Compilabilidade:** `npm run build` executa sem erros de TypeScript.
+  - [x] **Caminho Normal:** `npm run start:dev` inicia o servidor na porta 3001 e responde no endpoint raiz.
+  - [x] **Compilabilidade:** `npm run build` executa sem erros de TypeScript.
 
 ---
 
-### ⏳ Tarefa 1.2: Prisma ORM, Model User, Migrations & Seed de Gerente
+### ✅ Tarefa 1.2: Prisma ORM, Model User, Migrations & Seed de Gerente
 - **Objetivo:** Estabelecer a camada de persistência com PostgreSQL local, definindo o model `User`, o enum `UserRole`, rodando a migration inicial e criando o usuário Gerente padrão via seed.
 - **Arquivos a Modificar / Criar:**
   - `backend/prisma/schema.prisma`
@@ -102,13 +102,13 @@ Progresso da Fase 1 (Backend): [--------------------------------] 0% Concluído 
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Inicializar o Prisma e configurar a variável `DATABASE_URL` no `.env`
-  - [ ] Configurar `PrismaService` estendendo `PrismaClient` com `onModuleInit` e `enableShutdownHooks`
-  - [ ] Executar `npx prisma migrate dev --name init_users`
-  - [ ] Criar script `seed.ts` que insere o Gerente `admin` com senha criptografada caso não exista
+  - [x] Inicializar o Prisma e configurar a variável `DATABASE_URL` no `.env`
+  - [x] Configurar `PrismaService` estendendo `PrismaClient` com `onModuleInit` e `enableShutdownHooks`
+  - [x] Executar `npx prisma migrate dev --name init_users`
+  - [x] Criar script `seed.ts` que insere o Gerente `admin` com senha criptografada caso não exista
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npx prisma db seed` executa com sucesso e grava o usuário `admin` no banco.
-  - [ ] **Violação de Contrato:** Tentativa de inserir usuário com `username` duplicado falha com erro de constraint unique.
+  - [x] **Caminho Normal:** `npx prisma db seed` executa com sucesso e grava o usuário `admin` no banco.
+  - [x] **Violação de Contrato:** Tentativa de inserir usuário com `username` duplicado falha com erro de constraint unique.
 
 ---
 

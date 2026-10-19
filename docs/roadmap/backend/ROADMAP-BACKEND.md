@@ -29,9 +29,9 @@
   - `RNF-07`: Hash criptográfico de senhas e proteção de rotas com Guards (`JwtAuthGuard`, `RolesGuard`).
 - **Dependências Bloqueantes:** Instalação do runtime Node.js 20 LTS e instância local do PostgreSQL 16.
 - **Checklist Técnico Sequencial:**
-  - [ ] 1.1: Inicialização do projeto NestJS 10 com TypeScript estrito (`nest new backend`)
-  - [ ] 1.2: Configuração do Prisma ORM (`prisma init`), conexão com PostgreSQL e model `User`
-  - [ ] 1.3: Criação da migration inicial da tabela `users` e seed do usuário Gerente administrador
+  - [x] 1.1: Inicialização do projeto NestJS 10 com TypeScript estrito (`nest new backend`)
+  - [x] 1.2: Configuração do Prisma ORM (`prisma init`), conexão com PostgreSQL e model `User`
+  - [x] 1.3: Criação da migration inicial da tabela `users` e seed do usuário Gerente administrador
   - [ ] 1.4: Implementação do filtro global `HttpExceptionFilter` (RFC 7807)
   - [ ] 1.5: Implementação do `AuthModule` (login, validação de credenciais e emissão de JWT)
   - [ ] 1.6: Implementação dos decorators `@CurrentUser()` e `@Roles()`, e dos guards `JwtAuthGuard` e `RolesGuard`
