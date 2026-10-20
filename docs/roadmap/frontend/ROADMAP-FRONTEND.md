@@ -11,7 +11,7 @@
 | Fase Setorial | Título da Entrega Técnica | Plano de Execução Vinculado | Status |
 | :---: | :--- | :--- | :---: |
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
-| **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | ⚪ A Iniciar |
+| **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟡 Em Andamento |
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | ⚪ A Iniciar |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
 

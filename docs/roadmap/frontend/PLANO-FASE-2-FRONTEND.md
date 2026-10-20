@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,12 +33,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **2.1** | Tipos TypeScript de Domínio e Clientes de API | ⏳ Pendente | `frontend/src/types/domain.ts`, `frontend/src/services/*` |
+| **2.1** | Tipos TypeScript de Domínio e Clientes de API | ✅ Concluída | `frontend/src/types/domain.ts`, `frontend/src/services/*` |
 | **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ⏳ Pendente | `frontend/src/pages/admin/machines-page.tsx` |
 | **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ⏳ Pendente | `frontend/src/pages/admin/shifts-page.tsx` |
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ⏳ Pendente | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
@@ -52,7 +52,7 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⏳ Tarefa 2.1: Tipos TypeScript de Domínio e Clientes de API
+### ✅ Tarefa 2.1: Tipos TypeScript de Domínio e Clientes de API
 - **Objetivo:** Declarar os contratos TypeScript estritos das entidades de máquinas, turnos e alocações, e implementar os serviços Axios correspondentes.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/types/domain.ts`
@@ -94,12 +94,12 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar `machinesService.list()`, `create(dto)`, `updateStatus(id, status)`
-  - [ ] Implementar `shiftsService.list()`, `create(dto)`
-  - [ ] Implementar `allocationsService.getCurrent()`, `create(dto)`, `release(id)`
+  - [x] Implementar `machinesService.list()`, `create(dto)`, `updateStatus(id, status)`
+  - [x] Implementar `shiftsService.list()`, `create(dto)`
+  - [x] Implementar `allocationsService.getCurrent()`, `create(dto)`, `release(id)`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Chamadas de serviço retornam dados fortemente tipados sem uso de `any`.
-  - [ ] **Zero Fallback:** Campo opcional `model` tipado como `string | null` preservando a ausência do banco.
+  - [x] **Caminho Normal:** Chamadas de serviço retornam dados fortemente tipados sem uso de `any`.
+  - [x] **Zero Fallback:** Campo opcional `model` tipado como `string | null` preservando a ausência do banco.
 
 ---
 
