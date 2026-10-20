@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Em Andamento (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,14 +33,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
+Progresso da Fase 1 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **1.1** | Inicialização do Projeto NestJS 10 & Dependências Base | ✅ Concluída | `backend/package.json`, `backend/tsconfig.json` |
 | **1.2** | Prisma ORM, Model User, Migrations & Seed de Gerente | ✅ Concluída | `backend/prisma/schema.prisma`, `backend/prisma/seed.ts` |
-| **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ⏳ Pendente | `backend/src/common/filters/http-exception.filter.ts` |
+| **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ✅ Concluída | `backend/src/common/filters/http-exception.filter.ts` |
 | **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ⏳ Pendente | `backend/src/modules/auth/*` |
 | **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ⏳ Pendente | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
 | **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ⏳ Pendente | `backend/src/modules/users/*` |
@@ -112,7 +112,7 @@ Progresso da Fase 1 (Backend): [========------------------------] 29% Concluído
 
 ---
 
-### ⏳ Tarefa 1.3: Filtro Global de Exceção RFC 7807 (Problem Details)
+### ✅ Tarefa 1.3: Filtro Global de Exceção RFC 7807 (Problem Details)
 - **Objetivo:** Padronizar todas as respostas de erro da aplicação segundo o formato canônico RFC 7807, eliminando vazamento de stacktraces e assegurando comunicação limpa com o frontend.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/common/filters/http-exception.filter.ts`
@@ -131,13 +131,13 @@ Progresso da Fase 1 (Backend): [========------------------------] 29% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar classe `HttpExceptionFilter` implementando `ExceptionFilter` do NestJS
-  - [ ] Mapear status HTTP correspondente (`BadRequestException` $\rightarrow$ 400, `UnauthorizedException` $\rightarrow$ 401, `ForbiddenException` $\rightarrow$ 403, `NotFoundException` $\rightarrow$ 404, `ConflictException` $\rightarrow$ 409, `UnprocessableEntityException` $\rightarrow$ 422)
-  - [ ] Tratar mensagens de validação do `class-validator` estruturando o objeto `errors`
-  - [ ] Definir header `Content-Type: application/problem+json` na resposta
+  - [x] Criar classe `HttpExceptionFilter` implementando `ExceptionFilter` do NestJS
+  - [x] Mapear status HTTP correspondente (`BadRequestException` $\rightarrow$ 400, `UnauthorizedException` $\rightarrow$ 401, `ForbiddenException` $\rightarrow$ 403, `NotFoundException` $\rightarrow$ 404, `ConflictException` $\rightarrow$ 409, `UnprocessableEntityException` $\rightarrow$ 422)
+  - [x] Tratar mensagens de validação do `class-validator` estruturando o objeto `errors`
+  - [x] Definir header `Content-Type: application/problem+json` na resposta
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Erros lançados retornam JSON com `status`, `title`, `detail`, `instance` e `timestamp`.
-  - [ ] **Zero Fallback:** Proibido retornar `{ statusCode: 500, message: "Internal server error" }` para erros de domínio conhecidos.
+  - [x] **Caminho Normal:** Erros lançados retornam JSON com `status`, `title`, `detail`, `instance` e `timestamp`.
+  - [x] **Zero Fallback:** Proibido retornar `{ statusCode: 500, message: "Internal server error" }` para erros de domínio conhecidos.
 
 ---
 

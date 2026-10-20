@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -14,6 +15,9 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
+
+  // Filtro global de tratamento e padronização de exceções RFC 7807
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Pipeline global de validação estrita (Zero Fallback)
   app.useGlobalPipes(
