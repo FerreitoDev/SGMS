@@ -28,14 +28,33 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Toaster } from '@/components/ui/sonner';
+import { apiClient, extractProblemDetail } from '@/lib/api-client';
 
 export default function App(): React.ReactElement {
   const [operatorName, setOperatorName] = useState('');
+  const [isTestingApi, setIsTestingApi] = useState(false);
 
   const handleTestToast = () => {
     toast.success('Design System Operacional', {
       description: 'Primitivos shadcn/ui e Sonner integrados com sucesso.',
     });
+  };
+
+  const handleTestApi = async () => {
+    setIsTestingApi(true);
+    try {
+      const response = await apiClient.get('/users');
+      toast.success('Resposta da API', {
+        description: `Status ${response.status} recebido com sucesso.`,
+      });
+    } catch (err: unknown) {
+      const detail = extractProblemDetail(err);
+      toast.error('Erro RFC 7807', {
+        description: detail,
+      });
+    } finally {
+      setIsTestingApi(false);
+    }
   };
 
   return (
@@ -89,6 +108,13 @@ export default function App(): React.ReactElement {
                     <Badge variant="info">Ativo</Badge>
                   </TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Cliente HTTP</TableCell>
+                  <TableCell>Axios + RFC 7807</TableCell>
+                  <TableCell>
+                    <Badge variant="success">Configurado</Badge>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </div>
@@ -111,6 +137,14 @@ export default function App(): React.ReactElement {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <Button
+            variant="outline"
+            onClick={handleTestApi}
+            disabled={isTestingApi}
+          >
+            {isTestingApi ? 'Testando API...' : 'Testar GET /users'}
+          </Button>
+
           <Button variant="outline" onClick={handleTestToast}>
             Disparar Toast Sonner
           </Button>

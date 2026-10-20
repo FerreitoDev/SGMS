@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,14 +33,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [========------------------------] 29% Concluído (2 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **1.1** | Inicialização do Projeto Vite, TypeScript & Tailwind CSS | ✅ Concluída | `frontend/package.json`, `frontend/vite.config.ts` |
 | **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ✅ Concluída | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
-| **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ⏳ Pendente | `frontend/src/lib/api-client.ts` |
+| **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ✅ Concluída | `frontend/src/lib/api-client.ts`, `frontend/src/types/api.ts` |
 | **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ⏳ Pendente | `frontend/src/contexts/auth-context.tsx` |
 | **1.5** | Tela de Login Corporativa (`LoginPage`) | ⏳ Pendente | `frontend/src/pages/login-page.tsx` |
 | **1.6** | Tela de Gestão de Contas de Operadores (`UsersPage`) | ⏳ Pendente | `frontend/src/pages/users-page.tsx` |
@@ -98,7 +98,7 @@ Progresso da Fase 1 (Frontend): [========------------------------] 29% Concluíd
 
 ---
 
-### ⏳ Tarefa 1.3: Cliente HTTP Axios e Mapeamento de Erros RFC 7807
+### ✅ Tarefa 1.3: Cliente HTTP Axios e Mapeamento de Erros RFC 7807
 - **Objetivo:** Estabelecer uma instância centralizada do Axios para comunicação na rede local com envio automático do cabeçalho de autorização e tratamento transparente de erros RFC 7807.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/lib/api-client.ts`
@@ -117,13 +117,13 @@ Progresso da Fase 1 (Frontend): [========------------------------] 29% Concluíd
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar instância `apiClient` com `baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api'`
-  - [ ] Configurar Request Interceptor que adiciona `Authorization: Bearer <token>` a partir do storage
-  - [ ] Configurar Response Interceptor que extrai o corpo RFC 7807 em caso de erro HTTP e rejeita a Promise com o objeto `ProblemDetails` tipado
-  - [ ] Redirecionar para `/login` caso o erro seja HTTP 401
+  - [x] Criar instância `apiClient` com `baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api'`
+  - [x] Configurar Request Interceptor que adiciona `Authorization: Bearer <token>` a partir do storage
+  - [x] Configurar Response Interceptor que extrai o corpo RFC 7807 em caso de erro HTTP e rejeita a Promise com o objeto `ProblemDetails` tipado
+  - [x] Redirecionar para `/login` caso o erro seja HTTP 401
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Requisições autenticadas trafegam com o token no cabeçalho.
-  - [ ] **Zero Fallback:** Em caso de erro, a mensagem exibida na UI deve ser estritamente o `detail` recebido da API, sem substituição por "Ocorreu um erro inesperado".
+  - [x] **Caminho Normal:** Requisições autenticadas trafegam com o token no cabeçalho.
+  - [x] **Zero Fallback:** Em caso de erro, a mensagem exibida na UI deve ser estritamente o `detail` recebido da API, sem substituição por "Ocorreu um erro inesperado".
 
 ---
 
