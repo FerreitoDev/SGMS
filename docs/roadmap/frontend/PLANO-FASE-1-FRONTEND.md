@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 1 (Frontend): [============--------------------] 43% Concluíd
 | **1.1** | Inicialização do Projeto Vite, TypeScript & Tailwind CSS | ✅ Concluída | `frontend/package.json`, `frontend/vite.config.ts` |
 | **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ✅ Concluída | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
 | **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ✅ Concluída | `frontend/src/lib/api-client.ts`, `frontend/src/types/api.ts` |
-| **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ⏳ Pendente | `frontend/src/contexts/auth-context.tsx` |
+| **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ✅ Concluída | `frontend/src/contexts/auth-context.tsx`, `frontend/src/routes/app-routes.tsx` |
 | **1.5** | Tela de Login Corporativa (`LoginPage`) | ⏳ Pendente | `frontend/src/pages/login-page.tsx` |
 | **1.6** | Tela de Gestão de Contas de Operadores (`UsersPage`) | ⏳ Pendente | `frontend/src/pages/users-page.tsx` |
 | **1.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais, tipos e `npm run build` |
@@ -127,7 +127,7 @@ Progresso da Fase 1 (Frontend): [============--------------------] 43% Concluíd
 
 ---
 
-### ⏳ Tarefa 1.4: Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`)
+### ✅ Tarefa 1.4: Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`)
 - **Objetivo:** Criar o estado global de autenticação no React, provendo métodos de login, logout e guards de rota baseados nos papéis `GERENTE` e `OPERADOR`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/contexts/auth-context.tsx`
@@ -152,13 +152,13 @@ Progresso da Fase 1 (Frontend): [============--------------------] 43% Concluíd
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar `AuthProvider` inicializando estado a partir do `localStorage` local seguro
-  - [ ] Criar hook customizado `useAuth()` garantindo contexto não nulo
-  - [ ] Implementar `ProtectedRoute` que avalia: (1) se está autenticado; (2) se o `user.role` coincide com `requiredRole`
-  - [ ] Se o papel for insuficiente, redirecionar com aviso amigável sem quebrar a renderização
+  - [x] Implementar `AuthProvider` inicializando estado a partir do `localStorage` local seguro
+  - [x] Criar hook customizado `useAuth()` garantindo contexto não nulo
+  - [x] Implementar `ProtectedRoute` que avalia: (1) se está autenticado; (2) se o `user.role` coincide com `requiredRole`
+  - [x] Se o papel for insuficiente, redirecionar com aviso amigável sem quebrar a renderização
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Usuário logado navega pelas rotas permitidas de acordo com seu perfil.
-  - [ ] **Violação de Contrato:** Tentativa de acesso a `/admin/*` por um `OPERADOR` resulta em bloqueio e redirecionamento.
+  - [x] **Caminho Normal:** Usuário logado navega pelas rotas permitidas de acordo com seu perfil.
+  - [x] **Violação de Contrato:** Tentativa de acesso a `/admin/*` por um `OPERADOR` resulta em bloqueio e redirecionamento.
 
 ---
 
