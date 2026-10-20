@@ -52,7 +52,7 @@
 - **Dependências Bloqueantes:** Fase 1 concluída (autenticação, guards e tabela `users`).
 - **Checklist Técnico Sequencial:**
   - [x] 2.1: Migrations Prisma para `machines`, `shifts` e `shift_allocations` com índice único condicional
-  - [ ] 2.2: Implementação do `MachinesModule` (CRUD de máquinas e transições de `MachineStatus`)
+  - [x] 2.2: Implementação do `MachinesModule` (CRUD de máquinas e transições de `MachineStatus`)
   - [ ] 2.3: Implementação do `ShiftsModule` (Cadastro de turnos com horários formatados `HH:mm`)
   - [ ] 2.4: Implementação do `AllocationsModule` com transação interativa gerenciada (`$transaction`)
   - [ ] 2.5: Verificação de concorrência com lock ou consulta transacional para impedir alocações ativas simultâneas

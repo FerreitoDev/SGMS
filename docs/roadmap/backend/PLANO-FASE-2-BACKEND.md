@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -35,13 +35,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 2 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **2.1** | Migrations Prisma de Máquinas, Turnos e Alocações | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
-| **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ⏳ Pendente | `backend/src/modules/machines/*` |
+| **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ✅ Concluída | `backend/src/modules/machines/*` |
 | **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ⏳ Pendente | `backend/src/modules/shifts/*` |
 | **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
@@ -135,14 +135,17 @@ Progresso da Fase 2 (Backend): [====----------------------------] 14% Concluído
 
 ---
 
-### ⏳ Tarefa 2.2: Módulo de Máquinas de Sopro (`MachinesModule`)
+### ✅ Tarefa 2.2: Módulo de Máquinas de Sopro (`MachinesModule`)
 - **Objetivo:** Construir o CRUD de sopradoras com validação de unicidade de código e gerenciamento de status operacional.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/machines/dto/create-machine.dto.ts`
   - `backend/src/modules/machines/dto/update-machine.dto.ts`
+  - `backend/src/modules/machines/dto/update-machine-status.dto.ts`
+  - `backend/src/modules/machines/dto/list-machines-query.dto.ts`
   - `backend/src/modules/machines/machines.service.ts`
   - `backend/src/modules/machines/machines.controller.ts`
   - `backend/src/modules/machines/machines.module.ts`
+  - `backend/test/machines.e2e-spec.ts`
 - **Contratos e Tipagens Envolvidas:**
   ```typescript
   export class CreateMachineDto {
@@ -160,13 +163,13 @@ Progresso da Fase 2 (Backend): [====----------------------------] 14% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Endpoint `POST /api/machines` protegido para `Role.GERENTE`
-  - [ ] Endpoint `GET /api/machines` disponível para todos os usuários autenticados
-  - [ ] Lançar `ConflictException` (409) em RFC 7807 caso o `code` já esteja em uso
-  - [ ] Impedir inativação de máquina se ela possuir alocação `ACTIVE` no turno atual
+  - [x] Endpoint `POST /api/machines` protegido para `Role.GERENTE`
+  - [x] Endpoint `GET /api/machines` disponível para todos os usuários autenticados
+  - [x] Lançar `ConflictException` (409) em RFC 7807 caso o `code` já esteja em uso
+  - [x] Impedir inativação de máquina se ela possuir alocação `ACTIVE` no turno atual
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Criação de sopradora retorna HTTP 201 com status inicial `IDLE`.
-  - [ ] **Violação de Contrato:** Código duplicado retorna HTTP 409 Conflict estruturado.
+  - [x] **Caminho Normal:** Criação de sopradora retorna HTTP 201 com status inicial `IDLE`.
+  - [x] **Violação de Contrato:** Código duplicado retorna HTTP 409 Conflict estruturado.
 
 ---
 
