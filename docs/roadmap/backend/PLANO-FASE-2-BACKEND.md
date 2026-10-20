@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -35,14 +35,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
+Progresso da Fase 2 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **2.1** | Migrations Prisma de Máquinas, Turnos e Alocações | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ✅ Concluída | `backend/src/modules/machines/*` |
-| **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ⏳ Pendente | `backend/src/modules/shifts/*` |
+| **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ✅ Concluída | `backend/src/modules/shifts/*` |
 | **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.6** | Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
@@ -173,14 +173,17 @@ Progresso da Fase 2 (Backend): [========------------------------] 29% Concluído
 
 ---
 
-### ⏳ Tarefa 2.3: Módulo de Turnos de Trabalho (`ShiftsModule`)
+### ✅ Tarefa 2.3: Módulo de Turnos de Trabalho (`ShiftsModule`)
 - **Objetivo:** Permitir ao Gerente configurar turnos fabris, validando rigorosamente os horários de início e término.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/shifts/dto/create-shift.dto.ts`
   - `backend/src/modules/shifts/dto/update-shift.dto.ts`
+  - `backend/src/modules/shifts/dto/update-shift-status.dto.ts`
+  - `backend/src/modules/shifts/dto/list-shifts-query.dto.ts`
   - `backend/src/modules/shifts/shifts.service.ts`
   - `backend/src/modules/shifts/shifts.controller.ts`
   - `backend/src/modules/shifts/shifts.module.ts`
+  - `backend/test/shifts.e2e-spec.ts`
 - **Contratos e Tipagens Envolvidas:**
   ```typescript
   export class CreateShiftDto {
@@ -196,12 +199,12 @@ Progresso da Fase 2 (Backend): [========------------------------] 29% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Endpoint `POST /api/shifts` restrito a `Role.GERENTE`
-  - [ ] Endpoint `GET /api/shifts` ordenado por horário de início
-  - [ ] Validação garantindo que horários vazios ou em formatos inválidos falhem cedo na fronteira
+  - [x] Endpoint `POST /api/shifts` restrito a `Role.GERENTE`
+  - [x] Endpoint `GET /api/shifts` ordenado por horário de início
+  - [x] Validação garantindo que horários vazios ou em formatos inválidos falhem cedo na fronteira
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Cadastro de turno retorna HTTP 201 com dados persistidos.
-  - [ ] **Violação de Contrato:** Envio de `startTime: "25:00"` rejeitado com HTTP 400 Bad Request.
+  - [x] **Caminho Normal:** Cadastro de turno retorna HTTP 201 com dados persistidos.
+  - [x] **Violação de Contrato:** Envio de `startTime: "25:00"` rejeitado com HTTP 400 Bad Request.
 
 ---
 

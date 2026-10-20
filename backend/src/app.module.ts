@@ -6,6 +6,7 @@ import { PrismaModule } from './database/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { MachinesModule } from './modules/machines/machines.module';
+import { ShiftsModule } from './modules/shifts/shifts.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MachinesModule } from './modules/machines/machines.module';
     AuthModule,
     UsersModule,
     MachinesModule,
+    ShiftsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
