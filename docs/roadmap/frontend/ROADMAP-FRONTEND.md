@@ -29,7 +29,7 @@
   - `RNF-06`: Configuração inicial de PWA (Web App Manifest corporativo e ícones para tela inicial).
 - **Dependências Bloqueantes:** Endpoints de autenticação da Fase 1 do backend (`POST /api/auth/login`, `GET/POST /api/users`).
 - **Checklist Técnico Sequencial:**
-  - [ ] 1.1: Inicialização do projeto React 18 com Vite, TypeScript e Tailwind CSS (`create-vite`)
+  - [x] 1.1: Inicialização do projeto React 18 com Vite, TypeScript e Tailwind CSS (`create-vite`)
   - [ ] 1.2: Instalação e configuração do shadcn/ui (`Button`, `Input`, `Card`, `Dialog`, `Table`, `Badge`, `Toaster`)
   - [ ] 1.3: Configuração do cliente HTTP Axios com interceptors para anexar JWT e mapear erros RFC 7807
   - [ ] 1.4: Implementação do `AuthContext` e hook `useAuth` para controle de sessão e papéis (`GERENTE`/`OPERADOR`)

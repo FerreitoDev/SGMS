@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,12 +32,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **1.1** | Inicialização do Projeto Vite, TypeScript & Tailwind CSS | ⏳ Pendente | `frontend/package.json`, `frontend/vite.config.ts` |
+| **1.1** | Inicialização do Projeto Vite, TypeScript & Tailwind CSS | ✅ Concluída | `frontend/package.json`, `frontend/vite.config.ts` |
 | **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ⏳ Pendente | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
 | **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ⏳ Pendente | `frontend/src/lib/api-client.ts` |
 | **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ⏳ Pendente | `frontend/src/contexts/auth-context.tsx` |
@@ -51,7 +51,7 @@ Progresso da Fase 1 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⏳ Tarefa 1.1: Inicialização do Projeto Vite, TypeScript & Tailwind CSS
+### ✅ Tarefa 1.1: Inicialização do Projeto Vite, TypeScript & Tailwind CSS
 - **Objetivo:** Criar a estrutura base da aplicação web SPA na pasta `frontend/`, configurando Tailwind CSS, aliases de importação `@/*` e variáveis de ambiente locais.
 - **Arquivos a Modificar / Criar:**
   - `frontend/package.json`
@@ -63,13 +63,13 @@ Progresso da Fase 1 (Frontend): [--------------------------------] 0% Concluído
   - `react`, `react-dom`, `react-router-dom`
   - `tailwindcss`, `postcss`, `autoprefixer`, `clsx`, `tailwind-merge`
 - **Checklist de Execução Detalhado:**
-  - [ ] Inicializar projeto Vite com template `react-ts`
-  - [ ] Configurar alias `@` apontando para `src/` no `vite.config.ts` e `tsconfig.json`
-  - [ ] Configurar tokens de cores corporativas (tons sóbrios de azul petróleo/ardósia, cinzas neutros e acentos de status) no `tailwind.config.js`
-  - [ ] Importar fontes limpas no `index.css` e declarar reset com foco em touch
+  - [x] Inicializar projeto Vite com template `react-ts`
+  - [x] Configurar alias `@` apontando para `src/` no `vite.config.ts` e `tsconfig.json`
+  - [x] Configurar tokens de cores corporativas (tons sóbrios de azul petróleo/ardósia, cinzas neutros e acentos de status) no `tailwind.config.js`
+  - [x] Importar fontes limpas no `index.css` e declarar reset com foco em touch
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npm run dev` inicia o servidor na porta 5173 com estilos Tailwind ativos.
-  - [ ] **Compilabilidade:** `npm run build` executa sem erros de tipos.
+  - [x] **Caminho Normal:** `npm run dev` inicia o servidor na porta 5173 com estilos Tailwind ativos.
+  - [x] **Compilabilidade:** `npm run build` executa sem erros de tipos.
 
 ---
 
