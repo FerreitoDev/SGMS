@@ -30,12 +30,12 @@
 - **Dependências Bloqueantes:** Endpoints de autenticação da Fase 1 do backend (`POST /api/auth/login`, `GET/POST /api/users`).
 - **Checklist Técnico Sequencial:**
   - [x] 1.1: Inicialização do projeto React 18 com Vite, TypeScript e Tailwind CSS (`create-vite`)
-  - [ ] 1.2: Instalação e configuração do shadcn/ui (`Button`, `Input`, `Card`, `Dialog`, `Table`, `Badge`, `Toaster`)
+  - [ ] 1.2: Instalação e configuração do shadcn/ui (`Button`, `Input`, `Card`, `Sheet`, `Table`, `Badge`, `Toaster` — *Dialogs proibidos*)
   - [ ] 1.3: Configuração do cliente HTTP Axios com interceptors para anexar JWT e mapear erros RFC 7807
   - [ ] 1.4: Implementação do `AuthContext` e hook `useAuth` para controle de sessão e papéis (`GERENTE`/`OPERADOR`)
   - [ ] 1.5: Criação da tela de Login com formulário tipado em `react-hook-form` + `zod`
   - [ ] 1.6: Criação das rotas protegidas (`ProtectedRoute`) e roteamento contextual por perfil de acesso
-  - [ ] 1.7: Tela de Gestão de Operadores para desktop do Gerente com tabela de usuários e modal de cadastro
+  - [ ] 1.7: Tela de Gestão de Operadores para desktop do Gerente com tabela de usuários e painel Sheet de cadastro
   - [ ] 1.8: Validação visual e teste de compilação sem warnings (`npm run build`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md)
 
@@ -91,7 +91,7 @@
   - `RNF-05`: Renderização instantânea de gráficos na rede local.
 - **Dependências Bloqueantes:** Endpoints da Fase 4 do backend (`/api/allocations/:id/close`, `/api/reports/*`).
 - **Checklist Técnico Sequencial:**
-  - [ ] 4.1: Componente de encerramento de turno no Console do Operador com modal de confirmação `AlertDialog`
+  - [ ] 4.1: Componente de encerramento de turno no Console do Operador com painel Sheet de confirmação irreversível
   - [ ] 4.2: Tela de Dashboard Gerencial para desktop (cards de KPIs: Produção Total, Disponibilidade %, Tempo Parado)
   - [ ] 4.3: Gráfico de Pareto de paradas com `Recharts` ou componentes customizados shadcn
   - [ ] 4.4: Tela de Relatórios com seletores de período (`DateRangePicker`), filtro por Máquina e Turno

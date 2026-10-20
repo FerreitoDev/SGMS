@@ -11,9 +11,10 @@
 ## 1. Visão Geral e Princípios Operacionais da Entrega
 
 1. **Design Corporativo Clean & Acessível:** Interface moderna com contraste equilibrado, tipografia profissional (Inter/Roboto), feedback visual claro em toasts (`sonner`) e alvos de interação generosos ($\ge 44\text{px}$).
-2. **Reuso Estrito de Primitivos shadcn/ui:** Proibida a criação de botões, inputs ou modais artesanais com HTML cru. Todos os componentes devem ser importados de `@/components/ui`.
-3. **Consumo de Erros RFC 7807 (Zero Fallback):** O cliente HTTP intercepta erros formatados em `application/problem+json` e apresenta diretamente o `detail` ou mensagens pontuais do array `errors`, sem inventar textos genéricos ou mensagens mágicas.
-4. **Isolamento de Papéis na Interface:** Rotas administrativas (`/admin/*`) bloqueadas para perfil `OPERADOR`. Sessões inválidas ou expiradas redirecionadas instantaneamente para `/login`.
+2. **Padrão Universal Sheet (Proibição Estrita de Dialogs):** Modais flutuantes centralizados (`Dialog`) estão estritamente proibidos em todo o frontend. Toda interação modal, formulário de cadastro ou confirmação deve utilizar exclusivamente o primitivo `Sheet` (Bottom Sheet no mobile ocupando a largura total e Side Sheet no desktop).
+3. **Reuso Estrito de Primitivos shadcn/ui:** Proibida a criação de botões, inputs ou gavetas artesanais com HTML cru. Todos os componentes devem ser importados de `@/components/ui`.
+4. **Consumo de Erros RFC 7807 (Zero Fallback):** O cliente HTTP intercepta erros formatados em `application/problem+json` e apresenta diretamente o `detail` ou mensagens pontuais do array `errors`, sem inventar textos genéricos ou mensagens mágicas.
+5. **Isolamento de Papéis na Interface:** Rotas administrativas (`/admin/*`) bloqueadas para perfil `OPERADOR`. Sessões inválidas ou expiradas redirecionadas instantaneamente para `/login`.
 
 ---
 
@@ -22,9 +23,9 @@
 | Rota / Tela | Componente Alvo | Perfil Permitido | Comportamento Operacional / Regra |
 | :--- | :--- | :---: | :--- |
 | `/login` | `frontend/src/pages/login-page.tsx` | Público | Formulário de login corporativo, validação Zod, desabilitação no envio e redirecionamento |
-| `/admin/users` | `frontend/src/pages/users-page.tsx` | `GERENTE` | Listagem tabular de operadores, toggle de status e modal para cadastro de novo operador |
+| `/admin/users` | `frontend/src/pages/users-page.tsx` | `GERENTE` | Listagem tabular de operadores, toggle de status e gaveta Sheet para cadastro de novo operador |
 | `ProtectedRoute` | `frontend/src/components/auth/protected-route.tsx` | Autenticado | Intercepta rota e valida permissão por perfil (`requiredRole`) |
-| `UserCreateDialog`| `frontend/src/components/users/user-create-dialog.tsx`| `GERENTE` | Modal com formulário Zod para criação de operador e atualização instantânea da tabela |
+| `UserCreateSheet` | `frontend/src/components/users/user-create-sheet.tsx` | `GERENTE` | Painel Sheet com formulário Zod para criação de operador e atualização instantânea da tabela |
 | `apiClient` | `frontend/src/lib/api-client.ts` | Global | Instância Axios com interceptors de JWT e extração de erros RFC 7807 |
 
 ---
@@ -74,25 +75,26 @@ Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluíd
 ---
 
 ### ⏳ Tarefa 1.2: Instalação e Configuração dos Componentes shadcn/ui
-- **Objetivo:** Integrar os componentes oficiais da biblioteca shadcn/ui necessários para a Fase 1, garantindo consistência visual e acessibilidade Radix UI.
+- **Objetivo:** Integrar os componentes oficiais da biblioteca shadcn/ui necessários para a Fase 1, padronizando gavetas `Sheet` e garantindo consistência visual e acessibilidade Radix UI.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/lib/utils.ts` (helper `cn`)
   - `frontend/src/components/ui/button.tsx`
   - `frontend/src/components/ui/input.tsx`
   - `frontend/src/components/ui/card.tsx`
-  - `frontend/src/components/ui/dialog.tsx`
+  - `frontend/src/components/ui/sheet.tsx` *(Padrão universal: **Proibido `dialog.tsx`**)*
   - `frontend/src/components/ui/table.tsx`
   - `frontend/src/components/ui/badge.tsx`
   - `frontend/src/components/ui/sonner.tsx`
 - **Dependências a Instalar:**
-  - `@radix-ui/react-dialog`, `@radix-ui/react-slot`, `lucide-react`, `sonner`
+  - `@radix-ui/react-dialog` *(utilizado internamente pelo primitivo `Sheet`)*, `@radix-ui/react-slot`, `lucide-react`, `sonner`
 - **Checklist de Execução Detalhado:**
   - [ ] Criar o utilitário `cn(...inputs)` com `clsx` e `twMerge` em `src/lib/utils.ts`
-  - [ ] Implementar os componentes de botão, input, card, modal dialog, tabela e badge
+  - [ ] Implementar os componentes de botão, input, card, gaveta lateral/inferior `Sheet`, tabela e badge
   - [ ] Configurar o componente `Toaster` do Sonner no layout raiz (`App.tsx`)
   - [ ] Garantir que o componente `Button` possua altura mínima `h-11` na variante primária para alvos touch
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Componentes renderizam com estilos aplicados e interatividade acessível (fechamento com ESC, foco visível).
+  - [ ] **Caminho Normal:** Componentes renderizam com estilos aplicados e interatividade acessível (fechamento com ESC, swipe touch, foco visível).
+  - [ ] **Proibição de Dialog:** Nenhum arquivo `dialog.tsx` existe ou é exportado em `@/components/ui/`.
 
 ---
 
@@ -186,10 +188,10 @@ Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluíd
 ---
 
 ### ⏳ Tarefa 1.6: Tela de Gestão de Contas de Operadores (`UsersPage`)
-- **Objetivo:** Permitir ao Gerente de Produção cadastrar novos operadores de máquina e gerenciar o status de ativação/inativação das contas através de uma tabela responsiva com modal dialog.
+- **Objetivo:** Permitir ao Gerente de Produção cadastrar novos operadores de máquina e gerenciar o status de ativação/inativação das contas através de uma tabela responsiva com painel lateral/inferior `Sheet`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/users-page.tsx`
-  - `frontend/src/components/users/user-create-dialog.tsx`
+  - `frontend/src/components/users/user-create-sheet.tsx`
   - `frontend/src/components/layout/app-layout.tsx`
   - `frontend/src/schemas/user-schema.ts`
 - **Contratos e Tipagens Envolvidas:**
@@ -203,8 +205,8 @@ Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluíd
 - **Checklist de Execução Detalhado:**
   - [ ] Criar `AppLayout` com barra superior corporativa exibindo nome do Gerente e botão "Sair"
   - [ ] Tabela shadcn (`Table`) listando: Nome, Login, Perfil (`Badge`), Status (`Ativo`/`Inativo`) e Ações
-  - [ ] Botão primário "+ Novo Operador" que abre o `UserCreateDialog`
-  - [ ] Modal com validação Zod e envio para `POST /api/users`
+  - [ ] Botão primário "+ Novo Operador" que abre o `UserCreateSheet`
+  - [ ] Painel `Sheet` com validação Zod e envio para `POST /api/users`
   - [ ] Ação de alternar status (toggle ativo/inativo) via chamada `PATCH /api/users/:id/status` com atualização otimista ou refetch imediato
   - [ ] Feedback tátil via `toast.success` e `toast.error`
 - **Critérios de Aceite e Verificação Obrigatória:**

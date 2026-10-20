@@ -21,12 +21,12 @@
 
 | Rota / Tela | Componente Alvo | Perfil Permitido | Comportamento Operacional / Regra |
 | :--- | :--- | :---: | :--- |
-| `/admin/machines` | `frontend/src/pages/admin/machines-page.tsx` | `GERENTE` | Listagem tabular de sopradoras, status badges (`IDLE`, `RUNNING`, etc) e modal de cadastro |
+| `/admin/machines` | `frontend/src/pages/admin/machines-page.tsx` | `GERENTE` | Listagem tabular de sopradoras, status badges (`IDLE`, `RUNNING`, etc) e gaveta Sheet de cadastro |
 | `/admin/shifts` | `frontend/src/pages/admin/shifts-page.tsx` | `GERENTE` | Listagem e cadastro de turnos de produção com horários `HH:mm` |
 | `/chao-de-fabrica/alocacao` | `frontend/src/pages/operator/allocation-page.tsx` | `OPERADOR`, `GERENTE` | Interface touch para o operador selecionar máquina e turno e iniciar jornada |
 | `MachineCard` | `frontend/src/components/machines/machine-card.tsx` | Operacional | Cartão touch ($\ge 64\text{px}$) com status visual da máquina (Disponível, Em Uso, Inativa) |
-| `MachineDialog` | `frontend/src/components/machines/machine-dialog.tsx` | `GERENTE` | Modal de formulário Zod para cadastrar/editar código e modelo da sopradora |
-| `ShiftDialog` | `frontend/src/components/shifts/shift-dialog.tsx` | `GERENTE` | Modal de formulário Zod para cadastrar nome e horários do turno |
+| `MachineSheet` | `frontend/src/components/machines/machine-sheet.tsx` | `GERENTE` | Painel Sheet com formulário Zod para cadastrar/editar código e modelo da sopradora |
+| `ShiftSheet` | `frontend/src/components/shifts/shift-sheet.tsx` | `GERENTE` | Painel Sheet com formulário Zod para cadastrar nome e horários do turno |
 
 ---
 
@@ -107,7 +107,7 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
 - **Objetivo:** Permitir ao Gerente cadastrar, listar e gerenciar o status do parque de sopradoras industriais.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/machines-page.tsx`
-  - `frontend/src/components/machines/machine-dialog.tsx`
+  - `frontend/src/components/machines/machine-sheet.tsx`
   - `frontend/src/schemas/machine-schema.ts`
 - **Contratos e Tipagens Envolvidas:**
   ```typescript
@@ -121,7 +121,7 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
 - **Checklist de Execução Detalhado:**
   - [ ] Tabela com colunas: Código, Nome, Modelo, Status Operacional (`Badge`), Ativação e Ações
   - [ ] Badges com cores contextuais de status: `RUNNING` (verde), `STOPPED` (vermelho), `IDLE` (azul), `INACTIVE` (cinza)
-  - [ ] Modal `MachineDialog` para novo cadastro com tratamento de erro 409 em caso de código duplicado
+  - [ ] Painel `MachineSheet` para novo cadastro com tratamento de erro 409 em caso de código duplicado
   - [ ] Ação de alternar ativação (`isActive`) via switch ou botão
 - **Critérios de Aceite e Verificação Obrigatória:**
   - [ ] **Caminho Normal:** Cadastro de nova sopradora reflete imediatamente na listagem com toast de sucesso.
@@ -133,7 +133,7 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
 - **Objetivo:** Permitir ao Gerente configurar a grade de turnos de trabalho da fábrica com horários de início e término.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/shifts-page.tsx`
-  - `frontend/src/components/shifts/shift-dialog.tsx`
+  - `frontend/src/components/shifts/shift-sheet.tsx`
   - `frontend/src/schemas/shift-schema.ts`
 - **Contratos e Tipagens Envolvidas:**
   ```typescript
@@ -145,7 +145,7 @@ Progresso da Fase 2 (Frontend): [--------------------------------] 0% Concluído
   ```
 - **Checklist de Execução Detalhado:**
   - [ ] Tabela com colunas: Nome do Turno, Horário Início, Horário Término, Duração Prevista e Status
-  - [ ] Modal `ShiftDialog` com inputs formatados para `HH:mm`
+  - [ ] Painel `ShiftSheet` com inputs formatados para `HH:mm`
   - [ ] Validação síncrona com Zod antes do envio HTTP
 - **Critérios de Aceite e Verificação Obrigatória:**
   - [ ] **Caminho Normal:** Turno cadastrado aparece na grade com horários formatados.

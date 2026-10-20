@@ -10,7 +10,7 @@
 
 ## 1. Visão Geral e Princípios Operacionais da Entrega
 
-1. **Encerramento Consciente de Jornada (RN-06):** O encerramento de turno pelo operador exige confirmação explícita em modal `AlertDialog`, apresentando o resumo de garrafas e paradas apontadas antes do congelamento irreversível da alocação.
+1. **Encerramento Consciente de Jornada (RN-06):** O encerramento de turno pelo operador exige confirmação explícita em painel `Sheet`, apresentando o resumo de garrafas e paradas apontadas antes do congelamento irreversível da alocação.
 2. **Visualização Direta de Gargalos (Análise de Pareto):** O Gerente de Produção visualiza no dashboard os principais motivos de interrupção classificados em gráfico de Pareto (colunas de minutos parados combinadas com curva percentual acumulada), evidenciando os 20% de causas que geram 80% das perdas.
 3. **Download Instantâneo de Relatórios (CSV e PDF):** Os relatórios gerenciais são baixados no navegador via streaming de Blob (`window.URL.createObjectURL(blob)`), preservando a nomenclatura padronizada com carimbo de data.
 4. **Zero Fallback em Indicadores:** Períodos sem produção exibem honestamente `0 garrafas` e taxa de disponibilidade baseada em ausência de paradas, sem mascarar números reais como traços ou mensagens genéricas.
@@ -23,7 +23,7 @@
 | :--- | :--- | :---: | :--- |
 | `/admin/dashboard` | `frontend/src/pages/admin/dashboard-page.tsx` | `GERENTE` | Painel gerencial com KPIs de produção, disponibilidade e gráfico de Pareto de paradas |
 | `/admin/relatorios` | `frontend/src/pages/admin/reports-page.tsx` | `GERENTE` | Filtros por data/máquina/turno com botões de download direto para CSV e PDF |
-| `CloseShiftDialog` | `frontend/src/components/operator/close-shift-dialog.tsx` | `OPERADOR`, `GERENTE` | Modal de encerramento seguro com resumo consolidado e trava irreversível |
+| `CloseShiftSheet` | `frontend/src/components/operator/close-shift-sheet.tsx` | `OPERADOR`, `GERENTE` | Painel Sheet de encerramento seguro com resumo consolidado e trava irreversível |
 | `ParetoChart` | `frontend/src/components/dashboard/pareto-chart.tsx` | `GERENTE` | Gráfico combinado Recharts (barras de tempo + linha percentual 80/20) |
 | `KpiCards` | `frontend/src/components/dashboard/kpi-cards.tsx` | `GERENTE` | Cartões corporativos com Volume, Tempo Parado, Disponibilidade % e Ritmo |
 
@@ -37,7 +37,7 @@ Progresso da Fase 4 (Frontend): [--------------------------------] 0% Concluído
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftDialog`) | ⏳ Pendente | `frontend/src/components/operator/*` |
+| **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | ⏳ Pendente | `frontend/src/components/operator/*` |
 | **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | ⏳ Pendente | `frontend/src/services/reports-service.ts` |
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | ⏳ Pendente | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | ⏳ Pendente | `frontend/src/components/dashboard/pareto-chart.tsx` |
@@ -51,20 +51,20 @@ Progresso da Fase 4 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⏳ Tarefa 4.1: Componente de Encerramento Seguro de Turno (`CloseShiftDialog`)
-- **Objetivo:** Adicionar o botão "Encerrar Turno" no Console do Operador, abrindo modal de confirmação irreversível que finaliza a alocação e libera a máquina para `IDLE`.
+### ⏳ Tarefa 4.1: Componente de Encerramento Seguro de Turno (`CloseShiftSheet`)
+- **Objetivo:** Adicionar o botão "Encerrar Turno" no Console do Operador, abrindo painel `Sheet` de confirmação irreversível que finaliza a alocação e libera a máquina para `IDLE`.
 - **Arquivos a Modificar / Criar:**
-  - `frontend/src/components/operator/close-shift-dialog.tsx`
+  - `frontend/src/components/operator/close-shift-sheet.tsx`
   - `frontend/src/pages/operator/operator-console-page.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar diálogo usando o primitivo `AlertDialog` do shadcn
+  - [ ] Implementar confirmação usando o primitivo `Sheet` do shadcn (bottom sheet no mobile e side sheet no desktop)
   - [ ] Apresentar resumo: Total de garrafas sopradas no turno e quantidade de paradas apontadas
   - [ ] Alerta em destaque: *"Atenção: Ao encerrar o turno, nenhum novo apontamento poderá ser feito nesta máquina."*
   - [ ] Ao confirmar, disparar `allocationsService.close(allocationId)`
   - [ ] Em caso de sucesso, exibir `toast.success("Turno encerrado com sucesso!")` e redirecionar para a tela de alocação `/chao-de-fabrica/alocacao`
 - **Critérios de Aceite e Verificação Obrigatória:**
   - [ ] **Caminho Normal:** Fechamento confirmado libera a máquina e redireciona o operador.
-  - [ ] **Cancelamento:** Clicar em "Continuar Operando" fecha o modal sem alterar o estado da alocação.
+  - [ ] **Cancelamento:** Clicar em "Continuar Operando" fecha o painel Sheet sem alterar o estado da alocação.
 
 ---
 
