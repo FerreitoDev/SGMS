@@ -13,14 +13,74 @@ enum UserRole {
 }
 
 model User {
-  id           String   @id @default(uuid()) @db.Uuid
-  name         String   @db.VarChar(120)
-  username     String   @unique @db.VarChar(50)
-  passwordHash String   @db.VarChar(255)
+  id           String            @id @default(uuid()) @db.Uuid
+  name         String            @db.VarChar(120)
+  username     String            @unique @db.VarChar(50)
+  passwordHash String            @db.VarChar(255)
   role         UserRole
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now()) @db.Timestamptz
-  updatedAt    DateTime @updatedAt @db.Timestamptz
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now()) @db.Timestamptz
+  updatedAt    DateTime          @updatedAt @db.Timestamptz
+  allocations  ShiftAllocation[]
 
   @@map("users")
 }
+
+enum MachineStatus {
+  INACTIVE
+  IDLE
+  RUNNING
+  STOPPED
+}
+
+enum ShiftAllocationStatus {
+  ACTIVE
+  CLOSED
+}
+
+model Machine {
+  id          String            @id @default(uuid()) @db.Uuid
+  code        String            @unique @db.VarChar(30)
+  name        String            @db.VarChar(100)
+  model       String?           @db.VarChar(100)
+  status      MachineStatus     @default(IDLE)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now()) @db.Timestamptz
+  updatedAt   DateTime          @updatedAt @db.Timestamptz
+  allocations ShiftAllocation[]
+
+  @@map("machines")
+}
+
+model Shift {
+  id          String            @id @default(uuid()) @db.Uuid
+  name        String            @db.VarChar(60)
+  startTime   String            @db.VarChar(5)
+  endTime     String            @db.VarChar(5)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now()) @db.Timestamptz
+  updatedAt   DateTime          @updatedAt @db.Timestamptz
+  allocations ShiftAllocation[]
+
+  @@map("shifts")
+}
+
+model ShiftAllocation {
+  id         String                @id @default(uuid()) @db.Uuid
+  machineId  String                @db.Uuid
+  shiftId    String                @db.Uuid
+  operatorId String                @db.Uuid
+  shiftDate  DateTime              @db.Date
+  status     ShiftAllocationStatus @default(ACTIVE)
+  openedAt   DateTime              @default(now()) @db.Timestamptz
+  closedAt   DateTime?             @db.Timestamptz
+
+  machine    Machine               @relation(fields: [machineId], references: [id])
+  shift      Shift                 @relation(fields: [shiftId], references: [id])
+  operator   User                  @relation(fields: [operatorId], references: [id])
+
+  @@index([machineId, shiftDate])
+  @@index([operatorId, shiftDate])
+  @@map("shift_allocations")
+}
+

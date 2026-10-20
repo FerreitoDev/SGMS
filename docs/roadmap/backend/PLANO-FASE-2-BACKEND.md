@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -20,7 +20,7 @@
 ## 2. Matriz de Cobertura de Entidades / Rotas / Contratos
 
 | Rota / Elemento | Arquivo Alvo | Perfil Permitido | Comportamento Operacional / Regra |
-| :--- | :--- | :---: | :--- |
+| :--- | :--- | :--- | :--- |
 | `POST /api/machines` | `backend/src/modules/machines/machines.controller.ts` | `GERENTE` | Cadastra nova sopradora com unicidade de código (`code` ex: `SOPRO-01`) |
 | `GET /api/machines` | `backend/src/modules/machines/machines.controller.ts` | Autenticado | Lista sopradoras cadastradas com status e modelo |
 | `PATCH /api/machines/:id/status` | `backend/src/modules/machines/machines.controller.ts` | `GERENTE` | Altera status de ativação (`isActive`) ou operacional |
@@ -35,12 +35,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 2 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **2.1** | Migrations Prisma de Máquinas, Turnos e Alocações | ⏳ Pendente | `backend/prisma/schema.prisma`, `migrations/` |
+| **2.1** | Migrations Prisma de Máquinas, Turnos e Alocações | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ⏳ Pendente | `backend/src/modules/machines/*` |
 | **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ⏳ Pendente | `backend/src/modules/shifts/*` |
 | **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
@@ -54,11 +54,11 @@ Progresso da Fase 2 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⏳ Tarefa 2.1: Migrations Prisma de Máquinas, Turnos e Alocações
+### ✅ Tarefa 2.1: Migrations Prisma de Máquinas, Turnos e Alocações
 - **Objetivo:** Expandir o schema Prisma com os models `Machine`, `Shift` e `ShiftAllocation`, aplicando o índice único condicional no PostgreSQL para garantir integridade física no banco.
 - **Arquivos a Modificar / Criar:**
   - `backend/prisma/schema.prisma`
-  - `backend/prisma/migrations/xxxx_add_machines_shifts_allocations/migration.sql`
+  - `backend/prisma/migrations/20261020003534_add_machines_shifts_allocations/migration.sql`
 - **Contratos e Tipagens Envolvidas:**
   ```prisma
   enum MachineStatus {
@@ -120,18 +120,18 @@ Progresso da Fase 2 (Backend): [--------------------------------] 0% Concluído 
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Adicionar os enums e models no `schema.prisma`
-  - [ ] Executar migration gerando o arquivo SQL
-  - [ ] Inserir manualmente no arquivo da migration o índice condicional:
+  - [x] Adicionar os enums e models no `schema.prisma`
+  - [x] Executar migration gerando o arquivo SQL
+  - [x] Inserir manualmente no arquivo da migration o índice condicional:
     ```sql
     CREATE UNIQUE INDEX "idx_unique_active_machine_shift" 
     ON "shift_allocations" ("machineId", "shiftId", "shiftDate") 
     WHERE "status" = 'ACTIVE';
     ```
-  - [ ] Executar `npx prisma migrate dev` para aplicar a constraint no banco local
+  - [x] Executar `npx prisma migrate dev` para aplicar a constraint no banco local
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Migration aplicada com sucesso e tipos Prisma gerados (`prisma generate`).
-  - [ ] **Violação de Contrato:** Tentativa manual de inserir dois registros com mesmo `machineId`, `shiftId`, `shiftDate` e `status = 'ACTIVE'` rejeitada pelo PostgreSQL.
+  - [x] **Caminho Normal:** Migration aplicada com sucesso e tipos Prisma gerados (`prisma generate`).
+  - [x] **Violação de Contrato:** Tentativa manual de inserir dois registros com mesmo `machineId`, `shiftId`, `shiftDate` e `status = 'ACTIVE'` rejeitada pelo PostgreSQL com erro `P2002`.
 
 ---
 
