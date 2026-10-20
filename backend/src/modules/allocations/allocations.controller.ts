@@ -1,9 +1,13 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   UseGuards,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AllocationsService } from './allocations.service';
 import { CreateAllocationDto } from './dto/create-allocation.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -24,5 +28,14 @@ export class AllocationsController {
     @CurrentUser('id') operatorId: string,
   ) {
     return this.allocationsService.create(dto, operatorId);
+  }
+
+  @Get('current')
+  async getCurrent(
+    @CurrentUser('id') operatorId: string,
+    @Res() res: Response,
+  ) {
+    const allocation = await this.allocationsService.getCurrent(operatorId);
+    return res.status(HttpStatus.OK).json(allocation ?? null);
   }
 }

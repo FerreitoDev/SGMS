@@ -348,4 +348,42 @@ describe('AllocationsModule (e2e)', () => {
       });
     });
   });
+
+  describe('GET /api/allocations/current', () => {
+    it('deve retornar null com HTTP 200 quando o operador não possuir alocação ativa (Zero Fallback)', async () => {
+      await prisma.shiftAllocation.deleteMany({
+        where: { operatorId: op2Id },
+      });
+
+      const response = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op2Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toBeNull();
+    });
+
+    it('deve retornar dados completos da alocação corrente ativa para o operador alocado', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).not.toBeNull();
+      expect(response.body.status).toBe(ShiftAllocationStatus.ACTIVE);
+      expect(response.body.operatorId).toBe(op1Id);
+      expect(response.body).toHaveProperty('machine');
+      expect(response.body.machine.code).toBe('E2E-ALC-SOPRO-01');
+      expect(response.body.machine.status).toBe(MachineStatus.RUNNING);
+      expect(response.body).toHaveProperty('shift');
+      expect(response.body.shift.name).toBe('E2E-ALC-Turno Manhã');
+    });
+
+    it('deve rejeitar consulta sem token com HTTP 401 Unauthorized', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/allocations/current');
+
+      expect(response.status).toBe(401);
+    });
+  });
 });

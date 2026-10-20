@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -35,7 +35,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 2 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -44,7 +44,7 @@ Progresso da Fase 2 (Backend): [================----------------] 57% Concluído
 | **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ✅ Concluída | `backend/src/modules/machines/*` |
 | **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ✅ Concluída | `backend/src/modules/shifts/*` |
 | **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ✅ Concluída | `backend/src/modules/allocations/*` |
-| **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
+| **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ✅ Concluída | `backend/src/modules/allocations/*` |
 | **2.6** | Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.7** | Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação | ⏳ Pendente | `backend/test/allocations.e2e-spec.ts` |
 
@@ -241,18 +241,19 @@ Progresso da Fase 2 (Backend): [================----------------] 57% Concluído
 
 ---
 
-### ⏳ Tarefa 2.5: Consulta de Alocação Ativa (`GET /api/allocations/current`)
+### ✅ Tarefa 2.5: Consulta de Alocação Ativa (`GET /api/allocations/current`)
 - **Objetivo:** Fornecer ao operador ou gerente uma rota para inspecionar se há uma alocação em andamento vinculada ao seu usuário, recuperando o contexto operacional.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/allocations/allocations.service.ts`
   - `backend/src/modules/allocations/allocations.controller.ts`
+  - `backend/test/allocations.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Consultar `shift_allocations` com `operatorId = user.id` e `status = ACTIVE`
-  - [ ] Fazer include dos dados essenciais de `machine` (`code`, `name`, `status`) e `shift` (`name`, `startTime`, `endTime`)
-  - [ ] Se não houver alocação ativa, retornar honestamente `null` com HTTP 200 (sem inventar objeto artificial)
+  - [x] Consultar `shift_allocations` com `operatorId = user.id` e `status = ACTIVE`
+  - [x] Fazer include dos dados essenciais de `machine` (`code`, `name`, `status`) e `shift` (`name`, `startTime`, `endTime`)
+  - [x] Se não houver alocação ativa, retornar honestamente `null` com HTTP 200 (sem inventar objeto artificial)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Operador alocado recebe os dados completos da máquina e turno em andamento.
-  - [ ] **Zero Fallback:** Sem alocação ativa, a resposta é `null` (não um objeto mock ou vazio com strings mágicas).
+  - [x] **Caminho Normal:** Operador alocado recebe os dados completos da máquina e turno em andamento.
+  - [x] **Zero Fallback:** Sem alocação ativa, a resposta é `null` (não um objeto mock ou vazio com strings mágicas).
 
 ---
 

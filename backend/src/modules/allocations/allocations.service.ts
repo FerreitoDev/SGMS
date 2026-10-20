@@ -158,4 +158,41 @@ export class AllocationsService {
       throw error;
     }
   }
+
+  async getCurrent(operatorId: string) {
+    const allocation = await this.prisma.shiftAllocation.findFirst({
+      where: {
+        operatorId,
+        status: ShiftAllocationStatus.ACTIVE,
+      },
+      include: {
+        machine: {
+          select: {
+            id: true,
+            code: true,
+            name: true,
+            model: true,
+            status: true,
+          },
+        },
+        shift: {
+          select: {
+            id: true,
+            name: true,
+            startTime: true,
+            endTime: true,
+          },
+        },
+        operator: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    return allocation ?? null;
+  }
 }
