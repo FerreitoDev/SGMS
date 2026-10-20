@@ -54,9 +54,9 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
 
             <Button
               variant="outline"
-              size="sm"
+              size="default"
               onClick={logout}
-              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-destructive"
+              className="flex min-h-[44px] items-center gap-1.5 px-3 text-xs text-muted-foreground hover:text-destructive touch-manipulation"
               aria-label="Encerrar sessão"
             >
               <LogOut className="h-4 w-4" />

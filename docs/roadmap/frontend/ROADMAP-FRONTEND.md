@@ -10,7 +10,7 @@
 
 | Fase Setorial | Título da Entrega Técnica | Plano de Execução Vinculado | Status |
 | :---: | :--- | :--- | :---: |
-| **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | ⚪ A Iniciar |
+| **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
 | **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | ⚪ A Iniciar |
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | ⚪ A Iniciar |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
@@ -36,7 +36,7 @@
   - [x] 1.5: Criação da tela de Login com formulário tipado em `react-hook-form` + `zod`
   - [x] 1.6: Criação das rotas protegidas (`ProtectedRoute`) e roteamento contextual por perfil de acesso
   - [x] 1.7: Tela de Gestão de Operadores para desktop do Gerente com tabela de usuários e painel Sheet de cadastro
-  - [ ] 1.8: Validação visual e teste de compilação sem warnings (`npm run build`)
+  - [x] 1.8: Validação visual e teste de compilação sem warnings (`npm run build`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md)
 
 ---

@@ -10,7 +10,7 @@
 
 | Fase | Título da Fase | Módulos Envolvidos | Status | Requisitos Cobertos |
 | :---: | :--- | :--- | :---: | :--- |
-| **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | ⚪ A Iniciar | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
+| **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | 🟢 Concluída | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | ⚪ A Iniciar | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | ⚪ A Iniciar | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | ⚪ A Iniciar | RF-10, RF-11, RNF-01, RNF-05 |
@@ -29,13 +29,13 @@
   - `RNF-06`: Estrutura PWA (Manifest e Service Worker base) no frontend.
   - `RNF-07`: Criptografia de senhas com Argon2/Bcrypt e Guards de rota.
 - **Checklist Macro de Entregas:**
-  - [ ] Inicialização dos projetos `backend` (NestJS 10 + TypeScript) e `frontend` (React 18 + Vite + Tailwind + shadcn/ui)
-  - [ ] Configuração do Prisma ORM e migration da tabela `users`
-  - [ ] Implementação do módulo `AuthModule` (login, hash, guards e `@CurrentUser()`)
-  - [ ] Implementação do módulo `UsersModule` (CRUD de operadores exclusivo para Gerente)
-  - [ ] Filtro global de exceções RFC 7807 (`HttpExceptionFilter`)
-  - [ ] Tela de Login corporativa e gestão de sessão com persistência de token
-  - [ ] Painel inicial com redirecionamento contextual por papel (`GERENTE` $\rightarrow$ Admin, `OPERADOR` $\rightarrow$ Chão de Fábrica)
+  - [x] Inicialização dos projetos `backend` (NestJS 10 + TypeScript) e `frontend` (React 18 + Vite + Tailwind + shadcn/ui)
+  - [x] Configuração do Prisma ORM e migration da tabela `users`
+  - [x] Implementação do módulo `AuthModule` (login, hash, guards e `@CurrentUser()`)
+  - [x] Implementação do módulo `UsersModule` (CRUD de operadores exclusivo para Gerente)
+  - [x] Filtro global de exceções RFC 7807 (`HttpExceptionFilter`)
+  - [x] Tela de Login corporativa e gestão de sessão com persistência de token
+  - [x] Painel inicial com redirecionamento contextual por papel (`GERENTE` $\rightarrow$ Admin, `OPERADOR` $\rightarrow$ Chão de Fábrica)
 - **Critérios de Conclusão da Fase:**
   - Login operacional com rejeição de credenciais inválidas em formato RFC 7807.
   - Gerente consegue cadastrar nova conta de operador e desativar contas existentes.

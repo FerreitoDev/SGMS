@@ -118,7 +118,7 @@ export function UsersPage(): React.ReactElement {
               size="default"
               onClick={fetchUsers}
               disabled={isLoading}
-              className="flex items-center gap-2"
+              className="flex min-h-[44px] items-center gap-2"
               title="Recarregar lista de operadores"
             >
               <RefreshCw
@@ -129,7 +129,8 @@ export function UsersPage(): React.ReactElement {
 
             <Button
               onClick={() => setIsSheetOpen(true)}
-              className="flex items-center gap-2 font-semibold"
+              size="default"
+              className="flex min-h-[44px] items-center gap-2 font-semibold"
             >
               <UserPlus className="h-5 w-5" />
               <span>Novo Operador</span>
@@ -155,7 +156,7 @@ export function UsersPage(): React.ReactElement {
                 <button
                   type="button"
                   onClick={() => setStatusFilter('ALL')}
-                  className={`rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
+                  className={`flex min-h-[44px] items-center rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
                     statusFilter === 'ALL'
                       ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
@@ -166,7 +167,7 @@ export function UsersPage(): React.ReactElement {
                 <button
                   type="button"
                   onClick={() => setStatusFilter('ACTIVE')}
-                  className={`rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
+                  className={`flex min-h-[44px] items-center rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
                     statusFilter === 'ACTIVE'
                       ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
@@ -177,7 +178,7 @@ export function UsersPage(): React.ReactElement {
                 <button
                   type="button"
                   onClick={() => setStatusFilter('INACTIVE')}
-                  className={`rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
+                  className={`flex min-h-[44px] items-center rounded px-3 py-1.5 font-medium transition-colors touch-manipulation ${
                     statusFilter === 'INACTIVE'
                       ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
@@ -261,7 +262,7 @@ export function UsersPage(): React.ReactElement {
                               size="sm"
                               disabled={isUpdating}
                               onClick={() => handleToggleStatus(operator)}
-                              className="h-9 gap-1.5 text-xs font-semibold"
+                              className="min-h-[44px] min-w-[80px] gap-1.5 text-xs font-semibold touch-manipulation"
                             >
                               <Power className="h-3.5 w-3.5" />
                               {operator.isActive ? 'Inativar' : 'Ativar'}
