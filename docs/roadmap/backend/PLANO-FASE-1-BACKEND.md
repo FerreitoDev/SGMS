@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Em Andamento (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 1 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 1 (Backend): [================----------------] 57% Concluído
 | **1.2** | Prisma ORM, Model User, Migrations & Seed de Gerente | ✅ Concluída | `backend/prisma/schema.prisma`, `backend/prisma/seed.ts` |
 | **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ✅ Concluída | `backend/src/common/filters/http-exception.filter.ts` |
 | **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ✅ Concluída | `backend/src/modules/auth/*` |
-| **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ⏳ Pendente | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
+| **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ✅ Concluída | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
 | **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ⏳ Pendente | `backend/src/modules/users/*` |
 | **1.7** | Auditoria Zero Fallback, Testes de Integração & Homologação | ⏳ Pendente | `backend/test/auth.e2e-spec.ts` |
 
@@ -181,7 +181,7 @@ Progresso da Fase 1 (Backend): [================----------------] 57% Concluído
 
 ---
 
-### ⏳ Tarefa 1.5: Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`)
+### ✅ Tarefa 1.5: Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`)
 - **Objetivo:** Estabelecer a infraestrutura de proteção de rotas com Passport JWT, extração do usuário autenticado e verificação do papel (`Role`) do colaborador.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/auth/strategies/jwt.strategy.ts`
@@ -191,14 +191,14 @@ Progresso da Fase 1 (Backend): [================----------------] 57% Concluído
   - `backend/src/common/decorators/current-user.decorator.ts`
   - `backend/src/modules/auth/auth.controller.ts` (endpoint `GET /api/auth/me`)
 - **Checklist de Execução Detalhado:**
-  - [ ] Configurar `JwtStrategy` extraindo token do cabeçalho `Authorization: Bearer <token>`
-  - [ ] Implementar decorator `@Roles(...roles: UserRole[])` usando `SetMetadata`
-  - [ ] Implementar `RolesGuard` verificando se `user.role` coincide com os papéis anotados
-  - [ ] Implementar decorator `@CurrentUser()` para injeção limpa nos controllers
-  - [ ] Endpoint `GET /api/auth/me` protegido por `JwtAuthGuard` retornando os dados do usuário autenticado
+  - [x] Configurar `JwtStrategy` extraindo token do cabeçalho `Authorization: Bearer <token>`
+  - [x] Implementar decorator `@Roles(...roles: UserRole[])` usando `SetMetadata`
+  - [x] Implementar `RolesGuard` verificando se `user.role` coincide com os papéis anotados
+  - [x] Implementar decorator `@CurrentUser()` para injeção limpa nos controllers
+  - [x] Endpoint `GET /api/auth/me` protegido por `JwtAuthGuard` retornando os dados do usuário autenticado
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Requisição com JWT válido acessa `GET /api/auth/me` com sucesso.
-  - [ ] **Violação de Contrato:** Requisição sem token retorna HTTP 401; requisição com papel insuficiente retorna HTTP 403.
+  - [x] **Caminho Normal:** Requisição com JWT válido acessa `GET /api/auth/me` com sucesso.
+  - [x] **Violação de Contrato:** Requisição sem token retorna HTTP 401; requisição com papel insuficiente retorna HTTP 403.
 
 ---
 
