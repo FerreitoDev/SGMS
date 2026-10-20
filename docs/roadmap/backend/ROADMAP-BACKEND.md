@@ -57,7 +57,7 @@
   - [x] 2.4: Implementação do `AllocationsModule` com transação interativa gerenciada (`$transaction`)
   - [x] 2.5: Verificação de concorrência com lock ou consulta transacional para impedir alocações ativas simultâneas
   - [x] 2.6: Rota para consulta da alocação corrente ativa do operador autenticado (`GET /api/allocations/current`)
-  - [ ] 2.7: Testes automatizados validando rejeição 409 em tentativas de alocação concorrente
+  - [x] 2.7: Testes automatizados validando rejeição 409 em tentativas de alocação concorrente
 - **Plano de Execução Vinculado:** [PLANO-FASE-2-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-2-BACKEND.md)
 
 ---

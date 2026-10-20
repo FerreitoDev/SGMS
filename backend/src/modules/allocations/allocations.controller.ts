@@ -2,10 +2,13 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Body,
+  Param,
   UseGuards,
   Res,
   HttpStatus,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AllocationsService } from './allocations.service';
@@ -37,5 +40,13 @@ export class AllocationsController {
   ) {
     const allocation = await this.allocationsService.getCurrent(operatorId);
     return res.status(HttpStatus.OK).json(allocation ?? null);
+  }
+
+  @Patch(':id/release')
+  async release(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @CurrentUser() user: { id: string; role: UserRole },
+  ) {
+    return this.allocationsService.release(id, user);
   }
 }

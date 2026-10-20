@@ -4,10 +4,11 @@ import {
   NotFoundException,
   UnprocessableEntityException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateAllocationDto } from './dto/create-allocation.dto';
-import { MachineStatus, ShiftAllocationStatus, Prisma } from '@prisma/client';
+import { MachineStatus, ShiftAllocationStatus, Prisma, UserRole } from '@prisma/client';
 
 @Injectable()
 export class AllocationsService {
@@ -194,5 +195,78 @@ export class AllocationsService {
     });
 
     return allocation ?? null;
+  }
+
+  async release(id: string, user: { id: string; role: UserRole }) {
+    return this.prisma.$transaction(async (tx) => {
+      const allocation = await tx.shiftAllocation.findUnique({
+        where: { id },
+      });
+
+      if (!allocation) {
+        throw new NotFoundException(`Alocação com identificador '${id}' não encontrada.`);
+      }
+
+      if (allocation.status === ShiftAllocationStatus.CLOSED) {
+        throw new ConflictException({
+          title: 'Alocação Já Encerrada',
+          message: 'Esta alocação já foi finalizada anteriormente.',
+          code: 'ALLOCATION_ALREADY_CLOSED',
+        });
+      }
+
+      const isOwner = allocation.operatorId === user.id;
+      const isManager = user.role === UserRole.GERENTE;
+
+      if (!isOwner && !isManager) {
+        throw new ForbiddenException({
+          title: 'Acesso Proibido',
+          message: 'Você não tem permissão para liberar a alocação de outro operador.',
+          code: 'FORBIDDEN_RELEASE',
+        });
+      }
+
+      const closedAllocation = await tx.shiftAllocation.update({
+        where: { id },
+        data: {
+          status: ShiftAllocationStatus.CLOSED,
+          closedAt: new Date(),
+        },
+        include: {
+          machine: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+              status: true,
+            },
+          },
+          shift: {
+            select: {
+              id: true,
+              name: true,
+              startTime: true,
+              endTime: true,
+            },
+          },
+          operator: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+            },
+          },
+        },
+      });
+
+      await tx.machine.update({
+        where: { id: allocation.machineId },
+        data: { status: MachineStatus.IDLE },
+      });
+
+      closedAllocation.machine.status = MachineStatus.IDLE;
+
+      return closedAllocation;
+    });
   }
 }

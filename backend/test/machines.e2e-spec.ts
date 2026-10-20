@@ -124,6 +124,24 @@ describe('MachinesModule (e2e)', () => {
       expect(response.body.isActive).toBe(true);
     });
 
+    it('deve cadastrar sopradora sem modelo mantendo model estritamente como null no banco (Zero Fallback)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/machines')
+        .set('Authorization', `Bearer ${managerToken}`)
+        .send({
+          code: 'E2E-SOPRO-NOMODEL',
+          name: 'Sopradora Sem Modelo',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.model).toBeNull();
+
+      const inDb = await prisma.machine.findUnique({
+        where: { code: 'E2E-SOPRO-NOMODEL' },
+      });
+      expect(inDb!.model).toBeNull();
+    });
+
     it('deve rejeitar cadastro com código duplicado retornando HTTP 409 Conflict em formato RFC 7807', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/machines')

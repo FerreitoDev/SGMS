@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
+> **Status:** ✅ Concluída (7 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -35,7 +35,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 2 (Backend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -45,8 +45,8 @@ Progresso da Fase 2 (Backend): [====================------------] 71% Concluído
 | **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ✅ Concluída | `backend/src/modules/shifts/*` |
 | **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ✅ Concluída | `backend/src/modules/allocations/*` |
 | **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ✅ Concluída | `backend/src/modules/allocations/*` |
-| **2.6** | Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
-| **2.7** | Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação | ⏳ Pendente | `backend/test/allocations.e2e-spec.ts` |
+| **2.6** | Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`) | ✅ Concluída | `backend/src/modules/allocations/*` |
+| **2.7** | Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação | ✅ Concluída | `backend/test/allocations.e2e-spec.ts` |
 
 ---
 
@@ -257,51 +257,52 @@ Progresso da Fase 2 (Backend): [====================------------] 71% Concluído
 
 ---
 
-### ⏳ Tarefa 2.6: Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`)
+### ✅ Tarefa 2.6: Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`)
 - **Objetivo:** Permitir desfazer uma alocação antes do fechamento formal do turno, revertendo a máquina para `IDLE` caso o operador precise se desvincular ou corrigir um erro de seleção.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/allocations/allocations.service.ts`
   - `backend/src/modules/allocations/allocations.controller.ts`
+  - `backend/test/allocations.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Validar que apenas o próprio operador vinculado ou um `GERENTE` pode liberar a alocação
-  - [ ] Atualizar status da alocação para `CLOSED` com carimbo `closedAt = now()`
-  - [ ] Reverter status da máquina correspondente para `IDLE` dentro da mesma transação
+  - [x] Validar que apenas o próprio operador vinculado ou um `GERENTE` pode liberar a alocação
+  - [x] Atualizar status da alocação para `CLOSED` com carimbo `closedAt = now()`
+  - [x] Reverter status da máquina correspondente para `IDLE` dentro da mesma transação
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Alocação fechada e máquina retorna ao status `IDLE`, ficando disponível para nova alocação.
-  - [ ] **Violação de Contrato:** Tentativa de outro operador liberar máquina alheia bloqueada com HTTP 403 Forbidden.
+  - [x] **Caminho Normal:** Alocação fechada e máquina retorna ao status `IDLE`, ficando disponível para nova alocação.
+  - [x] **Violação de Contrato:** Tentativa de outro operador liberar máquina alheia bloqueada com HTTP 403 Forbidden.
 
 ---
 
-### ⏳ Tarefa 2.7: Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação
+### ✅ Tarefa 2.7: Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação
 - **Objetivo:** Validar através de testes automatizados ponta a ponta as invariantes de concorrência e integridade de domínio da Fase 2.
 - **Arquivos a Modificar / Criar:**
   - `backend/test/allocations.e2e-spec.ts`
   - `backend/test/machines.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Teste E2E de criação de sopradora com código duplicado $\rightarrow$ 409 Conflict
-  - [ ] Teste E2E de alocação válida $\rightarrow$ 201 Created e máquina em `RUNNING`
-  - [ ] Teste E2E de duas chamadas paralelas concorrentes (`Promise.all`) para a mesma máquina/turno $\rightarrow$ exatamente 1 sucesso (201) e 1 conflito (409)
-  - [ ] Teste E2E de consulta `GET /api/allocations/current` validando retorno `null` quando desocupado
-  - [ ] Validação de integridade: zero uso de defaults mágicos em serviços
-  - [ ] Validação de build estrito: `npm run build` verde
+  - [x] Teste E2E de criação de sopradora com código duplicado $\rightarrow$ 409 Conflict
+  - [x] Teste E2E de alocação válida $\rightarrow$ 201 Created e máquina em `RUNNING`
+  - [x] Teste E2E de duas chamadas paralelas concorrentes (`Promise.all`) para a mesma máquina/turno $\rightarrow$ exatamente 1 sucesso (201) e 1 conflito (409)
+  - [x] Teste E2E de consulta `GET /api/allocations/current` validando retorno `null` quando desocupado
+  - [x] Validação de integridade: zero uso de defaults mágicos em serviços
+  - [x] Validação de build estrito: `npm run build` verde
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] Suíte de testes automatizados executando 100% verde.
-  - [ ] Compilação de produção executada sem erros de tipagem TypeScript.
+  - [x] Suíte de testes automatizados executando 100% verde.
+  - [x] Compilação de produção executada sem erros de tipagem TypeScript.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Ausência de modelo técnico de máquina gravada fielmente como `null` no PostgreSQL (`model: null`).
-- [ ] Conflito de concorrência em alocação reportado com erro 409 explícito contendo o identificador do conflito, sem recuperação silenciosa.
-- [ ] Retorno de ausência de alocação ativa emitido honestamente como `null`.
-- [ ] Proibido o uso de `any`, castings arbitrários ou supressão de tipos nos DTOs.
+- [x] Ausência de modelo técnico de máquina gravada fielmente como `null` no PostgreSQL (`model: null`).
+- [x] Conflito de concorrência em alocação reportado com erro 409 explícito contendo o identificador do conflito, sem recuperação silenciosa.
+- [x] Retorno de ausência de alocação ativa emitido honestamente como `null`.
+- [x] Proibido o uso de `any`, castings arbitrários ou supressão de tipos nos DTOs.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] Sopradoras industriais cadastradas no banco com status `IDLE`.
-- [ ] Turnos de trabalho operando com horários formatados `HH:mm`.
-- [ ] Trava ACID 1:1 comprovada em teste automatizado de concorrência.
-- [ ] Build estrito de produção executado com sucesso (`npm run build`).
+- [x] Sopradoras industriais cadastradas no banco com status `IDLE`.
+- [x] Turnos de trabalho operando com horários formatados `HH:mm`.
+- [x] Trava ACID 1:1 comprovada em teste automatizado de concorrência.
+- [x] Build estrito de produção executado com sucesso (`npm run build`).

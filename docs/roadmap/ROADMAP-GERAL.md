@@ -11,7 +11,7 @@
 | Fase | Título da Fase | Módulos Envolvidos | Status | Requisitos Cobertos |
 | :---: | :--- | :--- | :---: | :--- |
 | **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | 🟢 Concluída | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
-| **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | ⚪ A Iniciar | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
+| **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟡 Em Andamento (Backend 100%) | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | ⚪ A Iniciar | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | ⚪ A Iniciar | RF-10, RF-11, RNF-01, RNF-05 |
 
@@ -52,10 +52,10 @@
   - `RF-05`: Alocação exclusiva de máquina por turno com validação de unicidade (`shift_allocations`).
   - `RNF-03`: Ergonomia de toque adaptada para telas móveis de seleção rápida.
 - **Checklist Macro de Entregas:**
-  - [ ] Migrations das tabelas `machines`, `shifts` e `shift_allocations` com constraint condicional
-  - [ ] Módulo `MachinesModule` (CRUD de sopradoras e transições de status)
-  - [ ] Módulo `ShiftsModule` (Cadastro e listagem de turnos fabris)
-  - [ ] Módulo `AllocationsModule` com validação de concorrência e trava 1:1 (RN-01)
+  - [x] Migrations das tabelas `machines`, `shifts` e `shift_allocations` com constraint condicional
+  - [x] Módulo `MachinesModule` (CRUD de sopradoras e transições de status)
+  - [x] Módulo `ShiftsModule` (Cadastro e listagem de turnos fabris)
+  - [x] Módulo `AllocationsModule` com validação de concorrência e trava 1:1 (RN-01)
   - [ ] Telas administrativas de gestão de máquinas e turnos para desktop
   - [ ] Interface touch para o operador selecionar a máquina e turno no início da jornada
 - **Critérios de Conclusão da Fase:**

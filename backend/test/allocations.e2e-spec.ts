@@ -13,11 +13,13 @@ describe('AllocationsModule (e2e)', () => {
 
   let op1Token: string;
   let op2Token: string;
+  let mgrToken: string;
   let op1Id: string;
   let op2Id: string;
 
   const op1Username = 'e2e.alc.op1';
   const op2Username = 'e2e.alc.op2';
+  const mgrUsername = 'e2e.alc.mgr';
   const rawPassword = 'password123';
 
   beforeAll(async () => {
@@ -59,7 +61,7 @@ describe('AllocationsModule (e2e)', () => {
     });
     await prisma.user.deleteMany({
       where: {
-        username: { in: [op1Username, op2Username] },
+        username: { in: [op1Username, op2Username, mgrUsername] },
       },
     });
 
@@ -85,6 +87,16 @@ describe('AllocationsModule (e2e)', () => {
     });
     op2Id = user2.id;
 
+    await prisma.user.create({
+      data: {
+        name: 'Gerente Allocations E2E',
+        username: mgrUsername,
+        passwordHash,
+        role: UserRole.GERENTE,
+        isActive: true,
+      },
+    });
+
     // Login Operador 1
     const op1Login = await request(app.getHttpServer())
       .post('/api/auth/login')
@@ -96,6 +108,12 @@ describe('AllocationsModule (e2e)', () => {
       .post('/api/auth/login')
       .send({ username: op2Username, password: rawPassword });
     op2Token = op2Login.body.accessToken;
+
+    // Login Gerente
+    const mgrLogin = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({ username: mgrUsername, password: rawPassword });
+    mgrToken = mgrLogin.body.accessToken;
   });
 
   afterAll(async () => {
@@ -116,7 +134,7 @@ describe('AllocationsModule (e2e)', () => {
     });
     await prisma.user.deleteMany({
       where: {
-        username: { in: [op1Username, op2Username] },
+        username: { in: [op1Username, op2Username, mgrUsername] },
       },
     });
     await app.close();
@@ -384,6 +402,119 @@ describe('AllocationsModule (e2e)', () => {
         .get('/api/allocations/current');
 
       expect(response.status).toBe(401);
+    });
+  });
+
+  describe('PATCH /api/allocations/:id/release', () => {
+    it('deve rejeitar tentativa de outro operador liberar alocação alheia com HTTP 403 Forbidden', async () => {
+      // Buscar a alocação ativa do op1
+      const currentRes = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op1Token}`);
+      const allocationId = currentRes.body.id;
+
+      // op2 tenta liberar a alocação do op1
+      const response = await request(app.getHttpServer())
+        .patch(`/api/allocations/${allocationId}/release`)
+        .set('Authorization', `Bearer ${op2Token}`);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('FORBIDDEN_RELEASE');
+    });
+
+    it('deve permitir ao próprio operador liberar sua alocação, revertendo a máquina para IDLE', async () => {
+      const currentRes = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op1Token}`);
+      const allocationId = currentRes.body.id;
+
+      const response = await request(app.getHttpServer())
+        .patch(`/api/allocations/${allocationId}/release`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe(ShiftAllocationStatus.CLOSED);
+      expect(response.body.closedAt).not.toBeNull();
+      expect(response.body.machine.status).toBe(MachineStatus.IDLE);
+
+      // Verificar persistência no banco da máquina como IDLE
+      const machine = await prisma.machine.findUnique({
+        where: { id: response.body.machineId },
+      });
+      expect(machine!.status).toBe(MachineStatus.IDLE);
+
+      // Verificar que op1 não possui mais alocação ativa
+      const checkCurrent = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op1Token}`);
+      expect(checkCurrent.body).toBeNull();
+    });
+
+    it('deve rejeitar tentativa de liberar alocação já encerrada com HTTP 409 Conflict', async () => {
+      const closedAllocation = await prisma.shiftAllocation.findFirst({
+        where: {
+          operatorId: op1Id,
+          status: ShiftAllocationStatus.CLOSED,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .patch(`/api/allocations/${closedAllocation!.id}/release`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe('ALLOCATION_ALREADY_CLOSED');
+    });
+
+    it('deve permitir ao Gerente liberar a alocação de um operador', async () => {
+      // Criar alocação nova para op2
+      const machine = await prisma.machine.create({
+        data: {
+          code: 'E2E-ALC-MGR-REL',
+          name: 'Sopradora Mgr Release',
+          status: MachineStatus.IDLE,
+          isActive: true,
+        },
+      });
+      const shift = await prisma.shift.findFirst({
+        where: { name: 'E2E-ALC-Turno Manhã' },
+      });
+
+      const allocRes = await request(app.getHttpServer())
+        .post('/api/allocations')
+        .set('Authorization', `Bearer ${op2Token}`)
+        .send({
+          machineId: machine.id,
+          shiftId: shift!.id,
+          shiftDate: '2026-10-23',
+        });
+      expect(allocRes.status).toBe(201);
+
+      // Gerente libera a alocação do op2
+      const response = await request(app.getHttpServer())
+        .patch(`/api/allocations/${allocRes.body.id}/release`)
+        .set('Authorization', `Bearer ${mgrToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe(ShiftAllocationStatus.CLOSED);
+      expect(response.body.machine.status).toBe(MachineStatus.IDLE);
+    });
+
+    it('deve retornar HTTP 404 se alocação não existir', async () => {
+      const nonExistentUuid = 'a0000000-0000-4000-8000-000000000000';
+      const response = await request(app.getHttpServer())
+        .patch(`/api/allocations/${nonExistentUuid}/release`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(404);
+    });
+
+    it('deve retornar HTTP 400 se UUID fornecido for inválido', async () => {
+      const response = await request(app.getHttpServer())
+        .patch('/api/allocations/not-a-uuid/release')
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(400);
     });
   });
 });
