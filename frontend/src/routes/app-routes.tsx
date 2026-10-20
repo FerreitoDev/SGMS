@@ -11,62 +11,7 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-
-export function LoginPageShell(): React.ReactElement {
-  const { user, login } = useAuth();
-
-  if (user) {
-    return (
-      <Navigate
-        to={user.role === 'GERENTE' ? '/admin/users' : '/'}
-        replace
-      />
-    );
-  }
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md border-border bg-card shadow-sm">
-        <CardHeader>
-          <Badge className="mb-2 w-fit">Acesso Corporativo</Badge>
-          <CardTitle>SGMS — Autenticação</CardTitle>
-          <CardDescription>
-            Ambiente de autenticação e validação de sessão
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button
-            className="w-full"
-            onClick={() =>
-              login('token_gerente_valido', {
-                id: 'gerente-01',
-                name: 'Gerente da Planta',
-                username: 'gerente.sopro',
-                role: 'GERENTE',
-              })
-            }
-          >
-            Entrar como Gerente
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() =>
-              login('token_operador_valido', {
-                id: 'operador-01',
-                name: 'Operador Fabril',
-                username: 'operador.sopro',
-                role: 'OPERADOR',
-              })
-            }
-          >
-            Entrar como Operador
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+import { LoginPage } from '@/pages/login-page';
 
 export function AdminUsersPageShell(): React.ReactElement {
   const { user, logout } = useAuth();
@@ -137,7 +82,7 @@ export function OperatorHomeShell(): React.ReactElement {
 export function AppRoutes(): React.ReactElement {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPageShell />} />
+      <Route path="/login" element={<LoginPage />} />
 
       {/* Rota Protegida Geral: exige usuário autenticado */}
       <Route element={<ProtectedRoute />}>

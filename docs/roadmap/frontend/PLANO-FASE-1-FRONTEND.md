@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 1 (Frontend): [================----------------] 57% Concluíd
 | **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ✅ Concluída | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
 | **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ✅ Concluída | `frontend/src/lib/api-client.ts`, `frontend/src/types/api.ts` |
 | **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ✅ Concluída | `frontend/src/contexts/auth-context.tsx`, `frontend/src/routes/app-routes.tsx` |
-| **1.5** | Tela de Login Corporativa (`LoginPage`) | ⏳ Pendente | `frontend/src/pages/login-page.tsx` |
+| **1.5** | Tela de Login Corporativa (`LoginPage`) | ✅ Concluída | `frontend/src/pages/login-page.tsx`, `frontend/src/schemas/auth-schema.ts` |
 | **1.6** | Tela de Gestão de Contas de Operadores (`UsersPage`) | ⏳ Pendente | `frontend/src/pages/users-page.tsx` |
 | **1.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais, tipos e `npm run build` |
 
@@ -162,7 +162,7 @@ Progresso da Fase 1 (Frontend): [================----------------] 57% Concluíd
 
 ---
 
-### ⏳ Tarefa 1.5: Tela de Login Corporativa (`LoginPage`)
+### ✅ Tarefa 1.5: Tela de Login Corporativa (`LoginPage`)
 - **Objetivo:** Construir uma página de login com design corporativo sóbrio, campos com labels acessíveis, integração com `react-hook-form` + `zod`, desabilitação de botão durante a requisição e feedback visual via toast.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/login-page.tsx`
@@ -176,14 +176,14 @@ Progresso da Fase 1 (Frontend): [================----------------] 57% Concluíd
   export type LoginFormData = z.infer<typeof loginSchema>;
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar layout centralizado em card corporativo com logo/título do SGMS (GEPF Agroindústria)
-  - [ ] Formulário com `react-hook-form` integrado ao resolver Zod
-  - [ ] Botão de envio com feedback de carregamento (`isSubmitting`) prevenindo duplo clique
-  - [ ] Disparo de toast de erro `toast.error(error.detail)` em caso de falha de credenciais
-  - [ ] Redirecionamento condicional pós-login: `GERENTE` $\rightarrow$ `/admin/users`; `OPERADOR` $\rightarrow$ `/chao-de-fabrica`
+  - [x] Criar layout centralizado em card corporativo com logo/título do SGMS (GEPF Agroindústria)
+  - [x] Formulário com `react-hook-form` integrado ao resolver Zod
+  - [x] Botão de envio com feedback de carregamento (`isSubmitting`) prevenindo duplo clique
+  - [x] Disparo de toast de erro `toast.error(error.detail)` em caso de falha de credenciais
+  - [x] Redirecionamento condicional pós-login: `GERENTE` $\rightarrow$ `/admin/users`; `OPERADOR` $\rightarrow$ `/` (ou `/chao-de-fabrica`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Login com credenciais válidas autentica com sucesso e redireciona.
-  - [ ] **Violação de Contrato:** Submissão com campos vazios exibe mensagens de validação síncronas sem disparar requisição.
+  - [x] **Caminho Normal:** Login com credenciais válidas autentica com sucesso e redireciona.
+  - [x] **Violação de Contrato:** Submissão com campos vazios exibe mensagens de validação síncronas sem disparar requisição.
 
 ---
 
