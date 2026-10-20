@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID)  
-> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -35,7 +35,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 2 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 2 (Backend): [============--------------------] 43% Concluído
 | **2.1** | Migrations Prisma de Máquinas, Turnos e Alocações | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **2.2** | Módulo de Máquinas de Sopro (`MachinesModule`) | ✅ Concluída | `backend/src/modules/machines/*` |
 | **2.3** | Módulo de Turnos de Trabalho (`ShiftsModule`) | ✅ Concluída | `backend/src/modules/shifts/*` |
-| **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
+| **2.4** | Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`) | ✅ Concluída | `backend/src/modules/allocations/*` |
 | **2.5** | Consulta de Alocação Ativa (`GET /api/allocations/current`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.6** | Liberação Antecipada de Alocação (`PATCH /api/allocations/:id/release`) | ⏳ Pendente | `backend/src/modules/allocations/*` |
 | **2.7** | Auditoria Zero Fallback, Testes E2E de Concorrência & Homologação | ⏳ Pendente | `backend/test/allocations.e2e-spec.ts` |
@@ -208,20 +208,21 @@ Progresso da Fase 2 (Backend): [============--------------------] 43% Concluído
 
 ---
 
-### ⏳ Tarefa 2.4: Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`)
+### ✅ Tarefa 2.4: Módulo de Alocações com Trava ACID 1:1 (`AllocationsModule`)
 - **Objetivo:** Implementar o fluxo atômico de alocação de operador na máquina, garantindo que duas requisições simultâneas nunca assumam a mesma máquina no mesmo turno.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/allocations/dto/create-allocation.dto.ts`
   - `backend/src/modules/allocations/allocations.service.ts`
   - `backend/src/modules/allocations/allocations.controller.ts`
   - `backend/src/modules/allocations/allocations.module.ts`
+  - `backend/test/allocations.e2e-spec.ts`
 - **Contratos e Tipagens Envolvidas:**
   ```typescript
   export class CreateAllocationDto {
-    @IsUUID(undefined, { message: 'ID da máquina inválido.' })
+    @IsUUID('4', { message: 'ID da máquina inválido.' })
     machineId: string;
 
-    @IsUUID(undefined, { message: 'ID do turno inválido.' })
+    @IsUUID('4', { message: 'ID do turno inválido.' })
     shiftId: string;
 
     @IsISO8601({ strict: true }, { message: 'Data do turno deve estar no formato YYYY-MM-DD.' })
@@ -229,14 +230,14 @@ Progresso da Fase 2 (Backend): [============--------------------] 43% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Executar verificação e criação dentro de transação interativa gerenciada `this.prisma.$transaction`
-  - [ ] Verificar se a máquina existe e está ativa (`isActive: true` e `status != INACTIVE`)
-  - [ ] Consultar se já existe registro em `shift_allocations` com `machineId`, `shiftId`, `shiftDate` e `status: ACTIVE`
-  - [ ] Se existir, lançar `ConflictException('Máquina já possui alocação ativa neste turno por outro operador.')`
-  - [ ] Inserir nova alocação e atualizar atomicamente `machine.status` para `RUNNING`
+  - [x] Executar verificação e criação dentro de transação interativa gerenciada `this.prisma.$transaction`
+  - [x] Verificar se a máquina existe e está ativa (`isActive: true` e `status != INACTIVE`)
+  - [x] Consultar se já existe registro em `shift_allocations` com `machineId`, `shiftId`, `shiftDate` e `status: ACTIVE`
+  - [x] Se existir, lançar `ConflictException('Máquina já possui alocação ativa neste turno por outro operador.')`
+  - [x] Inserir nova alocação e atualizar atomicamente `machine.status` para `RUNNING`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Alocação criada com status `ACTIVE` e máquina transita para `RUNNING`.
-  - [ ] **Violação de Contrato (RN-01):** Tentativa concorrente retorna HTTP 409 Conflict em formato RFC 7807.
+  - [x] **Caminho Normal:** Alocação criada com status `ACTIVE` e máquina transita para `RUNNING`.
+  - [x] **Violação de Contrato (RN-01):** Tentativa concorrente retorna HTTP 409 Conflict em formato RFC 7807.
 
 ---
 

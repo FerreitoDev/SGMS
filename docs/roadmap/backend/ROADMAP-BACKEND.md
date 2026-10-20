@@ -54,7 +54,7 @@
   - [x] 2.1: Migrations Prisma para `machines`, `shifts` e `shift_allocations` com índice único condicional
   - [x] 2.2: Implementação do `MachinesModule` (CRUD de máquinas e transições de `MachineStatus`)
   - [x] 2.3: Implementação do `ShiftsModule` (Cadastro de turnos com horários formatados `HH:mm`)
-  - [ ] 2.4: Implementação do `AllocationsModule` com transação interativa gerenciada (`$transaction`)
+  - [x] 2.4: Implementação do `AllocationsModule` com transação interativa gerenciada (`$transaction`)
   - [ ] 2.5: Verificação de concorrência com lock ou consulta transacional para impedir alocações ativas simultâneas
   - [ ] 2.6: Rota para consulta da alocação corrente ativa do operador autenticado (`GET /api/allocations/current`)
   - [ ] 2.7: Testes automatizados validando rejeição 409 em tentativas de alocação concorrente
