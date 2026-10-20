@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Em Andamento (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 1 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 1 (Backend): [============--------------------] 43% Concluído
 | **1.1** | Inicialização do Projeto NestJS 10 & Dependências Base | ✅ Concluída | `backend/package.json`, `backend/tsconfig.json` |
 | **1.2** | Prisma ORM, Model User, Migrations & Seed de Gerente | ✅ Concluída | `backend/prisma/schema.prisma`, `backend/prisma/seed.ts` |
 | **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ✅ Concluída | `backend/src/common/filters/http-exception.filter.ts` |
-| **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ⏳ Pendente | `backend/src/modules/auth/*` |
+| **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ✅ Concluída | `backend/src/modules/auth/*` |
 | **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ⏳ Pendente | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
 | **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ⏳ Pendente | `backend/src/modules/users/*` |
 | **1.7** | Auditoria Zero Fallback, Testes de Integração & Homologação | ⏳ Pendente | `backend/test/auth.e2e-spec.ts` |
@@ -141,7 +141,7 @@ Progresso da Fase 1 (Backend): [============--------------------] 43% Concluído
 
 ---
 
-### ⏳ Tarefa 1.4: Módulo de Autenticação (`AuthModule`) e Emissão de JWT
+### ✅ Tarefa 1.4: Módulo de Autenticação (`AuthModule`) e Emissão de JWT
 - **Objetivo:** Implementar o fluxo de autenticação com validação segura de credenciais, comparação de hash com `bcryptjs` e emissão de tokens JWT com expiração de 12 horas.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/auth/dto/login.dto.ts`
@@ -171,13 +171,13 @@ Progresso da Fase 1 (Backend): [============--------------------] 43% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar `validateUser(username, password)` no `AuthService`
-  - [ ] Implementar `login(loginDto)` gerando payload `{ sub: user.id, username: user.username, role: user.role }`
-  - [ ] Endpoint `POST /api/auth/login` retornando token e dados do usuário
-  - [ ] Rejeitar login se o usuário estiver inativo (`isActive: false`) com HTTP 403
+  - [x] Implementar `validateUser(username, password)` no `AuthService`
+  - [x] Implementar `login(loginDto)` gerando payload `{ sub: user.id, username: user.username, role: user.role }`
+  - [x] Endpoint `POST /api/auth/login` retornando token e dados do usuário
+  - [x] Rejeitar login se o usuário estiver inativo (`isActive: false`) com HTTP 403
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Credenciais válidas retornam HTTP 200 com `accessToken` válido.
-  - [ ] **Violação de Contrato:** Senha incorreta ou usuário inexistente retorna HTTP 401 Unauthorized em RFC 7807.
+  - [x] **Caminho Normal:** Credenciais válidas retornam HTTP 200 com `accessToken` válido.
+  - [x] **Violação de Contrato:** Senha incorreta ou usuário inexistente retorna HTTP 401 Unauthorized em RFC 7807.
 
 ---
 
