@@ -35,7 +35,7 @@
   - [x] 1.4: Implementação do filtro global `HttpExceptionFilter` (RFC 7807)
   - [x] 1.5: Implementação do `AuthModule` (login, validação de credenciais e emissão de JWT)
   - [x] 1.6: Implementação dos decorators `@CurrentUser()` e `@Roles()`, e dos guards `JwtAuthGuard` e `RolesGuard`
-  - [ ] 1.7: Implementação do `UsersModule` (DTOs com `class-validator`, Service e Controller para CRUD de operadores)
+  - [x] 1.7: Implementação do `UsersModule` (DTOs com `class-validator`, Service e Controller para CRUD de operadores)
   - [ ] 1.8: Testes de integração de autenticação e validação de bloqueio 403 para operadores
 - **Plano de Execução Vinculado:** [PLANO-FASE-1-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-1-BACKEND.md)
 

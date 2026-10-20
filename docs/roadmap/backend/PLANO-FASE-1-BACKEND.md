@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Em Andamento (5 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (6 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 1 (Backend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 1 (Backend): [====================------------] 71% Concluído
 | **1.3** | Filtro Global de Exceção RFC 7807 (Problem Details) | ✅ Concluída | `backend/src/common/filters/http-exception.filter.ts` |
 | **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ✅ Concluída | `backend/src/modules/auth/*` |
 | **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ✅ Concluída | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
-| **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ⏳ Pendente | `backend/src/modules/users/*` |
+| **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ✅ Concluída | `backend/src/modules/users/*` |
 | **1.7** | Auditoria Zero Fallback, Testes de Integração & Homologação | ⏳ Pendente | `backend/test/auth.e2e-spec.ts` |
 
 ---
@@ -202,7 +202,7 @@ Progresso da Fase 1 (Backend): [====================------------] 71% Concluído
 
 ---
 
-### ⏳ Tarefa 1.6: Módulo de Gestão de Usuários (`UsersModule` para Gerente)
+### ✅ Tarefa 1.6: Módulo de Gestão de Usuários (`UsersModule` para Gerente)
 - **Objetivo:** Permitir ao Gerente de Produção cadastrar novos operadores, listar colaboradores ativos e desativar contas sem exclusão física do histórico de dados.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/users/dto/create-operator.dto.ts`
@@ -232,14 +232,14 @@ Progresso da Fase 1 (Backend): [====================------------] 71% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Configurar rotas protegidas com `@UseGuards(JwtAuthGuard, RolesGuard)` e `@Roles(UserRole.GERENTE)`
-  - [ ] `POST /api/users`: criptografa a senha com Bcrypt e grava com papel `UserRole.OPERADOR`
-  - [ ] `GET /api/users`: lista operadores cadastrados ordenados por nome (ocultando `passwordHash`)
-  - [ ] `PATCH /api/users/:id/status`: atualiza campo `isActive` do operador
-  - [ ] Rejeição com HTTP 409 Conflict se `username` já existir
+  - [x] Configurar rotas protegidas com `@UseGuards(JwtAuthGuard, RolesGuard)` e `@Roles(UserRole.GERENTE)`
+  - [x] `POST /api/users`: criptografa a senha com Bcrypt e grava com papel `UserRole.OPERADOR`
+  - [x] `GET /api/users`: lista operadores cadastrados ordenados por nome (ocultando `passwordHash`)
+  - [x] `PATCH /api/users/:id/status`: atualiza campo `isActive` do operador
+  - [x] Rejeição com HTTP 409 Conflict se `username` já existir
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Gerente cadastra operador e recebe HTTP 201 com ID e sem hash de senha.
-  - [ ] **Violação de Contrato:** Operador tentando acessar `POST /api/users` recebe HTTP 403 Forbidden.
+  - [x] **Caminho Normal:** Gerente cadastra operador e recebe HTTP 201 com ID e sem hash de senha.
+  - [x] **Violação de Contrato:** Operador tentando acessar `POST /api/users` recebe HTTP 403 Forbidden.
 
 ---
 
