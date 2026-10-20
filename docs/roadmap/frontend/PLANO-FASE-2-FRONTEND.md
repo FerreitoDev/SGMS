@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,13 +33,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **2.1** | Tipos TypeScript de Domínio e Clientes de API | ✅ Concluída | `frontend/src/types/domain.ts`, `frontend/src/services/*` |
-| **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ⏳ Pendente | `frontend/src/pages/admin/machines-page.tsx` |
+| **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ✅ Concluída | `frontend/src/pages/admin/machines-page.tsx` |
 | **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ⏳ Pendente | `frontend/src/pages/admin/shifts-page.tsx` |
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ⏳ Pendente | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
 | **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
@@ -103,7 +103,7 @@ Progresso da Fase 2 (Frontend): [====----------------------------] 14% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.2: Tela Administrativa de Gestão de Máquinas (`MachinesPage`)
+### ✅ Tarefa 2.2: Tela Administrativa de Gestão de Máquinas (`MachinesPage`)
 - **Objetivo:** Permitir ao Gerente cadastrar, listar e gerenciar o status do parque de sopradoras industriais.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/machines-page.tsx`
@@ -119,13 +119,13 @@ Progresso da Fase 2 (Frontend): [====----------------------------] 14% Concluíd
   export type MachineFormData = z.infer<typeof machineSchema>;
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Tabela com colunas: Código, Nome, Modelo, Status Operacional (`Badge`), Ativação e Ações
-  - [ ] Badges com cores contextuais de status: `RUNNING` (verde), `STOPPED` (vermelho), `IDLE` (azul), `INACTIVE` (cinza)
-  - [ ] Painel `MachineSheet` para novo cadastro com tratamento de erro 409 em caso de código duplicado
-  - [ ] Ação de alternar ativação (`isActive`) via switch ou botão
+  - [x] Tabela com colunas: Código, Nome, Modelo, Status Operacional (`Badge`), Ativação e Ações
+  - [x] Badges com cores contextuais de status: `RUNNING` (verde), `STOPPED` (vermelho), `IDLE` (azul), `INACTIVE` (cinza)
+  - [x] Painel `MachineSheet` para novo cadastro com tratamento de erro 409 em caso de código duplicado
+  - [x] Ação de alternar ativação (`isActive`) via switch ou botão
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Cadastro de nova sopradora reflete imediatamente na listagem com toast de sucesso.
-  - [ ] **Violação de Contrato:** Código duplicado exibe alerta de conflito em toast sem quebrar a tela.
+  - [x] **Caminho Normal:** Cadastro de nova sopradora reflete imediatamente na listagem com toast de sucesso.
+  - [x] **Violação de Contrato:** Código duplicado exibe alerta de conflito em toast sem quebrar a tela.
 
 ---
 

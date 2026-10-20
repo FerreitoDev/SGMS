@@ -1,5 +1,6 @@
 import React from 'react';
-import { LogOut } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { LogOut, Users, Cpu, Clock } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,18 +18,67 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
       <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Marca / Identidade */}
-          <div className="flex items-center gap-3">
-            <span className="inline-block rounded bg-primary/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary">
-              GEPF Agro
-            </span>
-            <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-foreground">
-                SGMS
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="inline-block rounded bg-primary/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary">
+                GEPF Agro
               </span>
-              <span className="hidden text-xs text-muted-foreground sm:inline">
-                Gestão de Máquinas de Sopro
-              </span>
+              <div className="flex flex-col">
+                <span className="text-base font-bold tracking-tight text-foreground">
+                  SGMS
+                </span>
+                <span className="hidden text-xs text-muted-foreground sm:inline">
+                  Gestão de Máquinas de Sopro
+                </span>
+              </div>
             </div>
+
+            {/* Navegação Administrativa (visível para perfil GERENTE) */}
+            {user?.role === 'GERENTE' && (
+              <nav className="hidden md:flex items-center gap-1 border-l border-border pl-6">
+                <NavLink
+                  to="/admin/machines"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors touch-manipulation ${
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`
+                  }
+                >
+                  <Cpu className="h-4 w-4" />
+                  <span>Sopradoras</span>
+                </NavLink>
+
+                <NavLink
+                  to="/admin/users"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors touch-manipulation ${
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`
+                  }
+                >
+                  <Users className="h-4 w-4" />
+                  <span>Operadores</span>
+                </NavLink>
+
+                <NavLink
+                  to="/admin/shifts"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors touch-manipulation ${
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`
+                  }
+                >
+                  <Clock className="h-4 w-4" />
+                  <span>Turnos</span>
+                </NavLink>
+              </nav>
+            )}
           </div>
 
           {/* Dados do Usuário & Ação de Logout */}

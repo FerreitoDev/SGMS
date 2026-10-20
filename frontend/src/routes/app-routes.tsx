@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import { LoginPage } from '@/pages/login-page';
 import { UsersPage } from '@/pages/users-page';
+import { MachinesPage } from '@/pages/admin/machines-page';
 
 export function OperatorHomeShell(): React.ReactElement {
   const { user, logout } = useAuth();
@@ -60,6 +61,7 @@ export function AppRoutes(): React.ReactElement {
       {/* Rota Protegida Exclusiva: exige perfil GERENTE */}
       <Route element={<ProtectedRoute requiredRole="GERENTE" />}>
         <Route path="/admin/users" element={<UsersPage />} />
+        <Route path="/admin/machines" element={<MachinesPage />} />
       </Route>
 
       {/* Redirecionamento padrão para rota raiz */}
