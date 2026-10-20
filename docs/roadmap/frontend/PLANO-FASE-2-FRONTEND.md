@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 2 (Frontend): [================----------------] 57% Concluíd
 | **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ✅ Concluída | `frontend/src/pages/admin/machines-page.tsx` |
 | **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ✅ Concluída | `frontend/src/pages/admin/shifts-page.tsx` |
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ✅ Concluída | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
-| **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
+| **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ✅ Concluída | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.7** | Auditoria Zero Fallback, Responsividade Mobile & Build | ⏳ Pendente | Testes visuais e compilação de produção |
 
@@ -169,19 +169,19 @@ Progresso da Fase 2 (Frontend): [================----------------] 57% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.5: Tela de Alocação de Máquina para o Operador (`AllocationPage`)
+### ✅ Tarefa 2.5: Tela de Alocação de Máquina para o Operador (`AllocationPage`)
 - **Objetivo:** Construir o fluxo operacional do operador: ao entrar no sistema, o operador escolhe a sopradora desimpedida, o turno e confirma a alocação.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/operator/allocation-page.tsx`
   - `frontend/src/routes/app-routes.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Carregar lista de máquinas ativas e turnos ativos em paralelo (`Promise.all`)
-  - [ ] Grade responsiva de cartões: 1 coluna em mobile (<640px), 2 colunas em tablets/desktop
-  - [ ] Data do turno inicializada automaticamente com a data corrente (`YYYY-MM-DD`)
-  - [ ] Botão inferior fixo em barra touch: "Assumir [Código da Máquina]" (desabilitado se máquina não selecionada)
-  - [ ] Ao clicar, disparar `allocationsService.create({ machineId, shiftId, shiftDate })`
+  - [x] Carregar lista de máquinas ativas e turnos ativos em paralelo (`Promise.all`)
+  - [x] Grade responsiva de cartões: 1 coluna em mobile (<640px), 2 colunas em tablets/desktop
+  - [x] Data do turno inicializada automaticamente com a data corrente (`YYYY-MM-DD`)
+  - [x] Botão inferior fixo em barra touch: "Assumir [Código da Máquina]" (desabilitado se máquina não selecionada)
+  - [x] Ao clicar, disparar `allocationsService.create({ machineId, shiftId, shiftDate })`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Alocação criada com sucesso redireciona o operador para `/chao-de-fabrica/console`.
+  - [x] **Caminho Normal:** Alocação criada com sucesso redireciona o operador para `/chao-de-fabrica/console`.
 
 ---
 
