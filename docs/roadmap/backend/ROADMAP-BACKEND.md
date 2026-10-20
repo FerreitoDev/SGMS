@@ -10,7 +10,7 @@
 
 | Fase Setorial | Título da Entrega Técnica | Plano de Execução Vinculado | Status |
 | :---: | :--- | :--- | :---: |
-| **Fase 1** | Fundação, Prisma, Autenticação JWT & Gestão de Usuários | [PLANO-FASE-1-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-1-BACKEND.md) | ⚪ A Iniciar |
+| **Fase 1** | Fundação, Prisma, Autenticação JWT & Gestão de Usuários | [PLANO-FASE-1-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-1-BACKEND.md) | 🟢 Concluída |
 | **Fase 2** | Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID | [PLANO-FASE-2-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-2-BACKEND.md) | ⚪ A Iniciar |
 | **Fase 3** | Apontamento de Produção, Paradas & Sincronização Idempotente | [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md) | ⚪ A Iniciar |
 | **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | ⚪ A Iniciar |
@@ -36,7 +36,7 @@
   - [x] 1.5: Implementação do `AuthModule` (login, validação de credenciais e emissão de JWT)
   - [x] 1.6: Implementação dos decorators `@CurrentUser()` e `@Roles()`, e dos guards `JwtAuthGuard` e `RolesGuard`
   - [x] 1.7: Implementação do `UsersModule` (DTOs com `class-validator`, Service e Controller para CRUD de operadores)
-  - [ ] 1.8: Testes de integração de autenticação e validação de bloqueio 403 para operadores
+  - [x] 1.8: Testes de integração de autenticação e validação de bloqueio 403 para operadores
 - **Plano de Execução Vinculado:** [PLANO-FASE-1-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-1-BACKEND.md)
 
 ---

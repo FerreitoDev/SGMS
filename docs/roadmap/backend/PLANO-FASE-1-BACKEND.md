@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Fundação, Prisma, Autenticação JWT & Gestão de Usuários)  
-> **Status:** 🟡 Em Andamento (6 de 7 Tarefas Concluídas)  
+> **Status:** 🟢 Concluída (7 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + JWT/Passport)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Backend): [========================--------] 86% Concluído (6 de 7 tarefas)
+Progresso da Fase 1 (Backend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -44,7 +44,7 @@ Progresso da Fase 1 (Backend): [========================--------] 86% Concluído
 | **1.4** | Módulo de Autenticação (`AuthModule`) e Emissão de JWT | ✅ Concluída | `backend/src/modules/auth/*` |
 | **1.5** | Guards e Decorators de Segurança (`JwtAuthGuard`, `@Roles()`) | ✅ Concluída | `backend/src/common/guards/*`, `backend/src/common/decorators/*` |
 | **1.6** | Módulo de Gestão de Usuários (`UsersModule` para Gerente) | ✅ Concluída | `backend/src/modules/users/*` |
-| **1.7** | Auditoria Zero Fallback, Testes de Integração & Homologação | ⏳ Pendente | `backend/test/auth.e2e-spec.ts` |
+| **1.7** | Auditoria Zero Fallback, Testes de Integração & Homologação | ✅ Concluída | `backend/test/auth.e2e-spec.ts`, `backend/test/users.e2e-spec.ts` |
 
 ---
 
@@ -243,37 +243,37 @@ Progresso da Fase 1 (Backend): [========================--------] 86% Concluído
 
 ---
 
-### ⏳ Tarefa 1.7: Auditoria Zero Fallback, Testes de Integração & Homologação
+### ✅ Tarefa 1.7: Auditoria Zero Fallback, Testes de Integração & Homologação
 - **Objetivo:** Executar testes automatizados ponta a ponta dos fluxos de autenticação, validação de DTOs e controle de acesso RBAC, garantindo conformidade rigorosa com a Diretriz Global.
 - **Arquivos a Modificar / Criar:**
   - `backend/test/auth.e2e-spec.ts`
   - `backend/test/users.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Teste E2E de login com credenciais corretas $\rightarrow$ 200 OK com JWT
-  - [ ] Teste E2E de login com senha incorreta $\rightarrow$ 401 Unauthorized em RFC 7807
-  - [ ] Teste E2E de tentativa de login de usuário inativo $\rightarrow$ 403 Forbidden
-  - [ ] Teste E2E de criação de operador por Gerente $\rightarrow$ 201 Created
-  - [ ] Teste E2E de criação de operador por Operador $\rightarrow$ 403 Forbidden
-  - [ ] Auditoria de código garantindo zero `|| ""` ou `|| 0` em DTOs e Services
-  - [ ] Validação do build estrito: `npm run build` executado com saída verde
+  - [x] Teste E2E de login com credenciais corretas $\rightarrow$ 200 OK com JWT
+  - [x] Teste E2E de login com senha incorreta $\rightarrow$ 401 Unauthorized em RFC 7807
+  - [x] Teste E2E de tentativa de login de usuário inativo $\rightarrow$ 403 Forbidden
+  - [x] Teste E2E de criação de operador por Gerente $\rightarrow$ 201 Created
+  - [x] Teste E2E de criação de operador por Operador $\rightarrow$ 403 Forbidden
+  - [x] Auditoria de código garantindo zero `|| ""` ou `|| 0` em DTOs e Services
+  - [x] Validação do build estrito: `npm run build` executado com saída verde
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] Suíte de testes automatizados executando 100% verde.
-  - [ ] Zero erros de compilação TypeScript em modo estrito.
+  - [x] Suíte de testes automatizados executando 100% verde (32 testes unitários e E2E).
+  - [x] Zero erros de compilação TypeScript em modo estrito.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Proibido o uso de `|| 0`, `|| ""`, `|| "N/A"`, `?? []` silencioso nos services e DTOs.
-- [ ] Ausência de campo obrigatório rejeitada imediatamente na fronteira HTTP pelo `ValidationPipe`.
-- [ ] Senhas nunca expostas em retornos de consultas (`passwordHash` expressamente excluído dos selects).
-- [ ] Erros preservam contexto de diagnóstico no formato RFC 7807 com causa e detalhamento da violação.
+- [x] Proibido o uso de `|| 0`, `|| ""`, `|| "N/A"`, `?? []` silencioso nos services e DTOs.
+- [x] Ausência de campo obrigatório rejeitada imediatamente na fronteira HTTP pelo `ValidationPipe`.
+- [x] Senhas nunca expostas em retornos de consultas (`passwordHash` expressamente excluído dos selects).
+- [x] Erros preservam contexto de diagnóstico no formato RFC 7807 com causa e detalhamento da violação.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] PostgreSQL local inicializado com migrações aplicadas.
-- [ ] Usuário Gerente `admin` criado via seed e autenticando com sucesso.
-- [ ] Endpoints `/api/auth/*` e `/api/users/*` testados e validados contra violações.
-- [ ] Compilação de produção (`npm run build`) verde e sem advertências.
+- [x] PostgreSQL local inicializado com migrações aplicadas.
+- [x] Usuário Gerente `admin` criado via seed e autenticando com sucesso.
+- [x] Endpoints `/api/auth/*` e `/api/users/*` testados e validados contra violações.
+- [x] Compilação de produção (`npm run build`) verde e sem advertências.
