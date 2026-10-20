@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 2 (Frontend): [============--------------------] 43% Concluíd
 | **2.1** | Tipos TypeScript de Domínio e Clientes de API | ✅ Concluída | `frontend/src/types/domain.ts`, `frontend/src/services/*` |
 | **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ✅ Concluída | `frontend/src/pages/admin/machines-page.tsx` |
 | **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ✅ Concluída | `frontend/src/pages/admin/shifts-page.tsx` |
-| **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ⏳ Pendente | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
+| **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ✅ Concluída | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
 | **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.7** | Auditoria Zero Fallback, Responsividade Mobile & Build | ⏳ Pendente | Testes visuais e compilação de produção |
@@ -153,19 +153,19 @@ Progresso da Fase 2 (Frontend): [============--------------------] 43% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.4: Componentes Touch-First (`MachineCard`, `ShiftSelector`)
+### ✅ Tarefa 2.4: Componentes Touch-First (`MachineCard`, `ShiftSelector`)
 - **Objetivo:** Criar os componentes reutilizáveis de seleção rápida para operadores de chão de fábrica, otimizados para toque com smartphones e tablets.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/machines/machine-card.tsx`
   - `frontend/src/components/shifts/shift-card.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] `MachineCard`: Altura mínima de 80px, cantos arredondados, indicação clara de código (`SOPRO-01`) em destaque, status visual e feedback de seleção (borda ativa)
-  - [ ] Se a máquina estiver com `status = RUNNING` (ocupada por outro operador) ou `INACTIVE`, desabilitar clique e exibir badge "Em Uso" / "Inativa"
-  - [ ] `ShiftCard`: Cartão compacto exibindo nome do turno e faixa horária (`06:00 - 14:00`)
-  - [ ] Classe utilitária `touch-manipulation` para eliminar atraso de 300ms em toques móveis
+  - [x] `MachineCard`: Altura mínima de 80px, cantos arredondados, indicação clara de código (`SOPRO-01`) em destaque, status visual e feedback de seleção (borda ativa)
+  - [x] Se a máquina estiver com `status = RUNNING` (ocupada por outro operador) ou `INACTIVE`, desabilitar clique e exibir badge "Em Uso" / "Inativa"
+  - [x] `ShiftCard`: Cartão compacto exibindo nome do turno e faixa horária (`06:00 - 14:00`)
+  - [x] Classe utilitária `touch-manipulation` para eliminar atraso de 300ms em toques móveis
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Toque no cartão alterna estado de seleção visual imediatamente.
-  - [ ] **Ergonomia:** Alvo de clique atende plenamente ao critério $\ge 44 \times 44\text{px}$.
+  - [x] **Caminho Normal:** Toque no cartão alterna estado de seleção visual imediatamente.
+  - [x] **Ergonomia:** Alvo de clique atende plenamente ao critério $\ge 44 \times 44\text{px}$.
 
 ---
 
