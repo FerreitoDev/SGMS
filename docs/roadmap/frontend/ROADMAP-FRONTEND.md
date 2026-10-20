@@ -30,7 +30,7 @@
 - **Dependências Bloqueantes:** Endpoints de autenticação da Fase 1 do backend (`POST /api/auth/login`, `GET/POST /api/users`).
 - **Checklist Técnico Sequencial:**
   - [x] 1.1: Inicialização do projeto React 18 com Vite, TypeScript e Tailwind CSS (`create-vite`)
-  - [ ] 1.2: Instalação e configuração do shadcn/ui (`Button`, `Input`, `Card`, `Sheet`, `Table`, `Badge`, `Toaster` — *Dialogs proibidos*)
+  - [x] 1.2: Instalação e configuração do shadcn/ui (`Button`, `Input`, `Card`, `Sheet`, `Table`, `Badge`, `Toaster` — *Dialogs proibidos*)
   - [ ] 1.3: Configuração do cliente HTTP Axios com interceptors para anexar JWT e mapear erros RFC 7807
   - [ ] 1.4: Implementação do `AuthContext` e hook `useAuth` para controle de sessão e papéis (`GERENTE`/`OPERADOR`)
   - [ ] 1.5: Criação da tela de Login com formulário tipado em `react-hook-form` + `zod`

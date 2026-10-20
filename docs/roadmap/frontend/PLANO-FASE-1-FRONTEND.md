@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,13 +33,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [========------------------------] 29% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **1.1** | Inicialização do Projeto Vite, TypeScript & Tailwind CSS | ✅ Concluída | `frontend/package.json`, `frontend/vite.config.ts` |
-| **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ⏳ Pendente | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
+| **1.2** | Instalação e Configuração dos Componentes shadcn/ui | ✅ Concluída | `frontend/src/components/ui/*`, `frontend/src/lib/utils.ts` |
 | **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ⏳ Pendente | `frontend/src/lib/api-client.ts` |
 | **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ⏳ Pendente | `frontend/src/contexts/auth-context.tsx` |
 | **1.5** | Tela de Login Corporativa (`LoginPage`) | ⏳ Pendente | `frontend/src/pages/login-page.tsx` |
@@ -74,7 +74,7 @@ Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluíd
 
 ---
 
-### ⏳ Tarefa 1.2: Instalação e Configuração dos Componentes shadcn/ui
+### ✅ Tarefa 1.2: Instalação e Configuração dos Componentes shadcn/ui
 - **Objetivo:** Integrar os componentes oficiais da biblioteca shadcn/ui necessários para a Fase 1, padronizando gavetas `Sheet` e garantindo consistência visual e acessibilidade Radix UI.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/lib/utils.ts` (helper `cn`)
@@ -88,13 +88,13 @@ Progresso da Fase 1 (Frontend): [====----------------------------] 14% Concluíd
 - **Dependências a Instalar:**
   - `@radix-ui/react-dialog` *(utilizado internamente pelo primitivo `Sheet`)*, `@radix-ui/react-slot`, `lucide-react`, `sonner`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar o utilitário `cn(...inputs)` com `clsx` e `twMerge` em `src/lib/utils.ts`
-  - [ ] Implementar os componentes de botão, input, card, gaveta lateral/inferior `Sheet`, tabela e badge
-  - [ ] Configurar o componente `Toaster` do Sonner no layout raiz (`App.tsx`)
-  - [ ] Garantir que o componente `Button` possua altura mínima `h-11` na variante primária para alvos touch
+  - [x] Criar o utilitário `cn(...inputs)` com `clsx` e `twMerge` em `src/lib/utils.ts`
+  - [x] Implementar os componentes de botão, input, card, gaveta lateral/inferior `Sheet`, tabela e badge
+  - [x] Configurar o componente `Toaster` do Sonner no layout raiz (`App.tsx`)
+  - [x] Garantir que o componente `Button` possua altura mínima `h-11` na variante primária para alvos touch
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Componentes renderizam com estilos aplicados e interatividade acessível (fechamento com ESC, swipe touch, foco visível).
-  - [ ] **Proibição de Dialog:** Nenhum arquivo `dialog.tsx` existe ou é exportado em `@/components/ui/`.
+  - [x] **Caminho Normal:** Componentes renderizam com estilos aplicados e interatividade acessível (fechamento com ESC, swipe touch, foco visível).
+  - [x] **Proibição de Dialog:** Nenhum arquivo `dialog.tsx` existe ou é exportado em `@/components/ui/`.
 
 ---
 
