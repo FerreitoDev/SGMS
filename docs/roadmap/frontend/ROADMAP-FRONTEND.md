@@ -34,8 +34,8 @@
   - [x] 1.3: Configuração do cliente HTTP Axios com interceptors para anexar JWT e mapear erros RFC 7807
   - [x] 1.4: Implementação do `AuthContext` e hook `useAuth` para controle de sessão e papéis (`GERENTE`/`OPERADOR`)
   - [x] 1.5: Criação da tela de Login com formulário tipado em `react-hook-form` + `zod`
-  - [ ] 1.6: Criação das rotas protegidas (`ProtectedRoute`) e roteamento contextual por perfil de acesso
-  - [ ] 1.7: Tela de Gestão de Operadores para desktop do Gerente com tabela de usuários e painel Sheet de cadastro
+  - [x] 1.6: Criação das rotas protegidas (`ProtectedRoute`) e roteamento contextual por perfil de acesso
+  - [x] 1.7: Tela de Gestão de Operadores para desktop do Gerente com tabela de usuários e painel Sheet de cadastro
   - [ ] 1.8: Validação visual e teste de compilação sem warnings (`npm run build`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md)
 

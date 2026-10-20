@@ -12,39 +12,7 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { LoginPage } from '@/pages/login-page';
-
-export function AdminUsersPageShell(): React.ReactElement {
-  const { user, logout } = useAuth();
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-lg border-border bg-card shadow-sm">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <Badge variant="success">Área Administrativa</Badge>
-            <Badge variant="outline">GERENTE</Badge>
-          </div>
-          <CardTitle>Gestão de Operadores</CardTitle>
-          <CardDescription>
-            Rota restrita `/admin/users` — Autorização confirmada
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="rounded border border-border p-3 text-sm">
-            <p>
-              <strong>Usuário:</strong> {user?.name} ({user?.username})
-            </p>
-            <p>
-              <strong>Perfil:</strong> {user?.role}
-            </p>
-          </div>
-          <Button variant="destructive" className="w-full" onClick={logout}>
-            Encerrar Sessão
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+import { UsersPage } from '@/pages/users-page';
 
 export function OperatorHomeShell(): React.ReactElement {
   const { user, logout } = useAuth();
@@ -91,7 +59,7 @@ export function AppRoutes(): React.ReactElement {
 
       {/* Rota Protegida Exclusiva: exige perfil GERENTE */}
       <Route element={<ProtectedRoute requiredRole="GERENTE" />}>
-        <Route path="/admin/users" element={<AdminUsersPageShell />} />
+        <Route path="/admin/users" element={<UsersPage />} />
       </Route>
 
       {/* Redirecionamento padrão para rota raiz */}

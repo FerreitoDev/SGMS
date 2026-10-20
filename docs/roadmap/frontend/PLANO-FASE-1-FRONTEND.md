@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 1 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 1 (Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas)  
-> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (6 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 1 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 1 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 1 (Frontend): [====================------------] 71% Concluíd
 | **1.3** | Cliente HTTP Axios e Mapeamento de Erros RFC 7807 | ✅ Concluída | `frontend/src/lib/api-client.ts`, `frontend/src/types/api.ts` |
 | **1.4** | Gerenciamento de Sessão (`AuthContext`, `useAuth`, `ProtectedRoute`) | ✅ Concluída | `frontend/src/contexts/auth-context.tsx`, `frontend/src/routes/app-routes.tsx` |
 | **1.5** | Tela de Login Corporativa (`LoginPage`) | ✅ Concluída | `frontend/src/pages/login-page.tsx`, `frontend/src/schemas/auth-schema.ts` |
-| **1.6** | Tela de Gestão de Contas de Operadores (`UsersPage`) | ⏳ Pendente | `frontend/src/pages/users-page.tsx` |
+| **1.6** | Tela de Gestão de Contas de Operadores (`UsersPage`) | ✅ Concluída | `frontend/src/pages/users-page.tsx`, `frontend/src/components/users/user-create-sheet.tsx` |
 | **1.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais, tipos e `npm run build` |
 
 ---
@@ -187,7 +187,7 @@ Progresso da Fase 1 (Frontend): [====================------------] 71% Concluíd
 
 ---
 
-### ⏳ Tarefa 1.6: Tela de Gestão de Contas de Operadores (`UsersPage`)
+### ✅ Tarefa 1.6: Tela de Gestão de Contas de Operadores (`UsersPage`)
 - **Objetivo:** Permitir ao Gerente de Produção cadastrar novos operadores de máquina e gerenciar o status de ativação/inativação das contas através de uma tabela responsiva com painel lateral/inferior `Sheet`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/users-page.tsx`
@@ -203,15 +203,15 @@ Progresso da Fase 1 (Frontend): [====================------------] 71% Concluíd
   });
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar `AppLayout` com barra superior corporativa exibindo nome do Gerente e botão "Sair"
-  - [ ] Tabela shadcn (`Table`) listando: Nome, Login, Perfil (`Badge`), Status (`Ativo`/`Inativo`) e Ações
-  - [ ] Botão primário "+ Novo Operador" que abre o `UserCreateSheet`
-  - [ ] Painel `Sheet` com validação Zod e envio para `POST /api/users`
-  - [ ] Ação de alternar status (toggle ativo/inativo) via chamada `PATCH /api/users/:id/status` com atualização otimista ou refetch imediato
-  - [ ] Feedback tátil via `toast.success` e `toast.error`
+  - [x] Criar `AppLayout` com barra superior corporativa exibindo nome do Gerente e botão "Sair"
+  - [x] Tabela shadcn (`Table`) listando: Nome, Login, Perfil (`Badge`), Status (`Ativo`/`Inativo`) e Ações
+  - [x] Botão primário "+ Novo Operador" que abre o `UserCreateSheet`
+  - [x] Painel `Sheet` com validação Zod e envio para `POST /api/users`
+  - [x] Ação de alternar status (toggle ativo/inativo) via chamada `PATCH /api/users/:id/status` com atualização otimista ou refetch imediato
+  - [x] Feedback tátil via `toast.success` e `toast.error`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Novo operador cadastrado aparece imediatamente na lista sem recarregar a página.
-  - [ ] **Violação de Contrato:** Tentativa de criar operador com login duplicado exibe o erro 409 vindo do backend em toast de alerta.
+  - [x] **Caminho Normal:** Novo operador cadastrado aparece imediatamente na lista sem recarregar a página.
+  - [x] **Violação de Contrato:** Tentativa de criar operador com login duplicado exibe o erro 409 vindo do backend em toast de alerta.
 
 ---
 

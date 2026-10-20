@@ -14,3 +14,14 @@ export interface AuthContextType {
   login: (token: string, user: AuthenticatedUser) => void;
   logout: () => void;
 }
+
+export interface UserListItem {
+  id: string;
+  name: string;
+  username: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
