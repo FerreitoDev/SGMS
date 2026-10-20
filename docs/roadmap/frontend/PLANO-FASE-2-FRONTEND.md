@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,14 +33,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **2.1** | Tipos TypeScript de Domínio e Clientes de API | ✅ Concluída | `frontend/src/types/domain.ts`, `frontend/src/services/*` |
 | **2.2** | Tela Administrativa de Gestão de Máquinas (`MachinesPage`) | ✅ Concluída | `frontend/src/pages/admin/machines-page.tsx` |
-| **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ⏳ Pendente | `frontend/src/pages/admin/shifts-page.tsx` |
+| **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ✅ Concluída | `frontend/src/pages/admin/shifts-page.tsx` |
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ⏳ Pendente | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
 | **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
@@ -129,7 +129,7 @@ Progresso da Fase 2 (Frontend): [========------------------------] 28% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.3: Tela Administrativa de Gestão de Turnos (`ShiftsPage`)
+### ✅ Tarefa 2.3: Tela Administrativa de Gestão de Turnos (`ShiftsPage`)
 - **Objetivo:** Permitir ao Gerente configurar a grade de turnos de trabalho da fábrica com horários de início e término.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/shifts-page.tsx`
@@ -144,12 +144,12 @@ Progresso da Fase 2 (Frontend): [========------------------------] 28% Concluíd
   });
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Tabela com colunas: Nome do Turno, Horário Início, Horário Término, Duração Prevista e Status
-  - [ ] Painel `ShiftSheet` com inputs formatados para `HH:mm`
-  - [ ] Validação síncrona com Zod antes do envio HTTP
+  - [x] Tabela com colunas: Nome do Turno, Horário Início, Horário Término, Duração Prevista e Status
+  - [x] Painel `ShiftSheet` com inputs formatados para `HH:mm`
+  - [x] Validação síncrona com Zod antes do envio HTTP
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Turno cadastrado aparece na grade com horários formatados.
-  - [ ] **Violação de Contrato:** Horário inválido (ex: `27:00`) bloqueado com mensagem no input.
+  - [x] **Caminho Normal:** Turno cadastrado aparece na grade com horários formatados.
+  - [x] **Violação de Contrato:** Horário inválido (ex: `27:00`) bloqueado com mensagem no input.
 
 ---
 

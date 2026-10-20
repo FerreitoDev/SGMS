@@ -14,6 +14,7 @@ import {
 import { LoginPage } from '@/pages/login-page';
 import { UsersPage } from '@/pages/users-page';
 import { MachinesPage } from '@/pages/admin/machines-page';
+import { ShiftsPage } from '@/pages/admin/shifts-page';
 
 export function OperatorHomeShell(): React.ReactElement {
   const { user, logout } = useAuth();
@@ -62,6 +63,7 @@ export function AppRoutes(): React.ReactElement {
       <Route element={<ProtectedRoute requiredRole="GERENTE" />}>
         <Route path="/admin/users" element={<UsersPage />} />
         <Route path="/admin/machines" element={<MachinesPage />} />
+        <Route path="/admin/shifts" element={<ShiftsPage />} />
       </Route>
 
       {/* Redirecionamento padrão para rota raiz */}

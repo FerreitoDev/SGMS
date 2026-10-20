@@ -51,7 +51,7 @@
 - **Dependências Bloqueantes:** Endpoints da Fase 2 do backend (`/api/machines`, `/api/shifts`, `/api/allocations`).
 - **Checklist Técnico Sequencial:**
   - [x] 2.1: Tela administrativa de Máquinas (cadastro de tags `SOPRO-XX`, modelo e toggle de ativação)
-  - [ ] 2.2: Tela administrativa de Turnos (horários de início/fim com validação de formato `HH:mm`)
+  - [x] 2.2: Tela administrativa de Turnos (horários de início/fim com validação de formato `HH:mm`)
   - [ ] 2.3: Tela de Alocação Mobile para o Operador (cartões grandes com alvos de toque `h-14`)
   - [ ] 2.4: Integração com `POST /api/allocations` e captura de erro 409 exibindo toast explicativo amigável
   - [ ] 2.5: Redirecionamento automático para o Console Operacional da máquina alocada
