@@ -93,15 +93,15 @@ export interface CreateAllocationDto {
 }
 
 export type DowntimeReason =
-  | 'MOLDE_DEFEITO'
-  | 'AQUECIMENTO'
-  | 'PRESSAO_AR'
-  | 'FALTA_PREFORMA'
-  | 'MANUTENCAO_PREVENTIVA'
-  | 'MANUTENCAO_CORRETIVA'
+  | 'PRE_FORMA'
+  | 'COMPRESSOR'
+  | 'AQUECIMENTO_FORNO'
+  | 'MOLDE'
+  | 'MECANICA'
+  | 'ELETRICA'
   | 'OUTROS';
 
-export type DowntimeStatus = 'OPEN' | 'RESOLVED';
+export type DowntimeStatus = 'IN_PROGRESS' | 'RESOLVED';
 
 export interface ProductionEntry {
   id: string;

@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 3 (Frontend): [====================------------] 71% Concluíd
 | **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | 🟢 Concluída | `frontend/src/hooks/use-offline-sync.ts`, `frontend/src/components/sync/sync-badge.tsx` |
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/operator/*` |
 | **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | 🟢 Concluída | `frontend/src/components/production/*`, `frontend/src/schemas/production-schema.ts` |
-| **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | ⏳ Pendente | `frontend/src/components/downtime/*` |
+| **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | 🟢 Concluída | `frontend/src/components/downtime/*`, `frontend/src/schemas/downtime-schema.ts` |
 | **3.7** | Auditoria Zero Fallback, Simulação Offline & Build | ⏳ Pendente | Testes de desconexão e compilação de produção |
 
 ---
@@ -171,7 +171,7 @@ Progresso da Fase 3 (Frontend): [====================------------] 71% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.6: Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`)
+### ✅ Tarefa 3.6: Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`)
 - **Objetivo:** Construir o componente para apontamento de interrupções de linha, tratando os motivos padronizados e exigindo justificativa obrigatória para `OUTROS`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/downtime/downtime-modal.tsx`
@@ -195,14 +195,14 @@ Progresso da Fase 3 (Frontend): [====================------------] 71% Concluíd
   });
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Seletor visual de motivos em botões de rádio ou grade de cards (Pré-forma, Compressor, Molde, Forno, Mecânica, Elétrica, Outros)
-  - [ ] Se o operador selecionar "Outros", renderizar campo `Textarea` obrigatório com foco imediato
-  - [ ] Modo Tempo Real: captura carimbo atual e envia para `POST /api/downtimes/start`
-  - [ ] Modo Retroativo: inputs de data/hora de Início e Término, validando $T_{fim} \ge T_{ini}$ antes do envio
-  - [ ] Gravação Local-First com `clientUuid` no IndexedDB antes do disparo de rede
+  - [x] Seletor visual de motivos em botões de rádio ou grade de cards (Pré-forma, Compressor, Molde, Forno, Mecânica, Elétrica, Outros)
+  - [x] Se o operador selecionar "Outros", renderizar campo `Textarea` obrigatório com foco imediato
+  - [x] Modo Tempo Real: captura carimbo atual e envia para `POST /api/downtimes/start`
+  - [x] Modo Retroativo: inputs de data/hora de Início e Término, validando $T_{fim} \ge T_{ini}$ antes do envio
+  - [x] Gravação Local-First com `clientUuid` no IndexedDB antes do disparo de rede
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Registro de parada altera o console para modo paralisado e inicia cronômetro visual.
-  - [ ] **Violação de Contrato:** Seleção de "Outros" sem preenchimento de justificativa impede o envio e destaca o campo com erro.
+  - [x] **Caminho Normal:** Registro de parada altera o console para modo paralisado e inicia cronômetro visual.
+  - [x] **Violação de Contrato:** Seleção de "Outros" sem preenchimento de justificativa impede o envio e destaca o campo com erro.
 
 ---
 

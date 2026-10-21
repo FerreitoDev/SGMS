@@ -25,6 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { OperatorHeader } from '@/components/operator/operator-header';
 import { ProductionSummaryCard } from '@/components/operator/production-summary-card';
 import { ProductionDrawer } from '@/components/production/production-drawer';
+import { DowntimeModal } from '@/components/downtime/downtime-modal';
 import type { ProductionEntry, DowntimeRecord } from '@/types/domain';
 import type { ProductionPayload } from '@/types/offline';
 
@@ -47,13 +48,15 @@ export function OperatorConsolePage(): React.ReactElement {
   const [isReleasing, setIsReleasing] = useState<boolean>(false);
   const [isResolvingDowntime, setIsResolvingDowntime] = useState<boolean>(false);
   const [isProductionDrawerOpen, setIsProductionDrawerOpen] = useState<boolean>(false);
+  const [isDowntimeModalOpen, setIsDowntimeModalOpen] = useState<boolean>(false);
+  const [isDowntimeRetroactive, setIsDowntimeRetroactive] = useState<boolean>(false);
 
   // Tempo decorrido de parada ativa
   const [stopwatchSeconds, setStopwatchSeconds] = useState<number>(0);
 
-  // Parada ativa com status OPEN
+  // Parada ativa com status IN_PROGRESS
   const activeDowntime = useMemo(() => {
-    return downtimes.find((d) => d.status === 'OPEN') ?? null;
+    return downtimes.find((d) => d.status === 'IN_PROGRESS') ?? null;
   }, [downtimes]);
 
   // Carregamento de dados de produção, paradas e buffer offline
@@ -97,13 +100,20 @@ export function OperatorConsolePage(): React.ReactElement {
     const handleOpenProduction = (): void => {
       setIsProductionDrawerOpen(true);
     };
+    const handleOpenDowntime = (e: Event): void => {
+      const customEvent = e as CustomEvent<{ isRetroactive?: boolean }>;
+      setIsDowntimeRetroactive(Boolean(customEvent.detail?.isRetroactive));
+      setIsDowntimeModalOpen(true);
+    };
 
     window.addEventListener(STORAGE_UPDATED_EVENT, handleStorageUpdate);
     window.addEventListener('sgms:open-production-drawer', handleOpenProduction);
+    window.addEventListener('sgms:open-downtime-modal', handleOpenDowntime);
 
     return () => {
       window.removeEventListener(STORAGE_UPDATED_EVENT, handleStorageUpdate);
       window.removeEventListener('sgms:open-production-drawer', handleOpenProduction);
+      window.removeEventListener('sgms:open-downtime-modal', handleOpenDowntime);
     };
   }, [loadConsoleData]);
 
@@ -328,8 +338,8 @@ export function OperatorConsolePage(): React.ReactElement {
               variant="destructive"
               className="min-h-[58px] text-base font-bold w-full shadow-md touch-manipulation flex items-center justify-center gap-2 active:scale-98"
               onClick={() => {
-                // Dispara evento para abertura do DowntimeModal (Tarefa 3.6)
-                window.dispatchEvent(new CustomEvent('sgms:open-downtime-modal'));
+                setIsDowntimeRetroactive(false);
+                setIsDowntimeModalOpen(true);
               }}
             >
               <AlertTriangle className="h-5 w-5" />
@@ -343,9 +353,8 @@ export function OperatorConsolePage(): React.ReactElement {
             variant="outline"
             className="min-h-[44px] text-xs font-semibold w-full sm:col-span-2 border-dashed text-muted-foreground hover:text-foreground touch-manipulation flex items-center justify-center gap-1.5"
             onClick={() => {
-              window.dispatchEvent(
-                new CustomEvent('sgms:open-downtime-modal', { detail: { isRetroactive: true } }),
-              );
+              setIsDowntimeRetroactive(true);
+              setIsDowntimeModalOpen(true);
             }}
           >
             <History className="h-4 w-4" />
@@ -396,6 +405,17 @@ export function OperatorConsolePage(): React.ReactElement {
           open={isProductionDrawerOpen}
           onOpenChange={setIsProductionDrawerOpen}
           allocationId={allocation.id}
+          onSuccess={loadConsoleData}
+        />
+      )}
+
+      {/* Modal/Gaveta de Paradas em Tempo Real e Retroativas (Tarefa 3.6) */}
+      {allocation && (
+        <DowntimeModal
+          open={isDowntimeModalOpen}
+          onOpenChange={setIsDowntimeModalOpen}
+          allocationId={allocation.id}
+          initialIsRetroactive={isDowntimeRetroactive}
           onSuccess={loadConsoleData}
         />
       )}
