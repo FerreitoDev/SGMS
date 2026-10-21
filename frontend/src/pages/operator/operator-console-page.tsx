@@ -24,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { OperatorHeader } from '@/components/operator/operator-header';
 import { ProductionSummaryCard } from '@/components/operator/production-summary-card';
+import { ProductionDrawer } from '@/components/production/production-drawer';
 import type { ProductionEntry, DowntimeRecord } from '@/types/domain';
 import type { ProductionPayload } from '@/types/offline';
 
@@ -45,6 +46,7 @@ export function OperatorConsolePage(): React.ReactElement {
   const [isLoadingData, setIsLoadingData] = useState<boolean>(true);
   const [isReleasing, setIsReleasing] = useState<boolean>(false);
   const [isResolvingDowntime, setIsResolvingDowntime] = useState<boolean>(false);
+  const [isProductionDrawerOpen, setIsProductionDrawerOpen] = useState<boolean>(false);
 
   // Tempo decorrido de parada ativa
   const [stopwatchSeconds, setStopwatchSeconds] = useState<number>(0);
@@ -87,14 +89,21 @@ export function OperatorConsolePage(): React.ReactElement {
     }
   }, [allocation, loadConsoleData]);
 
-  // Atualização em resposta a eventos de storage local
+  // Atualização em resposta a eventos de storage local e gavetas
   useEffect(() => {
     const handleStorageUpdate = (): void => {
       void loadConsoleData();
     };
+    const handleOpenProduction = (): void => {
+      setIsProductionDrawerOpen(true);
+    };
+
     window.addEventListener(STORAGE_UPDATED_EVENT, handleStorageUpdate);
+    window.addEventListener('sgms:open-production-drawer', handleOpenProduction);
+
     return () => {
       window.removeEventListener(STORAGE_UPDATED_EVENT, handleStorageUpdate);
+      window.removeEventListener('sgms:open-production-drawer', handleOpenProduction);
     };
   }, [loadConsoleData]);
 
@@ -305,10 +314,7 @@ export function OperatorConsolePage(): React.ReactElement {
             id="btn-open-production-drawer"
             disabled={isMachineStopped}
             className="min-h-[58px] text-lg font-black tracking-wide w-full shadow-md bg-primary hover:bg-primary/90 text-primary-foreground touch-manipulation flex items-center justify-center gap-2 active:scale-98"
-            onClick={() => {
-              // Dispara evento para abertura do ProductionDrawer (Tarefa 3.5)
-              window.dispatchEvent(new CustomEvent('sgms:open-production-drawer'));
-            }}
+            onClick={() => setIsProductionDrawerOpen(true)}
           >
             <Plus className="h-6 w-6 stroke-[3]" />
             <span>+ Apontar Produção</span>
@@ -383,6 +389,16 @@ export function OperatorConsolePage(): React.ReactElement {
           )}
         </div>
       </main>
+
+      {/* Gaveta de Apontamento de Produção (Tarefa 3.5) */}
+      {allocation && (
+        <ProductionDrawer
+          open={isProductionDrawerOpen}
+          onOpenChange={setIsProductionDrawerOpen}
+          allocationId={allocation.id}
+          onSuccess={loadConsoleData}
+        />
+      )}
     </div>
   );
 }

@@ -74,7 +74,7 @@
   - [x] 3.2: Implementação da camada de armazenamento local `OfflineStorage` (tabela `pending_events`)
   - [x] 3.3: Implementação do hook `useOfflineSync` com monitoramento de conexão e disparo em lote para `/api/sync`
   - [x] 3.4: Construção do Console do Operador (cabeçalho com máquina ativa, status e badge de conectividade)
-  - [ ] 3.5: Componente `ProductionDrawer` usando `Sheet` do shadcn com input `type="number" inputMode="numeric"`
+  - [x] 3.5: Componente `ProductionDrawer` usando `Sheet` do shadcn com input `type="number" inputMode="numeric"`
   - [ ] 3.6: Componente `DowntimeModal` com cronômetro em tempo real para paradas ativas e aba para modo retroativo
   - [ ] 3.7: Validação Zod garantindo que o campo `justification` seja obrigatório se motivo for `OUTROS`
   - [ ] 3.8: Simulação física de modo avião/desconexão provando que nenhum apontamento digitado se perde

@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 3 (Frontend): [================----------------] 57% Concluíd
 | **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts`, `frontend/src/types/offline.ts` |
 | **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | 🟢 Concluída | `frontend/src/hooks/use-offline-sync.ts`, `frontend/src/components/sync/sync-badge.tsx` |
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/operator/*` |
-| **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | ⏳ Pendente | `frontend/src/components/production/*` |
+| **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | 🟢 Concluída | `frontend/src/components/production/*`, `frontend/src/schemas/production-schema.ts` |
 | **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | ⏳ Pendente | `frontend/src/components/downtime/*` |
 | **3.7** | Auditoria Zero Fallback, Simulação Offline & Build | ⏳ Pendente | Testes de desconexão e compilação de produção |
 
@@ -141,7 +141,7 @@ Progresso da Fase 3 (Frontend): [================----------------] 57% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.5: Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`)
+### ✅ Tarefa 3.5: Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`)
 - **Objetivo:** Permitir o registro rápido da contagem de garrafas sopradas via gaveta touch inferior (`Sheet`), com foco automático no teclado numérico nativo do celular.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/production/production-drawer.tsx`
@@ -151,23 +151,23 @@ Progresso da Fase 3 (Frontend): [================----------------] 57% Concluíd
   ```typescript
   export const productionSchema = z.object({
     quantity: z.number().int().positive('A quantidade deve ser maior que zero.'),
-    timestamp: z.string().datetime(),
+    recordedAt: z.string(),
   });
   export type ProductionFormData = z.infer<typeof productionSchema>;
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Utilizar o componente `Sheet` do shadcn configurado com `side="bottom"` para telas menores (`sm`)
-  - [ ] Input com classes `text-3xl text-center font-bold h-16` e atributo `inputMode="numeric"`
-  - [ ] Timestamp inicializado com a hora corrente (`new Date().toISOString()`), permitindo edição pontual
-  - [ ] Ao confirmar:
+  - [x] Utilizar o componente `Sheet` do shadcn configurado com `side="bottom"` para telas menores (`sm`)
+  - [x] Input com classes `text-3xl text-center font-bold h-16` e atributo `inputMode="numeric"`
+  - [x] Timestamp inicializado com a hora corrente (`new Date().toISOString()`), permitindo edição pontual
+  - [x] Ao confirmar:
     1. Gera `clientUuid = crypto.randomUUID()`
     2. Grava evento no IndexedDB (`OfflineStorage.saveEvent`)
     3. Tenta envio HTTP imediato via Axios
     4. Se sucesso, atualiza contador na tela; se falha de rede, avisa "Salvo no dispositivo"
     5. Fecha a gaveta e reseta o formulário
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Envio em 2 toques: abre gaveta, digita número e toca em "Confirmar".
-  - [ ] **Violação de Contrato:** Quantidade zero ou vazia rejeitada síncronamente pelo Zod.
+  - [x] **Caminho Normal:** Envio em 2 toques: abre gaveta, digita número e toca em "Confirmar".
+  - [x] **Violação de Contrato:** Quantidade zero ou vazia rejeitada síncronamente pelo Zod.
 
 ---
 
