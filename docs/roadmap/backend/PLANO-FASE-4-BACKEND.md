@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (1 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,13 +32,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 4 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **4.1** | Encerramento de Turno & Guard de Imutabilidade (RN-06) | 🟢 Concluída | `backend/src/modules/allocations/*`, `backend/src/common/guards/*` |
-| **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | ⏳ Pendente | `backend/src/modules/reports/reports.service.ts` |
+| **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | 🟢 Concluída | `backend/src/modules/reports/reports.service.ts` |
 | **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | ⏳ Pendente | `backend/src/modules/reports/*` |
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | ⏳ Pendente | `backend/src/modules/reports/generators/csv.generator.ts` |
 | **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | ⏳ Pendente | `backend/src/modules/reports/generators/pdf.generator.ts` |
@@ -72,7 +72,7 @@ Progresso da Fase 4 (Backend): [====----------------------------] 14% Concluído
 
 ---
 
-### ⏳ Tarefa 4.2: Consultas Analíticas Agregadas (Disponibilidade & Pareto)
+### ✅ Tarefa 4.2: Consultas Analíticas Agregadas (Disponibilidade & Pareto)
 - **Objetivo:** Construir as queries SQL/Prisma de consolidação para extrair indicadores exatos de produção e tempo de inatividade.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/reports.service.ts`
@@ -86,12 +86,12 @@ Progresso da Fase 4 (Backend): [====----------------------------] 14% Concluído
   - $R = V_{prod} / (T_{liquido} / 60)$ (Ritmo médio em garrafas/hora)
   - Ranking Pareto: agregação `GROUP BY reason ORDER BY sum(durationMinutes) DESC`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar query agregada em `production_entries` agrupando por data/turno/máquina
-  - [ ] Criar query agregada em `downtime_records` com filtro de status `RESOLVED`
-  - [ ] Implementar cálculo de percentual acumulado de Pareto para cada motivo de parada
+  - [x] Criar query agregada em `production_entries` agrupando por data/turno/máquina
+  - [x] Criar query agregada em `downtime_records` com filtro de status `RESOLVED`
+  - [x] Implementar cálculo de percentual acumulado de Pareto para cada motivo de parada
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Query retorna indicadores consistentes com precisão matemática.
-  - [ ] **Zero Fallback:** Período sem produção retorna contagem `0` (número real válido), sem inventar valores ou mascarar como nulo.
+  - [x] **Caminho Normal:** Query retorna indicadores consistentes com precisão matemática.
+  - [x] **Zero Fallback:** Período sem produção retorna contagem `0` (número real válido), sem inventar valores ou mascarar como nulo.
 
 ---
 

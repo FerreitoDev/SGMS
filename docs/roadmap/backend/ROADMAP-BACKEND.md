@@ -94,7 +94,7 @@
 - **Checklist Técnico Sequencial:**
   - [x] 4.1: Endpoint de encerramento de turno (`POST /api/allocations/:id/close`) com transição da máquina para `IDLE`
   - [x] 4.2: Guard e validação impedindo apontamentos em alocações com status `CLOSED` (RN-06)
-  - [ ] 4.3: Implementação de queries de agregação analítica (tempo total parado, ritmo garrafas/hora e Pareto de motivos)
+  - [x] 4.3: Implementação de queries de agregação analítica (tempo total parado, ritmo garrafas/hora e Pareto de motivos)
   - [ ] 4.4: Implementação do `ReportsModule` com gerador de CSV via Fast-CSV (delimitador `;` e codificação UTF-8 com BOM)
   - [ ] 4.5: Implementação do compilador de relatórios corporativos em PDF utilizando PDFKit com layout limpo
   - [ ] 4.6: Endpoints de download binário (`GET /api/reports/csv` e `GET /api/reports/pdf`) com headers de streaming
