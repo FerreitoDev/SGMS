@@ -9,6 +9,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { StartDowntimeDto } from './dto/start-downtime.dto';
 import { ResolveDowntimeDto } from './dto/resolve-downtime.dto';
+import { RetroactiveDowntimeDto } from './dto/retroactive-downtime.dto';
 import {
   DowntimeReason,
   DowntimeStatus,
@@ -235,6 +236,120 @@ export class DowntimesService {
 
       return resolved;
     });
+  }
+
+  async createRetroactive(
+    dto: RetroactiveDowntimeDto,
+    user: { id: string; role: UserRole },
+  ): Promise<DowntimeStartResult> {
+    // 1. Validar timestamps
+    const startTime = new Date(dto.startTime);
+    const endTime = new Date(dto.endTime);
+
+    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+      throw new BadRequestException({
+        title: 'Requisição Inválida',
+        message: 'Os horários de início e término devem ser datas ISO 8601 válidas.',
+        code: 'INVALID_TIMESTAMP',
+      });
+    }
+
+    const now = new Date();
+    if (startTime.getTime() > now.getTime() || endTime.getTime() > now.getTime()) {
+      throw new UnprocessableEntityException({
+        title: 'Entidade Improcessável',
+        message: 'O horário informado não pode estar no futuro.',
+        code: 'FUTURE_TIMESTAMP',
+      });
+    }
+
+    // RN-03: Consistência Cronológica (T_fim >= T_ini)
+    if (endTime.getTime() < startTime.getTime()) {
+      throw new UnprocessableEntityException({
+        title: 'Entidade Improcessável',
+        message: 'O horário de término da parada não pode ser anterior ao horário de início.',
+        code: 'INVALID_DOWNTIME_RANGE',
+      });
+    }
+
+    // 2. RN-04: Justificativa obrigatória se OUTROS (>= 5 caracteres), senão null estrito (Zero Fallback)
+    let finalJustification: string | null = null;
+    if (dto.reason === DowntimeReason.OUTROS) {
+      if (!dto.justification || dto.justification.trim().length < 5) {
+        throw new BadRequestException({
+          title: 'Requisição Inválida',
+          message: 'A justificativa detalhada é obrigatória para paradas com motivo OUTROS (mínimo de 5 caracteres).',
+          code: 'INVALID_JUSTIFICATION',
+        });
+      }
+      finalJustification = dto.justification.trim();
+    }
+
+    // 3. RN-07: Idempotência radical por clientUuid
+    const existing = await this.prisma.downtimeRecord.findUnique({
+      where: { clientUuid: dto.clientUuid },
+    });
+
+    if (existing) {
+      return {
+        data: existing,
+        isDuplicate: true,
+      };
+    }
+
+    // 4. Buscar e validar alocação de turno
+    const allocation = await this.prisma.shiftAllocation.findUnique({
+      where: { id: dto.allocationId },
+    });
+
+    if (!allocation) {
+      throw new NotFoundException(`Alocação com identificador '${dto.allocationId}' não encontrada.`);
+    }
+
+    // 5. RN-06: Imutabilidade de turno fechado para operadores
+    if (allocation.status === ShiftAllocationStatus.CLOSED && user.role !== UserRole.GERENTE) {
+      throw new ForbiddenException({
+        title: 'Acesso Proibido',
+        message: 'Este turno já foi encerrado e não aceita novos apontamentos.',
+        code: 'SHIFT_CLOSED',
+      });
+    }
+
+    // 6. RN-08: Restrição de apontamento ao operador alocado ou Gerente
+    const isOwner = allocation.operatorId === user.id;
+    const isManager = user.role === UserRole.GERENTE;
+
+    if (!isOwner && !isManager) {
+      throw new ForbiddenException({
+        title: 'Acesso Proibido',
+        message: 'Operador não possui alocação ativa nesta máquina.',
+        code: 'FORBIDDEN_ALLOCATION',
+      });
+    }
+
+    // 7. Cálculo exato da duração em minutos inteiros: floor((T_fim - T_ini) / 60000)
+    const durationMinutes = Math.floor(
+      (endTime.getTime() - startTime.getTime()) / 60000,
+    );
+
+    // 8. Gravar parada consolidada como RESOLVED sem alterar status da máquina
+    const created = await this.prisma.downtimeRecord.create({
+      data: {
+        clientUuid: dto.clientUuid,
+        allocationId: dto.allocationId,
+        reason: dto.reason,
+        justification: finalJustification,
+        status: DowntimeStatus.RESOLVED,
+        startTime,
+        endTime,
+        durationMinutes,
+      },
+    });
+
+    return {
+      data: created,
+      isDuplicate: false,
+    };
   }
 
   async findByAllocation(allocationId: string) {

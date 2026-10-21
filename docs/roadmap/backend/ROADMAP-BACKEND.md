@@ -74,8 +74,8 @@
 - **Checklist Técnico Sequencial:**
   - [x] 3.1: Migrations Prisma para as tabelas `production_entries` e `downtime_records`
   - [x] 3.2: Implementação do `ProductionsModule` (DTOs com `IsPositive`, validação de alocação ativa e gravação)
-  - [x] 3.3: Implementação do `DowntimesModule` (Início de parada em tempo real, resolução e lançamento retroativo)
-  - [ ] 3.4: Validador customizado/Pipe para forçar `justification` obrigatória se `reason == OUTROS`
+  - [x] 3.3: Implementação do `DowntimesModule` (Início de parada em tempo real e resolução)
+  - [x] 3.4: Apontamento retroativo e validação de justificativa para `OUTROS` (mín. 5 chars e null estrito)
   - [ ] 3.5: Implementação do `SyncModule` (`POST /api/sync`) com processamento em lote transacional
   - [ ] 3.6: Mecanismo de descarte idempotente de `clientUuid` pré-existente sem alterar dados
   - [ ] 3.7: Testes de unidade e integração provando idempotência e rejeição de horários futuros

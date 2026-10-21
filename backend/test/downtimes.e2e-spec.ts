@@ -459,4 +459,224 @@ describe('DowntimesModule (e2e)', () => {
       expect(response.status).toBe(404);
     });
   });
+
+  describe('POST /api/downtimes/retroactive', () => {
+    it('deve registrar parada retroativa com status RESOLVED, calcular durationMinutes e NÃO alterar o status da máquina', async () => {
+      const clientUuid = randomUUID();
+      const startTime = '2026-10-21T10:00:00.000Z';
+      const endTime = '2026-10-21T10:45:00.000Z';
+
+      // Verificar status prévio da máquina
+      const machineBefore = await prisma.machine.findUnique({ where: { id: machineId } });
+      expect(machineBefore?.status).toBe(MachineStatus.RUNNING);
+
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid,
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.MECANICA,
+          startTime,
+          endTime,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.clientUuid).toBe(clientUuid);
+      expect(response.body.allocationId).toBe(activeAllocationId);
+      expect(response.body.reason).toBe(DowntimeReason.MECANICA);
+      expect(response.body.status).toBe(DowntimeStatus.RESOLVED);
+      expect(response.body.justification).toBeNull();
+      expect(response.body.durationMinutes).toBe(45);
+      expect(new Date(response.body.startTime).toISOString()).toBe(startTime);
+      expect(new Date(response.body.endTime).toISOString()).toBe(endTime);
+
+      // Invariante essencial: Status da máquina continua RUNNING
+      const machineAfter = await prisma.machine.findUnique({ where: { id: machineId } });
+      expect(machineAfter?.status).toBe(MachineStatus.RUNNING);
+    });
+
+    it('deve retornar idempotência HTTP 200 ao reenviar mesmo clientUuid (RN-07)', async () => {
+      const clientUuid = randomUUID();
+      const startTime = '2026-10-21T11:00:00.000Z';
+      const endTime = '2026-10-21T11:20:00.000Z';
+
+      const payload = {
+        clientUuid,
+        allocationId: activeAllocationId,
+        reason: DowntimeReason.ELETRICA,
+        startTime,
+        endTime,
+      };
+
+      const firstResponse = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send(payload);
+
+      expect(firstResponse.status).toBe(201);
+
+      const duplicateResponse = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send(payload);
+
+      expect(duplicateResponse.status).toBe(200);
+      expect(duplicateResponse.body.id).toBe(firstResponse.body.id);
+      expect(duplicateResponse.body.durationMinutes).toBe(20);
+    });
+
+    it('deve exigir justificativa com no mínimo 5 caracteres quando motivo for OUTROS (HTTP 400)', async () => {
+      // Sem justificativa
+      const resWithout = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.OUTROS,
+          startTime: '2026-10-21T12:00:00.000Z',
+          endTime: '2026-10-21T12:15:00.000Z',
+        });
+
+      expect(resWithout.status).toBe(400);
+      expect(resWithout.body.detail).toMatch(/justificativa.*obrigatória/i);
+
+      // Justificativa curta (< 5 chars)
+      const resShort = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.OUTROS,
+          justification: 'abc',
+          startTime: '2026-10-21T12:00:00.000Z',
+          endTime: '2026-10-21T12:15:00.000Z',
+        });
+
+      expect(resShort.status).toBe(400);
+      expect(resShort.body.detail).toMatch(/mínimo de 5 caracteres/i);
+    });
+
+    it('deve aceitar OUTROS com justificativa >= 5 caracteres', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.OUTROS,
+          justification: 'Falta de ar comprimido na linha geral',
+          startTime: '2026-10-21T12:00:00.000Z',
+          endTime: '2026-10-21T12:30:00.000Z',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.reason).toBe(DowntimeReason.OUTROS);
+      expect(response.body.justification).toBe('Falta de ar comprimido na linha geral');
+      expect(response.body.durationMinutes).toBe(30);
+    });
+
+    it('deve anular justificativa (null estrito) se motivo for diferente de OUTROS mesmo se enviada (Zero Fallback)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.MOLDE,
+          justification: 'Texto qualquer que deve ser ignorado',
+          startTime: '2026-10-21T13:00:00.000Z',
+          endTime: '2026-10-21T13:10:00.000Z',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.reason).toBe(DowntimeReason.MOLDE);
+      expect(response.body.justification).toBeNull();
+      expect(response.body.durationMinutes).toBe(10);
+    });
+
+    it('deve rejeitar se endTime < startTime com HTTP 422 (INVALID_DOWNTIME_RANGE)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.MECANICA,
+          startTime: '2026-10-21T14:00:00.000Z',
+          endTime: '2026-10-21T13:00:00.000Z',
+        });
+
+      expect(response.status).toBe(422);
+      expect(response.body.code).toBe('INVALID_DOWNTIME_RANGE');
+    });
+
+    it('deve rejeitar timestamps futuros com HTTP 422 (FUTURE_TIMESTAMP)', async () => {
+      const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.MECANICA,
+          startTime: '2026-10-21T10:00:00.000Z',
+          endTime: futureDate,
+        });
+
+      expect(response.status).toBe(422);
+      expect(response.body.code).toBe('FUTURE_TIMESTAMP');
+    });
+
+    it('deve rejeitar operador não alocado tentando registrar parada com HTTP 403 (FORBIDDEN_ALLOCATION)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op2Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.MECANICA,
+          startTime: '2026-10-21T10:00:00.000Z',
+          endTime: '2026-10-21T10:15:00.000Z',
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('FORBIDDEN_ALLOCATION');
+    });
+
+    it('deve rejeitar registro em turno fechado com HTTP 403 (SHIFT_CLOSED)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: closedAllocationId,
+          reason: DowntimeReason.MECANICA,
+          startTime: '2026-10-20T10:00:00.000Z',
+          endTime: '2026-10-20T10:30:00.000Z',
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('SHIFT_CLOSED');
+    });
+
+    it('deve permitir que GERENTE registre parada retroativa mesmo não sendo o operador alocado', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${managerToken}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: activeAllocationId,
+          reason: DowntimeReason.COMPRESSOR,
+          startTime: '2026-10-21T15:00:00.000Z',
+          endTime: '2026-10-21T15:25:00.000Z',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.reason).toBe(DowntimeReason.COMPRESSOR);
+      expect(response.body.durationMinutes).toBe(25);
+    });
+  });
 });

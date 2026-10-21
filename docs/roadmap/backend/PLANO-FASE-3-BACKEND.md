@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 3 (Backend): [==================--------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 3 (Backend): [============--------------------] 43% Concluído
 | **3.1** | Migrations Prisma de Produção e Paradas | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ✅ Concluída | `backend/src/modules/productions/*` |
 | **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ✅ Concluída | `backend/src/modules/downtimes/*` |
-| **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ⏳ Pendente | `backend/src/modules/downtimes/*` |
+| **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ⏳ Pendente | `backend/src/modules/sync/*` |
 | **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ⏳ Pendente | `backend/src/common/pipes/date-validation.pipe.ts` |
 | **3.7** | Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação | ⏳ Pendente | `backend/test/sync-idempotency.e2e-spec.ts` |
@@ -195,7 +195,7 @@ Progresso da Fase 3 (Backend): [============--------------------] 43% Concluído
 
 ---
 
-### ⏳ Tarefa 3.4: Apontamento de Paradas Retroativas e Validação de Motivos
+### ✅ Tarefa 3.4: Apontamento de Paradas Retroativas e Validação de Motivos
 - **Objetivo:** Permitir registrar ocorrências ocorridas no passado com início e fim já consolidados, aplicando validação condicional obrigatória de justificativa para o motivo `OUTROS`.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/downtimes/dto/retroactive-downtime.dto.ts`
@@ -225,14 +225,14 @@ Progresso da Fase 3 (Backend): [============--------------------] 43% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Validar condicionalmente (RN-04):
+  - [x] Validar condicionalmente (RN-04):
     - Se `reason === DowntimeReason.OUTROS`: `justification` obrigatória e `justification.trim().length >= 5`. Se falhar, lançar `BadRequestException` (400) com mensagem clara.
     - Se `reason !== DowntimeReason.OUTROS`: forçar `justification = null`.
-  - [ ] Calcular duração em minutos e gravar parada já com status `RESOLVED`
-  - [ ] Não alterar o status atual da máquina (pois a parada já ocorreu e terminou no passado)
+  - [x] Calcular duração em minutos e gravar parada já com status `RESOLVED`
+  - [x] Não alterar o status atual da máquina (pois a parada já ocorreu e terminou no passado)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Parada retroativa registrada com duração calculada e status `RESOLVED`.
-  - [ ] **Violação de Contrato (RN-04):** Envio de `OUTROS` com justificativa vazia ou ausente rejeitado com HTTP 400 em RFC 7807.
+  - [x] **Caminho Normal:** Parada retroativa registrada com duração calculada e status `RESOLVED`.
+  - [x] **Violação de Contrato (RN-04):** Envio de `OUTROS` com justificativa vazia ou ausente rejeitado com HTTP 400 em RFC 7807.
 
 ---
 
