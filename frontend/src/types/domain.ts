@@ -91,3 +91,15 @@ export interface CreateAllocationDto {
   shiftId: string;
   shiftDate: string;
 }
+
+export type DowntimeReason =
+  | 'MOLDE_DEFEITO'
+  | 'AQUECIMENTO'
+  | 'PRESSAO_AR'
+  | 'FALTA_PREFORMA'
+  | 'MANUTENCAO_PREVENTIVA'
+  | 'MANUTENCAO_CORRETIVA'
+  | 'OUTROS';
+
+export type DowntimeStatus = 'OPEN' | 'RESOLVED';
+

@@ -32,13 +32,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **3.1** | Configuração PWA, Service Worker & Manifesto Web | 🟢 Concluída | `frontend/vite.config.ts`, `frontend/public/manifest.json` |
-| **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | ⏳ Pendente | `frontend/src/lib/offline-storage.ts` |
+| **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts`, `frontend/src/types/offline.ts` |
 | **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | ⏳ Pendente | `frontend/src/hooks/use-offline-sync.ts` |
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | ⏳ Pendente | `frontend/src/pages/operator/operator-console-page.tsx` |
 | **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | ⏳ Pendente | `frontend/src/components/production/*` |
@@ -72,7 +72,7 @@ Progresso da Fase 3 (Frontend): [====----------------------------] 14% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.2: Camada de Armazenamento Offline IndexedDB (`idb`)
+### ✅ Tarefa 3.2: Camada de Armazenamento Offline IndexedDB (`idb`)
 - **Objetivo:** Implementar o repositório local estruturado no navegador para armazenar os eventos de produção e paradas antes do envio de rede.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/lib/offline-storage.ts`
@@ -89,12 +89,12 @@ Progresso da Fase 3 (Frontend): [====----------------------------] 14% Concluíd
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Inicializar o banco IndexedDB `sgms_offline_db` (versão 1) com a object store `pending_events` usando `clientUuid` como keyPath
-  - [ ] Criar índice por `status` para busca rápida de eventos pendentes
-  - [ ] Implementar métodos: `saveEvent(event)`, `getPendingEvents()`, `markAsSynced(uuids: string[])`, `clearSyncedEvents()`
+  - [x] Inicializar o banco IndexedDB `sgms_offline_db` (versão 1) com a object store `pending_events` usando `clientUuid` como keyPath
+  - [x] Criar índice por `status` para busca rápida de eventos pendentes
+  - [x] Implementar métodos: `saveEvent(event)`, `getPendingEvents()`, `markAsSynced(uuids: string[])`, `clearSyncedEvents()`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Apontamentos gerados localmente são gravados com status `PENDING`.
-  - [ ] **Zero Fallback:** Proibido uso de `localStorage` com strings mágicas serializadas sem chave primária para dados transacionais.
+  - [x] **Caminho Normal:** Apontamentos gerados localmente são gravados com status `PENDING`.
+  - [x] **Zero Fallback:** Proibido uso de `localStorage` com strings mágicas serializadas sem chave primária para dados transacionais.
 
 ---
 

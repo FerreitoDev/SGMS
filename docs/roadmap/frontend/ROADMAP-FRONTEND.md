@@ -71,7 +71,7 @@
 - **Dependências Bloqueantes:** Endpoints da Fase 3 do backend (`/api/productions`, `/api/downtimes`, `/api/sync`).
 - **Checklist Técnico Sequencial:**
   - [x] 3.1: Instalação e configuração do `vite-plugin-pwa` e da biblioteca `idb` para IndexedDB
-  - [ ] 3.2: Implementação da camada de armazenamento local `OfflineStorage` (tabela `pending_events`)
+  - [x] 3.2: Implementação da camada de armazenamento local `OfflineStorage` (tabela `pending_events`)
   - [ ] 3.3: Implementação do hook `useOfflineSync` com monitoramento de conexão e disparo em lote para `/api/sync`
   - [ ] 3.4: Construção do Console do Operador (cabeçalho com máquina ativa, status e badge de conectividade)
   - [ ] 3.5: Componente `ProductionDrawer` usando `Sheet` do shadcn com input `type="number" inputMode="numeric"`
