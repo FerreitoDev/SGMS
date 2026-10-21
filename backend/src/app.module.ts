@@ -9,6 +9,7 @@ import { MachinesModule } from './modules/machines/machines.module';
 import { ShiftsModule } from './modules/shifts/shifts.module';
 import { AllocationsModule } from './modules/allocations/allocations.module';
 import { ProductionsModule } from './modules/productions/productions.module';
+import { DowntimesModule } from './modules/downtimes/downtimes.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProductionsModule } from './modules/productions/productions.module';
     ShiftsModule,
     AllocationsModule,
     ProductionsModule,
+    DowntimesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

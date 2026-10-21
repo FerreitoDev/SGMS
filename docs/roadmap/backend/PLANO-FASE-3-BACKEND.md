@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,14 +33,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
+Progresso da Fase 3 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **3.1** | Migrations Prisma de Produção e Paradas | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ✅ Concluída | `backend/src/modules/productions/*` |
-| **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ⏳ Pendente | `backend/src/modules/downtimes/*` |
+| **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ⏳ Pendente | `backend/src/modules/downtimes/*` |
 | **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ⏳ Pendente | `backend/src/modules/sync/*` |
 | **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ⏳ Pendente | `backend/src/common/pipes/date-validation.pipe.ts` |
@@ -153,7 +153,7 @@ Progresso da Fase 3 (Backend): [========------------------------] 29% Concluído
 
 ---
 
-### ⏳ Tarefa 3.3: Módulo de Paradas em Tempo Real (`DowntimesModule`)
+### ✅ Tarefa 3.3: Módulo de Paradas em Tempo Real (`DowntimesModule`)
 - **Objetivo:** Habilitar abertura imediata de ocorrência de parada quando a sopradora para e resolução posterior com cálculo automático da duração.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/downtimes/dto/start-downtime.dto.ts`
@@ -187,11 +187,11 @@ Progresso da Fase 3 (Backend): [========------------------------] 29% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] `POST /api/downtimes/start`: executa dentro de transação, grava parada com `status: IN_PROGRESS` e altera máquina para `MachineStatus.STOPPED`
-  - [ ] `PATCH /api/downtimes/:id/resolve`: valida que $T_{fim} \ge T_{ini}$, calcula `durationMinutes = Math.floor((endTime - startTime) / 60000)`, atualiza status para `RESOLVED` e altera máquina para `MachineStatus.RUNNING`
+  - [x] `POST /api/downtimes/start`: executa dentro de transação, grava parada com `status: IN_PROGRESS` e altera máquina para `MachineStatus.STOPPED`
+  - [x] `PATCH /api/downtimes/:id/resolve`: valida que $T_{fim} \ge T_{ini}$, calcula `durationMinutes = Math.floor((endTime - startTime) / 60000)`, atualiza status para `RESOLVED` e altera máquina para `MachineStatus.RUNNING`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Parada aberta altera status da máquina para `STOPPED`; resolução calcula minutos e retorna para `RUNNING`.
-  - [ ] **Violação de Contrato (RN-03):** Resolução com $T_{fim} < T_{ini}$ rejeitada com HTTP 422 Unprocessable Entity.
+  - [x] **Caminho Normal:** Parada aberta altera status da máquina para `STOPPED`; resolução calcula minutos e retorna para `RUNNING`.
+  - [x] **Violação de Contrato (RN-03):** Resolução com $T_{fim} < T_{ini}$ rejeitada com HTTP 422 Unprocessable Entity.
 
 ---
 
