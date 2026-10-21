@@ -72,7 +72,7 @@
   - `RN-04`: Validação estrita de justificativa mínima (5 caracteres) quando o motivo for `OUTROS`.
 - **Dependências Bloqueantes:** Fase 2 concluída (alocações ativas e tabelas operacionais).
 - **Checklist Técnico Sequencial:**
-  - [ ] 3.1: Migrations Prisma para as tabelas `production_entries` e `downtime_records`
+  - [x] 3.1: Migrations Prisma para as tabelas `production_entries` e `downtime_records`
   - [ ] 3.2: Implementação do `ProductionsModule` (DTOs com `IsPositive`, validação de alocação ativa e gravação)
   - [ ] 3.3: Implementação do `DowntimesModule` (Início de parada em tempo real, resolução e lançamento retroativo)
   - [ ] 3.4: Validador customizado/Pipe para forçar `justification` obrigatória se `reason == OUTROS`

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,12 +33,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 3 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **3.1** | Migrations Prisma de Produção e Paradas | ⏳ Pendente | `backend/prisma/schema.prisma`, `migrations/` |
+| **3.1** | Migrations Prisma de Produção e Paradas | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
 | **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ⏳ Pendente | `backend/src/modules/productions/*` |
 | **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ⏳ Pendente | `backend/src/modules/downtimes/*` |
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ⏳ Pendente | `backend/src/modules/downtimes/*` |
@@ -52,11 +52,11 @@ Progresso da Fase 3 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⏳ Tarefa 3.1: Migrations Prisma de Produção e Paradas
+### ✅ Tarefa 3.1: Migrations Prisma de Produção e Paradas
 - **Objetivo:** Adicionar os models `ProductionEntry` e `DowntimeRecord` com enums correspondentes e chaves únicas `clientUuid` para suporte a idempotência.
 - **Arquivos a Modificar / Criar:**
   - `backend/prisma/schema.prisma`
-  - `backend/prisma/migrations/xxxx_add_productions_downtimes/migration.sql`
+  - `backend/prisma/migrations/20261021211855_add_productions_downtimes/migration.sql`
 - **Contratos e Tipagens Envolvidas:**
   ```prisma
   enum DowntimeReason {
@@ -109,12 +109,12 @@ Progresso da Fase 3 (Backend): [--------------------------------] 0% Concluído 
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Adicionar os models no `schema.prisma`
-  - [ ] Executar `npx prisma migrate dev --name add_productions_downtimes`
-  - [ ] Verificar integridade das chaves estrangeiras referenciando `shift_allocations(id)`
+  - [x] Adicionar os models no `schema.prisma`
+  - [x] Executar `npx prisma migrate dev --name add_productions_downtimes`
+  - [x] Verificar integridade das chaves estrangeiras referenciando `shift_allocations(id)`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Migration aplicada sem erros e client Prisma atualizado.
-  - [ ] **Violação de Contrato:** Inserção com `clientUuid` duplicado rejeitada no banco de dados.
+  - [x] **Caminho Normal:** Migration aplicada sem erros e client Prisma atualizado.
+  - [x] **Violação de Contrato:** Inserção com `clientUuid` duplicado rejeitada no banco de dados.
 
 ---
 

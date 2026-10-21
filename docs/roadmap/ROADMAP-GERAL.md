@@ -12,7 +12,7 @@
 | :---: | :--- | :--- | :---: | :--- |
 | **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | 🟢 Concluída | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟢 Concluída | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
-| **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | ⚪ A Iniciar | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
+| **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟡 Em Andamento | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | ⚪ A Iniciar | RF-10, RF-11, RNF-01, RNF-05 |
 
 ---
@@ -74,7 +74,7 @@
   - `RF-09`: Fila local em IndexedDB com idempotência por `clientUuid`.
   - `RNF-04`: Idempotência transacional de sincronização no backend.
 - **Checklist Macro de Entregas:**
-  - [ ] Migrations das tabelas `production_entries` e `downtime_records` com chaves `clientUuid` únicas
+  - [x] Migrations das tabelas `production_entries` e `downtime_records` com chaves `clientUuid` únicas
   - [ ] Módulo `ProductionsModule` (lançamentos de produção com validação $Q > 0$)
   - [ ] Módulo `DowntimesModule` (paradas em tempo real e retroativas com validação de justificativa)
   - [ ] Módulo `SyncModule` (endpoint transacional idempotente `POST /api/sync`)

@@ -38,6 +38,21 @@ enum ShiftAllocationStatus {
   CLOSED
 }
 
+enum DowntimeReason {
+  PRE_FORMA
+  COMPRESSOR
+  AQUECIMENTO_FORNO
+  MOLDE
+  MECANICA
+  ELETRICA
+  OUTROS
+}
+
+enum DowntimeStatus {
+  IN_PROGRESS
+  RESOLVED
+}
+
 model Machine {
   id          String            @id @default(uuid()) @db.Uuid
   code        String            @unique @db.VarChar(30)
@@ -66,21 +81,57 @@ model Shift {
 }
 
 model ShiftAllocation {
-  id         String                @id @default(uuid()) @db.Uuid
-  machineId  String                @db.Uuid
-  shiftId    String                @db.Uuid
-  operatorId String                @db.Uuid
-  shiftDate  DateTime              @db.Date
-  status     ShiftAllocationStatus @default(ACTIVE)
-  openedAt   DateTime              @default(now()) @db.Timestamptz
-  closedAt   DateTime?             @db.Timestamptz
+  id          String                @id @default(uuid()) @db.Uuid
+  machineId   String                @db.Uuid
+  shiftId     String                @db.Uuid
+  operatorId  String                @db.Uuid
+  shiftDate   DateTime              @db.Date
+  status      ShiftAllocationStatus @default(ACTIVE)
+  openedAt    DateTime              @default(now()) @db.Timestamptz
+  closedAt    DateTime?             @db.Timestamptz
 
-  machine    Machine               @relation(fields: [machineId], references: [id])
-  shift      Shift                 @relation(fields: [shiftId], references: [id])
-  operator   User                  @relation(fields: [operatorId], references: [id])
+  machine     Machine               @relation(fields: [machineId], references: [id])
+  shift       Shift                 @relation(fields: [shiftId], references: [id])
+  operator    User                  @relation(fields: [operatorId], references: [id])
+  productions ProductionEntry[]
+  downtimes   DowntimeRecord[]
 
   @@index([machineId, shiftDate])
   @@index([operatorId, shiftDate])
   @@map("shift_allocations")
+}
+
+model ProductionEntry {
+  id           String          @id @default(uuid()) @db.Uuid
+  clientUuid   String          @unique @db.Uuid
+  allocationId String          @db.Uuid
+  quantity     Int
+  timestamp    DateTime        @db.Timestamptz
+  createdAt    DateTime        @default(now()) @db.Timestamptz
+
+  allocation   ShiftAllocation @relation(fields: [allocationId], references: [id])
+
+  @@index([allocationId, timestamp])
+  @@map("production_entries")
+}
+
+model DowntimeRecord {
+  id              String          @id @default(uuid()) @db.Uuid
+  clientUuid      String          @unique @db.Uuid
+  allocationId    String          @db.Uuid
+  reason          DowntimeReason
+  justification   String?         @db.VarChar(255)
+  status          DowntimeStatus
+  startTime       DateTime        @db.Timestamptz
+  endTime         DateTime?       @db.Timestamptz
+  durationMinutes Int?
+  createdAt       DateTime        @default(now()) @db.Timestamptz
+  updatedAt       DateTime        @updatedAt @db.Timestamptz
+
+  allocation      ShiftAllocation @relation(fields: [allocationId], references: [id])
+
+  @@index([allocationId, reason])
+  @@index([startTime, endTime])
+  @@map("downtime_records")
 }
 
