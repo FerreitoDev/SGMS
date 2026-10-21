@@ -18,6 +18,10 @@ import {
   UserRole,
   DowntimeRecord,
 } from '@prisma/client';
+import {
+  assertNotFutureDate,
+  assertShiftDateWindow,
+} from '../../common/validators/is-not-future-date.validator';
 
 export interface DowntimeStartResult {
   data: DowntimeRecord;
@@ -32,24 +36,8 @@ export class DowntimesService {
     dto: StartDowntimeDto,
     user: { id: string; role: UserRole },
   ): Promise<DowntimeStartResult> {
-    // 1. RN-05: Validar timestamp de início (não pode ser futuro)
-    const startTime = new Date(dto.startTime);
-    if (isNaN(startTime.getTime())) {
-      throw new BadRequestException({
-        title: 'Requisição Inválida',
-        message: 'startTime deve ser uma data e hora ISO 8601 válida.',
-        code: 'INVALID_TIMESTAMP',
-      });
-    }
-
-    const now = new Date();
-    if (startTime.getTime() > now.getTime()) {
-      throw new UnprocessableEntityException({
-        title: 'Entidade Improcessável',
-        message: 'O horário informado não pode estar no futuro.',
-        code: 'FUTURE_TIMESTAMP',
-      });
-    }
+    // 1. RN-05: Validar timestamp de início (bloqueio de data futura com tolerância máxima de 2 min)
+    const startTime = assertNotFutureDate(dto.startTime, 'O horário informado');
 
     // 2. RN-04: Justificativa obrigatória se OUTROS (>= 5 caracteres), senão null estrito (Zero Fallback)
     let finalJustification: string | null = null;
@@ -84,6 +72,9 @@ export class DowntimesService {
     if (!allocation) {
       throw new NotFoundException(`Alocação com identificador '${dto.allocationId}' não encontrada.`);
     }
+
+    // 4.1. RN-05: Validar consistência com a data do turno da alocação
+    assertShiftDateWindow(startTime, allocation.shiftDate, 'A parada');
 
     // 5. RN-06: Imutabilidade de turno fechado
     if (allocation.status === ShiftAllocationStatus.CLOSED) {
@@ -157,23 +148,8 @@ export class DowntimesService {
     dto: ResolveDowntimeDto,
     user: { id: string; role: UserRole },
   ): Promise<DowntimeRecord> {
-    const endTime = new Date(dto.endTime);
-    if (isNaN(endTime.getTime())) {
-      throw new BadRequestException({
-        title: 'Requisição Inválida',
-        message: 'endTime deve ser uma data e hora ISO 8601 válida.',
-        code: 'INVALID_TIMESTAMP',
-      });
-    }
-
-    const now = new Date();
-    if (endTime.getTime() > now.getTime()) {
-      throw new UnprocessableEntityException({
-        title: 'Entidade Improcessável',
-        message: 'O horário informado não pode estar no futuro.',
-        code: 'FUTURE_TIMESTAMP',
-      });
-    }
+    // RN-05: Validar timestamp de término (bloqueio de data futura com tolerância máxima de 2 min)
+    const endTime = assertNotFutureDate(dto.endTime, 'O horário informado');
 
     return this.prisma.$transaction(async (tx) => {
       const downtime = await tx.downtimeRecord.findUnique({
@@ -242,26 +218,9 @@ export class DowntimesService {
     dto: RetroactiveDowntimeDto,
     user: { id: string; role: UserRole },
   ): Promise<DowntimeStartResult> {
-    // 1. Validar timestamps
-    const startTime = new Date(dto.startTime);
-    const endTime = new Date(dto.endTime);
-
-    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-      throw new BadRequestException({
-        title: 'Requisição Inválida',
-        message: 'Os horários de início e término devem ser datas ISO 8601 válidas.',
-        code: 'INVALID_TIMESTAMP',
-      });
-    }
-
-    const now = new Date();
-    if (startTime.getTime() > now.getTime() || endTime.getTime() > now.getTime()) {
-      throw new UnprocessableEntityException({
-        title: 'Entidade Improcessável',
-        message: 'O horário informado não pode estar no futuro.',
-        code: 'FUTURE_TIMESTAMP',
-      });
-    }
+    // 1. RN-05: Validar timestamps (bloqueio de data futura com tolerância máxima de 2 min)
+    const startTime = assertNotFutureDate(dto.startTime, 'O horário de início da parada');
+    const endTime = assertNotFutureDate(dto.endTime, 'O horário de término da parada');
 
     // RN-03: Consistência Cronológica (T_fim >= T_ini)
     if (endTime.getTime() < startTime.getTime()) {
@@ -305,6 +264,9 @@ export class DowntimesService {
     if (!allocation) {
       throw new NotFoundException(`Alocação com identificador '${dto.allocationId}' não encontrada.`);
     }
+
+    // 4.1. RN-05: Validar consistência com a data do turno da alocação
+    assertShiftDateWindow(startTime, allocation.shiftDate, 'A parada retroativa');
 
     // 5. RN-06: Imutabilidade de turno fechado para operadores
     if (allocation.status === ShiftAllocationStatus.CLOSED && user.role !== UserRole.GERENTE) {

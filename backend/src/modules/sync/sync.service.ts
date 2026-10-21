@@ -15,6 +15,10 @@ import {
   DowntimeReason,
   DowntimeStatus,
 } from '@prisma/client';
+import {
+  assertNotFutureDate,
+  assertShiftDateWindow,
+} from '../../common/validators/is-not-future-date.validator';
 
 export interface SyncBatchResult {
   success: boolean;
@@ -74,23 +78,8 @@ export class SyncService {
             });
           }
 
-          // 3. RN-05: Validar timestamp (não pode estar no futuro)
-          const eventTime = new Date(timestamp);
-          if (isNaN(eventTime.getTime())) {
-            throw new BadRequestException({
-              title: 'Requisição Inválida',
-              message: 'Timestamp deve ser uma data e hora ISO 8601 válida.',
-              code: 'INVALID_TIMESTAMP',
-            });
-          }
-
-          if (eventTime.getTime() > now.getTime()) {
-            throw new UnprocessableEntityException({
-              title: 'Entidade Improcessável',
-              message: 'O horário informado não pode estar no futuro.',
-              code: 'FUTURE_TIMESTAMP',
-            });
-          }
+          // 3. RN-05: Validar timestamp (bloqueio de data futura com tolerância máxima de 2 min)
+          const eventTime = assertNotFutureDate(timestamp, 'O horário informado');
 
           // 4. Buscar a alocação de turno
           const allocation = await tx.shiftAllocation.findUnique({
@@ -102,6 +91,9 @@ export class SyncService {
               `Alocação com identificador '${allocationId}' não encontrada.`,
             );
           }
+
+          // 4.1. RN-05: Validar consistência com a data do turno da alocação
+          assertShiftDateWindow(eventTime, allocation.shiftDate, 'O apontamento de produção');
 
           // 5. RN-06: Imutabilidade de turno fechado
           if (allocation.status === ShiftAllocationStatus.CLOSED) {
@@ -197,23 +189,8 @@ export class SyncService {
             finalJustification = justification.trim();
           }
 
-          // 3. RN-05: Validar timestamps
-          const start = new Date(startTime);
-          if (isNaN(start.getTime())) {
-            throw new BadRequestException({
-              title: 'Requisição Inválida',
-              message: 'startTime deve ser uma data ISO 8601 válida.',
-              code: 'INVALID_START_TIME',
-            });
-          }
-
-          if (start.getTime() > now.getTime()) {
-            throw new UnprocessableEntityException({
-              title: 'Entidade Improcessável',
-              message: 'O horário de início da parada não pode estar no futuro.',
-              code: 'FUTURE_TIMESTAMP',
-            });
-          }
+          // 3. RN-05: Validar timestamps (bloqueio de data futura com tolerância máxima de 2 min)
+          const start = assertNotFutureDate(startTime, 'O horário de início da parada');
 
           // 4. Buscar a alocação de turno
           const allocation = await tx.shiftAllocation.findUnique({
@@ -226,6 +203,9 @@ export class SyncService {
               `Alocação com identificador '${allocationId}' não encontrada.`,
             );
           }
+
+          // 4.1. RN-05: Validar consistência com a data do turno da alocação
+          assertShiftDateWindow(start, allocation.shiftDate, 'A parada');
 
           // 5. RN-06: Imutabilidade de turno fechado
           if (allocation.status === ShiftAllocationStatus.CLOSED) {
@@ -250,22 +230,7 @@ export class SyncService {
 
           // 7. Diferenciar parada consolidada (com endTime) ou em andamento (sem endTime)
           if (endTime) {
-            const end = new Date(endTime);
-            if (isNaN(end.getTime())) {
-              throw new BadRequestException({
-                title: 'Requisição Inválida',
-                message: 'endTime deve ser uma data ISO 8601 válida.',
-                code: 'INVALID_END_TIME',
-              });
-            }
-
-            if (end.getTime() > now.getTime()) {
-              throw new UnprocessableEntityException({
-                title: 'Entidade Improcessável',
-                message: 'O horário de término da parada não pode estar no futuro.',
-                code: 'FUTURE_TIMESTAMP',
-              });
-            }
+            const end = assertNotFutureDate(endTime, 'O horário de término da parada');
 
             // RN-03: Validação de sequência cronológica
             if (end.getTime() < start.getTime()) {

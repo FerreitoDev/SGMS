@@ -8,6 +8,10 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { CreateProductionDto } from './dto/create-production.dto';
 import { ShiftAllocationStatus, UserRole, ProductionEntry } from '@prisma/client';
+import {
+  assertNotFutureDate,
+  assertShiftDateWindow,
+} from '../../common/validators/is-not-future-date.validator';
 
 export interface ProductionCreateResult {
   data: ProductionEntry;
@@ -31,24 +35,8 @@ export class ProductionsService {
       });
     }
 
-    // 2. RN-05: Validar timestamp (não pode estar no futuro)
-    const eventTime = new Date(dto.timestamp);
-    if (isNaN(eventTime.getTime())) {
-      throw new BadRequestException({
-        title: 'Requisição Inválida',
-        message: 'Timestamp deve ser uma data e hora ISO 8601 válida.',
-        code: 'INVALID_TIMESTAMP',
-      });
-    }
-
-    const now = new Date();
-    if (eventTime.getTime() > now.getTime()) {
-      throw new UnprocessableEntityException({
-        title: 'Entidade Improcessável',
-        message: 'O horário informado não pode estar no futuro.',
-        code: 'FUTURE_TIMESTAMP',
-      });
-    }
+    // 2. RN-05: Validar timestamp (bloqueio de data futura com tolerância máxima de 2 min)
+    const eventTime = assertNotFutureDate(dto.timestamp, 'O horário informado');
 
     // 3. RN-07: Idempotência radical por clientUuid
     const existing = await this.prisma.productionEntry.findUnique({
@@ -70,6 +58,9 @@ export class ProductionsService {
     if (!allocation) {
       throw new NotFoundException(`Alocação com identificador '${dto.allocationId}' não encontrada.`);
     }
+
+    // 4.1. RN-05: Validar consistência com a data do turno da alocação
+    assertShiftDateWindow(eventTime, allocation.shiftDate, 'O apontamento de produção');
 
     // 5. RN-06: Imutabilidade de turno fechado
     if (allocation.status === ShiftAllocationStatus.CLOSED) {

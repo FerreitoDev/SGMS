@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (6 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [======================----------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 3 (Backend): [==========================------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 3 (Backend): [======================----------] 71% Concluído
 | **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ✅ Concluída | `backend/src/modules/sync/*` |
-| **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ⏳ Pendente | `backend/src/common/pipes/date-validation.pipe.ts` |
+| **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ✅ Concluída | `backend/src/common/validators/is-not-future-date.validator.ts` |
 | **3.7** | Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação | ⏳ Pendente | `backend/test/sync-idempotency.e2e-spec.ts` |
 
 ---
@@ -276,19 +276,19 @@ Progresso da Fase 3 (Backend): [======================----------] 71% Concluído
 
 ---
 
-### ⏳ Tarefa 3.6: Validação Temporal Estrita e Bloqueio de Timestamps Futuros
+### ✅ Tarefa 3.6: Validação Temporal Estrita e Bloqueio de Timestamps Futuros
 - **Objetivo:** Prevenir que horários adulterados ou relógios descalibrados de celulares registrem eventos no futuro em relação ao servidor da fábrica.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/common/validators/is-not-future-date.validator.ts`
   - `backend/src/modules/productions/dto/create-production.dto.ts`
   - `backend/src/modules/downtimes/dto/start-downtime.dto.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar validador customizado `IsNotFutureDate` com tolerância máxima de 2 minutos para desvio de relógio
-  - [ ] Rejeitar qualquer carimbo com $T_{evento} > T_{servidor} + 2\text{min}$ lançando `UnprocessableEntityException` (422)
-  - [ ] Validar que o evento pertence à data/horário do turno da alocação
+  - [x] Criar validador customizado `IsNotFutureDate` com tolerância máxima de 2 minutos para desvio de relógio
+  - [x] Rejeitar qualquer carimbo com $T_{evento} > T_{servidor} + 2\text{min}$ lançando `UnprocessableEntityException` (422)
+  - [x] Validar que o evento pertence à data/horário do turno da alocação
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Eventos dentro da janela temporal aceitos normalmente.
-  - [ ] **Violação Temporal (RN-05):** Data futura rejeitada com HTTP 422 em RFC 7807.
+  - [x] **Caminho Normal:** Eventos dentro da janela temporal aceitos normalmente.
+  - [x] **Violação Temporal (RN-05):** Data futura rejeitada com HTTP 422 em RFC 7807.
 
 ---
 
