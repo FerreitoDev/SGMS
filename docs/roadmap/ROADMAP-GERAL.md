@@ -76,8 +76,8 @@
 - **Checklist Macro de Entregas:**
   - [x] Migrations das tabelas `production_entries` e `downtime_records` com chaves `clientUuid` únicas
   - [x] Módulo `ProductionsModule` (lançamentos de produção com validação $Q > 0$)
-  - [ ] Módulo `DowntimesModule` (paradas em tempo real e retroativas com validação de justificativa)
-  - [ ] Módulo `SyncModule` (endpoint transacional idempotente `POST /api/sync`)
+  - [x] Módulo `DowntimesModule` (paradas em tempo real e retroativas com validação de justificativa)
+  - [x] Módulo `SyncModule` (endpoint transacional idempotente `POST /api/sync`)
   - [ ] Camada de armazenamento cliente no IndexedDB (tabela local `pending_events`)
   - [ ] Gaveta touch rápida no frontend com teclado numérico nativo e alvos $\ge 44\text{px}$
   - [ ] Modal de registro de parada com cronômetro em tempo real e modo retroativo

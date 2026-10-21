@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (6 de 7 Tarefas Concluídas)  
+> **Status:** ✅ Concluída (7 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [==========================------] 86% Concluído (6 de 7 tarefas)
+Progresso da Fase 3 (Backend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -44,7 +44,7 @@ Progresso da Fase 3 (Backend): [==========================------] 86% Concluído
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ✅ Concluída | `backend/src/modules/sync/*` |
 | **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ✅ Concluída | `backend/src/common/validators/is-not-future-date.validator.ts` |
-| **3.7** | Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação | ⏳ Pendente | `backend/test/sync-idempotency.e2e-spec.ts` |
+| **3.7** | Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação | ✅ Concluída | `backend/test/sync-idempotency.e2e-spec.ts` |
 
 ---
 
@@ -292,36 +292,36 @@ Progresso da Fase 3 (Backend): [==========================------] 86% Concluído
 
 ---
 
-### ⏳ Tarefa 3.7: Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação
+### ✅ Tarefa 3.7: Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação
 - **Objetivo:** Provar a robustez do pipeline de chão de fábrica e a ausência de corrupção de dados sob estresse de rede.
 - **Arquivos a Modificar / Criar:**
   - `backend/test/productions.e2e-spec.ts`
   - `backend/test/downtimes.e2e-spec.ts`
   - `backend/test/sync-idempotency.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Teste E2E de reenvio de lote offline provando que a contagem de garrafas permanece idêntica
-  - [ ] Teste E2E de paradas retroativas com e sem motivo `OUTROS`
-  - [ ] Teste E2E de tentativa de apontamento em alocação fechada $\rightarrow$ 403 Forbidden
-  - [ ] Auditoria de código: zero uso de `|| 0`, `|| ""` ou fallbacks silenciosos
-  - [ ] Execução do build de produção: `npm run build` verde
+  - [x] Teste E2E de reenvio de lote offline provando que a contagem de garrafas permanece idêntica
+  - [x] Teste E2E de paradas retroativas com e sem motivo `OUTROS`
+  - [x] Teste E2E de tentativa de apontamento em alocação fechada $\rightarrow$ 403 Forbidden
+  - [x] Auditoria de código: zero uso de `|| 0`, `|| ""` ou fallbacks silenciosos
+  - [x] Execução do build de produção: `npm run build` verde
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] 100% dos testes E2E executando com sucesso.
-  - [ ] Compilação de produção verde sem erros de tipagem.
+  - [x] 100% dos testes E2E executando com sucesso (115/115 testes passando em 10 suítes).
+  - [x] Compilação de produção verde sem erros de tipagem.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Campo `justification` forçado a `null` quando o motivo não for `OUTROS` (sem strings vazias `""`).
-- [ ] Quantidades de garrafas estritamente inteiras e positivas; proibido aceitar `0` como ausência de dados.
-- [ ] Duração de paradas em andamento gravada honestamente como `null` (`durationMinutes: null`), calculada apenas na resolução.
-- [ ] Descarte idempotente por `clientUuid` registrado em log auditável sem mascarar anomalias.
+- [x] Campo `justification` forçado a `null` quando o motivo não for `OUTROS` (sem strings vazias `""`).
+- [x] Quantidades de garrafas estritamente inteiras e positivas; proibido aceitar `0` como ausência de dados.
+- [x] Duração de paradas em andamento gravada honestamente como `null` (`durationMinutes: null`), calculada apenas na resolução.
+- [x] Descarte idempotente por `clientUuid` registrado em log auditável sem mascarar anomalias.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] Endpoints `/api/productions/*`, `/api/downtimes/*` e `/api/sync` operacionais.
-- [ ] Teste de colisão offline validado (reenvio de lote não altera dados).
-- [ ] Parada com motivo `OUTROS` rejeitada na ausência de justificativa mínima.
-- [ ] Compilação de produção executada com sucesso (`npm run build`).
+- [x] Endpoints `/api/productions/*`, `/api/downtimes/*` e `/api/sync` operacionais.
+- [x] Teste de colisão offline validado (reenvio de lote não altera dados).
+- [x] Parada com motivo `OUTROS` rejeitada na ausência de justificativa mínima.
+- [x] Compilação de produção executada com sucesso (`npm run build`).

@@ -78,7 +78,7 @@
   - [x] 3.4: Apontamento retroativo e validação de justificativa para `OUTROS` (mín. 5 chars e null estrito)
   - [x] 3.5: Implementação do `SyncModule` (`POST /api/sync`) com processamento em lote transacional e descarte idempotente
   - [x] 3.6: Validação temporal estrita, tolerância de clock drift e bloqueio de timestamps futuros
-  - [ ] 3.7: Testes E2E de idempotência, auditoria Zero Fallback e homologação da Fase 3
+  - [x] 3.7: Testes E2E de idempotência, auditoria Zero Fallback e homologação da Fase 3
 - **Plano de Execução Vinculado:** [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md)
 
 ---
