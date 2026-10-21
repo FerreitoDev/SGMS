@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { MachinesModule } from './modules/machines/machines.module';
 import { ShiftsModule } from './modules/shifts/shifts.module';
 import { AllocationsModule } from './modules/allocations/allocations.module';
+import { ProductionsModule } from './modules/productions/productions.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AllocationsModule } from './modules/allocations/allocations.module';
     MachinesModule,
     ShiftsModule,
     AllocationsModule,
+    ProductionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

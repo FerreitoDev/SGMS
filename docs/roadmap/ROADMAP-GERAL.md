@@ -75,7 +75,7 @@
   - `RNF-04`: Idempotência transacional de sincronização no backend.
 - **Checklist Macro de Entregas:**
   - [x] Migrations das tabelas `production_entries` e `downtime_records` com chaves `clientUuid` únicas
-  - [ ] Módulo `ProductionsModule` (lançamentos de produção com validação $Q > 0$)
+  - [x] Módulo `ProductionsModule` (lançamentos de produção com validação $Q > 0$)
   - [ ] Módulo `DowntimesModule` (paradas em tempo real e retroativas com validação de justificativa)
   - [ ] Módulo `SyncModule` (endpoint transacional idempotente `POST /api/sync`)
   - [ ] Camada de armazenamento cliente no IndexedDB (tabela local `pending_events`)

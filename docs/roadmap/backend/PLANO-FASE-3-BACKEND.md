@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,13 +33,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 3 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **3.1** | Migrations Prisma de Produção e Paradas | ✅ Concluída | `backend/prisma/schema.prisma`, `migrations/` |
-| **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ⏳ Pendente | `backend/src/modules/productions/*` |
+| **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ✅ Concluída | `backend/src/modules/productions/*` |
 | **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ⏳ Pendente | `backend/src/modules/downtimes/*` |
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ⏳ Pendente | `backend/src/modules/downtimes/*` |
 | **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ⏳ Pendente | `backend/src/modules/sync/*` |
@@ -118,7 +118,7 @@ Progresso da Fase 3 (Backend): [====----------------------------] 14% Concluído
 
 ---
 
-### ⏳ Tarefa 3.2: Módulo de Apontamento de Produção (`ProductionsModule`)
+### ✅ Tarefa 3.2: Módulo de Apontamento de Produção (`ProductionsModule`)
 - **Objetivo:** Implementar o registro horário e acumulado de garrafas sopradas com validação de quantidade estritamente positiva ($Q \ge 1$).
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/productions/dto/create-production.dto.ts`
@@ -143,13 +143,13 @@ Progresso da Fase 3 (Backend): [====----------------------------] 14% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Validar que a alocação existe e está com `status = ACTIVE` (RN-06)
-  - [ ] Validar que o operador autenticado é o responsável pela alocação (ou perfil `GERENTE`) (RN-08)
-  - [ ] Tratar `clientUuid` pré-existente: se já existir, retornar o registro com HTTP 200 sem duplicar
-  - [ ] Gravar registro e responder com HTTP 201 Created
+  - [x] Validar que a alocação existe e está com `status = ACTIVE` (RN-06)
+  - [x] Validar que o operador autenticado é o responsável pela alocação (ou perfil `GERENTE`) (RN-08)
+  - [x] Tratar `clientUuid` pré-existente: se já existir, retornar o registro com HTTP 200 sem duplicar
+  - [x] Gravar registro e responder com HTTP 201 Created
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Apontamento válido grava registro e retorna dados persistidos.
-  - [ ] **Violação de Contrato (RN-02):** Envio de `quantity: 0` ou `quantity: -50` rejeitado com HTTP 422.
+  - [x] **Caminho Normal:** Apontamento válido grava registro e retorna dados persistidos.
+  - [x] **Violação de Contrato (RN-02):** Envio de `quantity: 0` ou `quantity: -50` rejeitado com HTTP 422.
 
 ---
 

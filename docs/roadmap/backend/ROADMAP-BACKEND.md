@@ -73,7 +73,7 @@
 - **Dependências Bloqueantes:** Fase 2 concluída (alocações ativas e tabelas operacionais).
 - **Checklist Técnico Sequencial:**
   - [x] 3.1: Migrations Prisma para as tabelas `production_entries` e `downtime_records`
-  - [ ] 3.2: Implementação do `ProductionsModule` (DTOs com `IsPositive`, validação de alocação ativa e gravação)
+  - [x] 3.2: Implementação do `ProductionsModule` (DTOs com `IsPositive`, validação de alocação ativa e gravação)
   - [ ] 3.3: Implementação do `DowntimesModule` (Início de parada em tempo real, resolução e lançamento retroativo)
   - [ ] 3.4: Validador customizado/Pipe para forçar `justification` obrigatória se `reason == OUTROS`
   - [ ] 3.5: Implementação do `SyncModule` (`POST /api/sync`) com processamento em lote transacional
