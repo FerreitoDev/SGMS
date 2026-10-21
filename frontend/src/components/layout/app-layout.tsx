@@ -114,6 +114,51 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
             </Button>
           </div>
         </div>
+
+        {/* Navegação Secundária Mobile para perfil GERENTE */}
+        {user?.role === 'GERENTE' && (
+          <div className="flex md:hidden border-t border-border bg-muted/20 px-3 py-1 gap-1 overflow-x-auto">
+            <NavLink
+              to="/admin/machines"
+              className={({ isActive }) =>
+                `flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors touch-manipulation ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`
+              }
+            >
+              <Cpu className="h-4 w-4" />
+              <span>Sopradoras</span>
+            </NavLink>
+            <NavLink
+              to="/admin/users"
+              className={({ isActive }) =>
+                `flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors touch-manipulation ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`
+              }
+            >
+              <Users className="h-4 w-4" />
+              <span>Operadores</span>
+            </NavLink>
+            <NavLink
+              to="/admin/shifts"
+              className={({ isActive }) =>
+                `flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors touch-manipulation ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`
+              }
+            >
+              <Clock className="h-4 w-4" />
+              <span>Turnos</span>
+            </NavLink>
+          </div>
+        )}
       </header>
 
       {/* Conteúdo Principal */}

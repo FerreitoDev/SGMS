@@ -11,7 +11,7 @@
 | Fase Setorial | Título da Entrega Técnica | Plano de Execução Vinculado | Status |
 | :---: | :--- | :--- | :---: |
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
-| **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟡 Em Andamento |
+| **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟢 Concluída |
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | ⚪ A Iniciar |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
 
@@ -55,7 +55,7 @@
   - [x] 2.3: Tela de Alocação Mobile para o Operador (cartões grandes com alvos de toque `h-14`)
   - [x] 2.4: Integração com `POST /api/allocations` e captura de erro 409 exibindo toast explicativo amigável
   - [x] 2.5: Redirecionamento automático para o Console Operacional da máquina alocada
-  - [ ] 2.6: Teste de usabilidade e responsividade em resoluções de smartphone (360x640) e tablet (768x1024)
+  - [x] 2.6: Teste de usabilidade e responsividade em resoluções de smartphone (360x640) e tablet (768x1024)
 - **Plano de Execução Vinculado:** [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md)
 
 ---

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (6 de 7 Tarefas Concluídas)  
+> **Status:** 🟢 Concluído (7 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -44,7 +44,7 @@ Progresso da Fase 2 (Frontend): [========================--------] 86% Concluíd
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ✅ Concluída | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
 | **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ✅ Concluída | `frontend/src/pages/operator/allocation-page.tsx` |
 | **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ✅ Concluída | `frontend/src/pages/operator/allocation-page.tsx`, `frontend/src/hooks/use-current-allocation.ts` |
-| **2.7** | Auditoria Zero Fallback, Responsividade Mobile & Build | ⏳ Pendente | Testes visuais e compilação de produção |
+| **2.7** | Auditoria Zero Fallback, Responsividade Mobile & Build | ✅ Concluída | Testes visuais e compilação de produção |
 
 ---
 
@@ -203,33 +203,33 @@ Progresso da Fase 2 (Frontend): [========================--------] 86% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.7: Auditoria Zero Fallback, Responsividade Mobile & Build
+### ✅ Tarefa 2.7: Auditoria Zero Fallback, Responsividade Mobile & Build
 - **Objetivo:** Validar a conformidade de tipos, ausência de valores mágicos, ergonomia touch nos 4 breakpoints e build verde de produção.
 - **Arquivos a Inspecionar:**
   - `frontend/src/**/*`
 - **Checklist de Execução Detalhado:**
-  - [ ] Inspecionar componentes e assegurar zero fallbacks arbitrários (`|| ""` ou `|| 0`)
-  - [ ] Validar responsividade em viewport de celular (360px) simulando operação com uma mão
-  - [ ] Validar responsividade em viewport de tablet (768px)
-  - [ ] Executar `npm run build` e validar compilação sem erros
+  - [x] Inspecionar componentes e assegurar zero fallbacks arbitrários (`|| ""` ou `|| 0`)
+  - [x] Validar responsividade em viewport de celular (360px) simulando operação com uma mão
+  - [x] Validar responsividade em viewport de tablet (768px)
+  - [x] Executar `npm run build` e validar compilação sem erros
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] `npm run build` finalizado com sucesso sem warnings de tipagem.
-  - [ ] Navegação completa entre Telas Administrativas e Tela de Alocação sem erros de console.
+  - [x] `npm run build` finalizado com sucesso sem warnings de tipagem.
+  - [x] Navegação completa entre Telas Administrativas e Tela de Alocação sem erros de console.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Modelo de sopradora ausente exibido explicitamente como traço `-`, nunca omitido silenciosamente ou mascarado com texto falso.
-- [ ] Erros de concorrência e validação da API extraídos fielmente do payload RFC 7807 e exibidos em toasts.
-- [ ] Prevenção de duplo clique em botões de confirmação de alocação através de flag de loading reativa.
-- [ ] Proibido o uso de `any` em estados de componentes e contratos de serviços.
+- [x] Modelo de sopradora ausente exibido explicitamente como traço `-`, nunca omitido silenciosamente ou mascarado com texto falso.
+- [x] Erros de concorrência e validação da API extraídos fielmente do payload RFC 7807 e exibidos em toasts.
+- [x] Prevenção de duplo clique em botões de confirmação de alocação através de flag de loading reativa.
+- [x] Proibido o uso de `any` em estados de componentes e contratos de serviços.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] Gerente cadastra máquinas e turnos com sucesso na interface de desktop.
-- [ ] Operador visualiza sopradoras disponíveis e assume uma máquina via smartphone/tablet.
-- [ ] Conflito de concorrência (dois operadores clicando na mesma máquina) testado com bloqueio visual do segundo.
-- [ ] Build estrito de produção executado com sucesso (`npm run build`).
+- [x] Gerente cadastra máquinas e turnos com sucesso na interface de desktop.
+- [x] Operador visualiza sopradoras disponíveis e assume uma máquina via smartphone/tablet.
+- [x] Conflito de concorrência (dois operadores clicando na mesma máquina) testado com bloqueio visual do segundo.
+- [x] Build estrito de produção executado com sucesso (`npm run build`).
