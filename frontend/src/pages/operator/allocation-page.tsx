@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/use-auth';
+import { useCurrentAllocation } from '@/hooks/use-current-allocation';
 import { Machine, Shift } from '@/types/domain';
 import { machinesService } from '@/services/machines-service';
 import { shiftsService } from '@/services/shifts-service';
@@ -35,6 +36,8 @@ export function AllocationPage(): React.ReactElement {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const { allocation, isLoading: isCheckingAllocation } = useCurrentAllocation();
+
   const [machines, setMachines] = useState<Machine[]>([]);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
@@ -43,6 +46,17 @@ export function AllocationPage(): React.ReactElement {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  // Redirecionamento automático se o operador já tiver alocação ativa (RN-01)
+  useEffect(() => {
+    if (allocation && allocation.status === 'ACTIVE') {
+      const machineCode = allocation.machine?.code ? allocation.machine.code : 'máquina';
+      toast.info('Retomando Operação', {
+        description: `Retomando operação da ${machineCode}.`,
+      });
+      navigate('/chao-de-fabrica/console', { replace: true });
+    }
+  }, [allocation, navigate]);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -103,15 +117,42 @@ export function AllocationPage(): React.ReactElement {
       navigate('/chao-de-fabrica/console');
     } catch (err: unknown) {
       const detail = extractProblemDetail(err);
-      toast.error('Falha ao Assumir Sopradora', {
+
+      // Em caso de concorrência ou máquina ocupada (HTTP 409)
+      // Atualiza o card local para RUNNING e limpa seleção
+      setMachines((prev) =>
+        prev.map((m) =>
+          m.id === selectedMachine.id
+            ? { ...m, status: 'RUNNING' }
+            : m
+        )
+      );
+      setSelectedMachine(null);
+
+      toast.error('Máquina já alocada por outro operador.', {
         description: detail,
       });
-      // Recarrega lista para atualizar status da máquina caso tenha sido ocupada por outro operador
+
+      // Recarrega lista para sincronizar estado em background
       loadData();
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Enquanto verifica a alocação atual do operador, evita flicker de tela
+  if (isCheckingAllocation && !allocation) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm font-medium text-muted-foreground">
+            Verificando alocação ativa do operador...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased pb-28">

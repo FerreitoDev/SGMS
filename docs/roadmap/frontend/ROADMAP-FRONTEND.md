@@ -53,8 +53,8 @@
   - [x] 2.1: Tela administrativa de Máquinas (cadastro de tags `SOPRO-XX`, modelo e toggle de ativação)
   - [x] 2.2: Tela administrativa de Turnos (horários de início/fim com validação de formato `HH:mm`)
   - [x] 2.3: Tela de Alocação Mobile para o Operador (cartões grandes com alvos de toque `h-14`)
-  - [ ] 2.4: Integração com `POST /api/allocations` e captura de erro 409 exibindo toast explicativo amigável
-  - [ ] 2.5: Redirecionamento automático para o Console Operacional da máquina alocada
+  - [x] 2.4: Integração com `POST /api/allocations` e captura de erro 409 exibindo toast explicativo amigável
+  - [x] 2.5: Redirecionamento automático para o Console Operacional da máquina alocada
   - [ ] 2.6: Teste de usabilidade e responsividade em resoluções de smartphone (360x640) e tablet (768x1024)
 - **Plano de Execução Vinculado:** [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md)
 

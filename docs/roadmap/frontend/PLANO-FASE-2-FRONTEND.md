@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 2 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 2 (Gestão de Máquinas, Turnos & Interface de Alocação Touch)  
-> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (6 de 7 Tarefas Concluídas)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + React Hook Form + Zod + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 2 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 2 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 2 (Frontend): [====================------------] 71% Concluíd
 | **2.3** | Tela Administrativa de Gestão de Turnos (`ShiftsPage`) | ✅ Concluída | `frontend/src/pages/admin/shifts-page.tsx` |
 | **2.4** | Componentes Touch-First (`MachineCard`, `ShiftSelector`) | ✅ Concluída | `frontend/src/components/machines/*`, `frontend/src/components/shifts/*` |
 | **2.5** | Tela de Alocação de Máquina para o Operador (`AllocationPage`) | ✅ Concluída | `frontend/src/pages/operator/allocation-page.tsx` |
-| **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ⏳ Pendente | `frontend/src/pages/operator/allocation-page.tsx` |
+| **2.6** | Tratamento de Conflito 409 e Redirecionamento Automático | ✅ Concluída | `frontend/src/pages/operator/allocation-page.tsx`, `frontend/src/hooks/use-current-allocation.ts` |
 | **2.7** | Auditoria Zero Fallback, Responsividade Mobile & Build | ⏳ Pendente | Testes visuais e compilação de produção |
 
 ---
@@ -185,21 +185,21 @@ Progresso da Fase 2 (Frontend): [====================------------] 71% Concluíd
 
 ---
 
-### ⏳ Tarefa 2.6: Tratamento de Conflito 409 e Redirecionamento Automático
+### ✅ Tarefa 2.6: Tratamento de Conflito 409 e Redirecionamento Automático
 - **Objetivo:** Blindar a interface do operador contra disputas de alocação e evitar redundância caso já haja sessão em andamento.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/operator/allocation-page.tsx`
   - `frontend/src/hooks/use-current-allocation.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar hook `useCurrentAllocation` que consome `GET /api/allocations/current`
-  - [ ] Se houver alocação `ACTIVE`, redirecionar imediatamente para o console da máquina alocada com toast informativo ("Retomando operação da SOPRO-01")
-  - [ ] Na submissão de nova alocação, se a API responder HTTP 409 Conflict:
-    - Capturar o `detail` do RFC 7807
-    - Disparar `toast.error("Máquina já alocada por outro operador.")`
-    - Atualizar a lista de máquinas para refletir o status `RUNNING` na máquina disputada
+  - [x] Criar hook `useCurrentAllocation` que consome `GET /api/allocations/current`
+  - [x] Se houver alocação `ACTIVE`, redirecionar imediatamente para o console da máquina alocada com toast informativo ("Retomando operação da SOPRO-01")
+  - [x] Na submissão de nova alocação, se a API responder HTTP 409 Conflict:
+    - [x] Capturar o `detail` do RFC 7807
+    - [x] Disparar `toast.error("Máquina já alocada por outro operador.")`
+    - [x] Atualizar a lista de máquinas para refletir o status `RUNNING` na máquina disputada
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Operador que já possui alocação é conduzido diretamente à operação sem telas intermediárias.
-  - [ ] **Violação de Concorrência:** Disputa simultânea exibe toast explicativo e impede avanço indevido.
+  - [x] **Caminho Normal:** Operador que já possui alocação é conduzido diretamente à operação sem telas intermediárias.
+  - [x] **Violação de Concorrência:** Disputa simultânea exibe toast explicativo e impede avanço indevido.
 
 ---
 
