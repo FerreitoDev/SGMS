@@ -8,6 +8,7 @@ import {
   UseGuards,
   Res,
   HttpStatus,
+  HttpCode,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -42,11 +43,21 @@ export class AllocationsController {
     return res.status(HttpStatus.OK).json(allocation ?? null);
   }
 
+  @Post(':id/close')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.OPERADOR, UserRole.GERENTE)
+  async close(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @CurrentUser() user: { id: string; role: UserRole },
+  ) {
+    return this.allocationsService.close(id, user);
+  }
+
   @Patch(':id/release')
   async release(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @CurrentUser() user: { id: string; role: UserRole },
   ) {
-    return this.allocationsService.release(id, user);
+    return this.allocationsService.close(id, user);
   }
 }

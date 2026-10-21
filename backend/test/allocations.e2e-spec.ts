@@ -5,7 +5,14 @@ import { AppModule } from '../src/app.module';
 import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
 import { PrismaService } from '../src/database/prisma.service';
 import * as bcrypt from 'bcryptjs';
-import { UserRole, MachineStatus, ShiftAllocationStatus } from '@prisma/client';
+import {
+  UserRole,
+  MachineStatus,
+  ShiftAllocationStatus,
+  DowntimeReason,
+  DowntimeStatus,
+} from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 describe('AllocationsModule (e2e)', () => {
   let app: INestApplication;
@@ -44,6 +51,16 @@ describe('AllocationsModule (e2e)', () => {
     const passwordHash = await bcrypt.hash(rawPassword, 10);
 
     // Limpeza prévia específica do suíte de Allocations
+    await prisma.productionEntry.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-ALC-' } } },
+      },
+    });
+    await prisma.downtimeRecord.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-ALC-' } } },
+      },
+    });
     await prisma.shiftAllocation.deleteMany({
       where: {
         machine: { code: { startsWith: 'E2E-ALC-' } },
@@ -117,6 +134,16 @@ describe('AllocationsModule (e2e)', () => {
   });
 
   afterAll(async () => {
+    await prisma.productionEntry.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-ALC-' } } },
+      },
+    });
+    await prisma.downtimeRecord.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-ALC-' } } },
+      },
+    });
     await prisma.shiftAllocation.deleteMany({
       where: {
         machine: { code: { startsWith: 'E2E-ALC-' } },
@@ -419,7 +446,7 @@ describe('AllocationsModule (e2e)', () => {
         .set('Authorization', `Bearer ${op2Token}`);
 
       expect(response.status).toBe(403);
-      expect(response.body.code).toBe('FORBIDDEN_RELEASE');
+      expect(response.body.code).toBe('FORBIDDEN_ALLOCATION');
     });
 
     it('deve permitir ao próprio operador liberar sua alocação, revertendo a máquina para IDLE', async () => {
@@ -517,4 +544,231 @@ describe('AllocationsModule (e2e)', () => {
       expect(response.status).toBe(400);
     });
   });
+
+  describe('POST /api/allocations/:id/close', () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    it('deve rejeitar tentativa de outro operador fechar alocação alheia com HTTP 403 Forbidden', async () => {
+      const machine = await prisma.machine.create({
+        data: {
+          code: 'E2E-ALC-CLS-OP1',
+          name: 'Sopradora Close Test 1',
+          status: MachineStatus.IDLE,
+          isActive: true,
+        },
+      });
+      const shift = await prisma.shift.findFirst({
+        where: { name: 'E2E-ALC-Turno Manhã' },
+      });
+
+      const allocRes = await request(app.getHttpServer())
+        .post('/api/allocations')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          machineId: machine.id,
+          shiftId: shift!.id,
+          shiftDate: todayStr,
+        });
+      expect(allocRes.status).toBe(201);
+
+      // op2 tenta fechar a alocação do op1
+      const response = await request(app.getHttpServer())
+        .post(`/api/allocations/${allocRes.body.id}/close`)
+        .set('Authorization', `Bearer ${op2Token}`);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('FORBIDDEN_ALLOCATION');
+    });
+
+    it('deve permitir ao próprio operador fechar seu turno, resolvendo paradas em andamento e liberando a máquina para IDLE', async () => {
+      // Buscar a alocação ativa do op1
+      const currentRes = await request(app.getHttpServer())
+        .get('/api/allocations/current')
+        .set('Authorization', `Bearer ${op1Token}`);
+      const allocationId = currentRes.body.id;
+
+      // Iniciar uma parada em andamento nesta alocação
+      const downtimeRes = await request(app.getHttpServer())
+        .post('/api/downtimes/start')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId,
+          reason: DowntimeReason.MOLDE,
+          startTime: new Date().toISOString(),
+          justification: 'Parada antes de encerrar o turno',
+        });
+      expect(downtimeRes.status).toBe(201);
+      expect(downtimeRes.body.status).toBe(DowntimeStatus.IN_PROGRESS);
+
+      // Operador fecha o turno
+      const response = await request(app.getHttpServer())
+        .post(`/api/allocations/${allocationId}/close`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe(ShiftAllocationStatus.CLOSED);
+      expect(response.body.closedAt).not.toBeNull();
+      expect(response.body.machine.status).toBe(MachineStatus.IDLE);
+
+      // Verificar que a parada foi automaticamente resolvida no banco
+      const downtimeDb = await prisma.downtimeRecord.findUnique({
+        where: { id: downtimeRes.body.id },
+      });
+      expect(downtimeDb!.status).toBe(DowntimeStatus.RESOLVED);
+      expect(downtimeDb!.endTime).not.toBeNull();
+      expect(downtimeDb!.durationMinutes).toBeGreaterThanOrEqual(0);
+
+      // Verificar máquina no banco como IDLE
+      const machine = await prisma.machine.findUnique({
+        where: { id: response.body.machineId },
+      });
+      expect(machine!.status).toBe(MachineStatus.IDLE);
+    });
+
+    it('deve rejeitar tentativa de fechar alocação já encerrada com HTTP 409 Conflict', async () => {
+      const closedAllocation = await prisma.shiftAllocation.findFirst({
+        where: {
+          operatorId: op1Id,
+          status: ShiftAllocationStatus.CLOSED,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(`/api/allocations/${closedAllocation!.id}/close`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(409);
+      expect(response.body.code).toBe('ALLOCATION_ALREADY_CLOSED');
+    });
+
+    it('deve permitir ao Gerente fechar a alocação de qualquer operador', async () => {
+      const machine = await prisma.machine.create({
+        data: {
+          code: 'E2E-ALC-MGR-CLS',
+          name: 'Sopradora Mgr Close',
+          status: MachineStatus.IDLE,
+          isActive: true,
+        },
+      });
+      const shift = await prisma.shift.findFirst({
+        where: { name: 'E2E-ALC-Turno Manhã' },
+      });
+
+      const allocRes = await request(app.getHttpServer())
+        .post('/api/allocations')
+        .set('Authorization', `Bearer ${op2Token}`)
+        .send({
+          machineId: machine.id,
+          shiftId: shift!.id,
+          shiftDate: todayStr,
+        });
+      expect(allocRes.status).toBe(201);
+
+      // Gerente fecha a alocação do op2
+      const response = await request(app.getHttpServer())
+        .post(`/api/allocations/${allocRes.body.id}/close`)
+        .set('Authorization', `Bearer ${mgrToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe(ShiftAllocationStatus.CLOSED);
+      expect(response.body.machine.status).toBe(MachineStatus.IDLE);
+    });
+  });
+
+  describe('AllocationActiveGuard & Imutabilidade (RN-06)', () => {
+    let closedAllocId: string;
+
+    beforeAll(async () => {
+      const closedAlloc = await prisma.shiftAllocation.findFirst({
+        where: {
+          operatorId: op1Id,
+          status: ShiftAllocationStatus.CLOSED,
+        },
+      });
+      closedAllocId = closedAlloc!.id;
+    });
+
+    it('deve rejeitar apontamento de produção em alocação encerrada por operador com HTTP 403 e code SHIFT_CLOSED', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/productions')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: closedAllocId,
+          quantity: 150,
+          timestamp: new Date().toISOString(),
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('SHIFT_CLOSED');
+    });
+
+    it('deve rejeitar abertura de parada em alocação encerrada por operador com HTTP 403 e code SHIFT_CLOSED', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/start')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: closedAllocId,
+          reason: DowntimeReason.MOLDE,
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('SHIFT_CLOSED');
+    });
+
+    it('deve rejeitar parada retroativa em alocação encerrada por operador com HTTP 403 e code SHIFT_CLOSED', async () => {
+      const now = new Date();
+      const past = new Date(now.getTime() - 10 * 60000);
+
+      const response = await request(app.getHttpServer())
+        .post('/api/downtimes/retroactive')
+        .set('Authorization', `Bearer ${op1Token}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: closedAllocId,
+          reason: DowntimeReason.MECANICA,
+          startTime: past.toISOString(),
+          endTime: now.toISOString(),
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('SHIFT_CLOSED');
+    });
+
+    it('deve permitir consulta de produções em alocação encerrada com HTTP 200', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/productions/allocation/${closedAllocId}`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.allocationId).toBe(closedAllocId);
+    });
+
+    it('deve permitir consulta de paradas em alocação encerrada com HTTP 200', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/downtimes/allocation/${closedAllocId}`)
+        .set('Authorization', `Bearer ${op1Token}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.allocationId).toBe(closedAllocId);
+    });
+
+    it('deve permitir ao Gerente realizar apontamento de produção em alocação encerrada (ajuste pós-fechamento)', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/productions')
+        .set('Authorization', `Bearer ${mgrToken}`)
+        .send({
+          clientUuid: randomUUID(),
+          allocationId: closedAllocId,
+          quantity: 200,
+          timestamp: new Date().toISOString(),
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.quantity).toBe(200);
+    });
+  });
 });
+

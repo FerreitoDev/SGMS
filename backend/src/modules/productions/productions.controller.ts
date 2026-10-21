@@ -16,6 +16,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { AllocationActiveGuard } from '../../common/guards/allocation-active.guard';
 import { UserRole } from '@prisma/client';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -24,6 +25,7 @@ export class ProductionsController {
   constructor(private readonly productionsService: ProductionsService) {}
 
   @Post()
+  @UseGuards(AllocationActiveGuard)
   @Roles(UserRole.OPERADOR, UserRole.GERENTE)
   async create(
     @Body() dto: CreateProductionDto,

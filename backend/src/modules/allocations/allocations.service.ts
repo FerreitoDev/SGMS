@@ -8,7 +8,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateAllocationDto } from './dto/create-allocation.dto';
-import { MachineStatus, ShiftAllocationStatus, Prisma, UserRole } from '@prisma/client';
+import {
+  MachineStatus,
+  ShiftAllocationStatus,
+  Prisma,
+  UserRole,
+  DowntimeStatus,
+} from '@prisma/client';
 
 @Injectable()
 export class AllocationsService {
@@ -197,7 +203,7 @@ export class AllocationsService {
     return allocation ?? null;
   }
 
-  async release(id: string, user: { id: string; role: UserRole }) {
+  async close(id: string, user: { id: string; role: UserRole }) {
     return this.prisma.$transaction(async (tx) => {
       const allocation = await tx.shiftAllocation.findUnique({
         where: { id },
@@ -221,16 +227,41 @@ export class AllocationsService {
       if (!isOwner && !isManager) {
         throw new ForbiddenException({
           title: 'Acesso Proibido',
-          message: 'Você não tem permissão para liberar a alocação de outro operador.',
-          code: 'FORBIDDEN_RELEASE',
+          message: 'Você não tem permissão para encerrar a alocação de outro operador.',
+          code: 'FORBIDDEN_ALLOCATION',
         });
       }
 
+      const now = new Date();
+
+      // 1. Se houver parada aberta (IN_PROGRESS) vinculada a esta alocação, encerra automaticamente
+      const activeDowntimes = await tx.downtimeRecord.findMany({
+        where: {
+          allocationId: id,
+          status: DowntimeStatus.IN_PROGRESS,
+        },
+      });
+
+      for (const downtime of activeDowntimes) {
+        const durationMinutes = Math.floor(
+          (now.getTime() - downtime.startTime.getTime()) / 60000,
+        );
+        await tx.downtimeRecord.update({
+          where: { id: downtime.id },
+          data: {
+            status: DowntimeStatus.RESOLVED,
+            endTime: now,
+            durationMinutes,
+          },
+        });
+      }
+
+      // 2. Atualizar alocação para CLOSED com data/hora de fechamento
       const closedAllocation = await tx.shiftAllocation.update({
         where: { id },
         data: {
           status: ShiftAllocationStatus.CLOSED,
-          closedAt: new Date(),
+          closedAt: now,
         },
         include: {
           machine: {
@@ -259,6 +290,7 @@ export class AllocationsService {
         },
       });
 
+      // 3. Reverter status da máquina para IDLE
       await tx.machine.update({
         where: { id: allocation.machineId },
         data: { status: MachineStatus.IDLE },
@@ -268,5 +300,9 @@ export class AllocationsService {
 
       return closedAllocation;
     });
+  }
+
+  async release(id: string, user: { id: string; role: UserRole }) {
+    return this.close(id, user);
   }
 }

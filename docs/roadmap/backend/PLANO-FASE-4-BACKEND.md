@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (1 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,12 +32,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 4 (Backend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **4.1** | Encerramento de Turno & Guard de Imutabilidade (RN-06) | ⏳ Pendente | `backend/src/modules/allocations/*`, `backend/src/common/guards/*` |
+| **4.1** | Encerramento de Turno & Guard de Imutabilidade (RN-06) | 🟢 Concluída | `backend/src/modules/allocations/*`, `backend/src/common/guards/*` |
 | **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | ⏳ Pendente | `backend/src/modules/reports/reports.service.ts` |
 | **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | ⏳ Pendente | `backend/src/modules/reports/*` |
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | ⏳ Pendente | `backend/src/modules/reports/generators/csv.generator.ts` |
@@ -51,7 +51,7 @@ Progresso da Fase 4 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⏳ Tarefa 4.1: Encerramento de Turno & Guard de Imutabilidade (RN-06)
+### ✅ Tarefa 4.1: Encerramento de Turno & Guard de Imutabilidade (RN-06)
 - **Objetivo:** Implementar a transição atômica de encerramento da alocação de turno e a trava de segurança que bloqueia novas inserções após o encerramento.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/allocations/allocations.service.ts`
@@ -60,15 +60,15 @@ Progresso da Fase 4 (Backend): [--------------------------------] 0% Concluído 
   - `backend/src/modules/productions/productions.controller.ts`
   - `backend/src/modules/downtimes/downtimes.controller.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar `closeAllocation(id, userId, role)` no `AllocationsService`:
+  - [x] Implementar `close(id, user)` no `AllocationsService`:
     - Validar que a alocação existe e está com `status: ACTIVE`
     - Validar que apenas o operador responsável ou um `GERENTE` pode fechar a alocação
     - Executar em transação: (1) Atualizar `ShiftAllocation.status` para `CLOSED` e `closedAt = now()`; (2) Se houver parada aberta (`IN_PROGRESS`), encerrá-la automaticamente com $T_{fim} = now()$; (3) Atualizar `Machine.status` para `IDLE`
-  - [ ] Implementar `AllocationActiveGuard` validando que `allocation.status === ACTIVE` antes de processar qualquer chamada em `ProductionsController` e `DowntimesController`
-  - [ ] Retornar HTTP 403 Forbidden em formato RFC 7807 se a alocação já estiver `CLOSED`
+  - [x] Implementar `AllocationActiveGuard` validando que `allocation.status === ACTIVE` antes de processar qualquer chamada em `ProductionsController` e `DowntimesController`
+  - [x] Retornar HTTP 403 Forbidden em formato RFC 7807 se a alocação já estiver `CLOSED`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Alocação encerrada transita para `CLOSED` e libera a máquina para `IDLE`.
-  - [ ] **Violação de Imutabilidade (RN-06):** Tentativa de apontar produção em alocação fechada bloqueada com HTTP 403.
+  - [x] **Caminho Normal:** Alocação encerrada transita para `CLOSED` e libera a máquina para `IDLE`.
+  - [x] **Violação de Imutabilidade (RN-06):** Tentativa de apontar produção em alocação fechada bloqueada com HTTP 403.
 
 ---
 

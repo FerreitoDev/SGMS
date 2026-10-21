@@ -95,8 +95,11 @@ export class SyncService {
           // 4.1. RN-05: Validar consistência com a data do turno da alocação
           assertShiftDateWindow(eventTime, allocation.shiftDate, 'O apontamento de produção');
 
-          // 5. RN-06: Imutabilidade de turno fechado
-          if (allocation.status === ShiftAllocationStatus.CLOSED) {
+          // 5. RN-06: Imutabilidade de turno fechado para operadores
+          if (
+            allocation.status === ShiftAllocationStatus.CLOSED &&
+            user.role !== UserRole.GERENTE
+          ) {
             throw new ForbiddenException({
               title: 'Acesso Proibido',
               message: 'Este turno já foi encerrado e não aceita novos apontamentos.',
@@ -207,8 +210,11 @@ export class SyncService {
           // 4.1. RN-05: Validar consistência com a data do turno da alocação
           assertShiftDateWindow(start, allocation.shiftDate, 'A parada');
 
-          // 5. RN-06: Imutabilidade de turno fechado
-          if (allocation.status === ShiftAllocationStatus.CLOSED) {
+          // 5. RN-06: Imutabilidade de turno fechado para operadores
+          if (
+            allocation.status === ShiftAllocationStatus.CLOSED &&
+            user.role !== UserRole.GERENTE
+          ) {
             throw new ForbiddenException({
               title: 'Acesso Proibido',
               message: 'Este turno já foi encerrado e não aceita novos apontamentos.',

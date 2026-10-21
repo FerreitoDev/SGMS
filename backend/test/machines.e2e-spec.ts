@@ -41,6 +41,8 @@ describe('MachinesModule (e2e)', () => {
     const passwordHash = await bcrypt.hash(rawPassword, 10);
 
     // Limpeza prévia
+    await prisma.productionEntry.deleteMany({});
+    await prisma.downtimeRecord.deleteMany({});
     await prisma.shiftAllocation.deleteMany({});
     await prisma.shift.deleteMany({});
     await prisma.machine.deleteMany({
@@ -89,6 +91,8 @@ describe('MachinesModule (e2e)', () => {
   });
 
   afterAll(async () => {
+    await prisma.productionEntry.deleteMany({});
+    await prisma.downtimeRecord.deleteMany({});
     await prisma.shiftAllocation.deleteMany({});
     await prisma.shift.deleteMany({});
     await prisma.machine.deleteMany({
