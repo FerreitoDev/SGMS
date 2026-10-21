@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Console Operacional Touch, Modal de Paradas & Persistência IndexedDB / PWA)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Andamento (1 de 7 Tarefas Concluídas — 14%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + idb + vite-plugin-pwa + Zod + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,12 +32,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **3.1** | Configuração PWA, Service Worker & Manifesto Web | ⏳ Pendente | `frontend/vite.config.ts`, `frontend/public/manifest.json` |
+| **3.1** | Configuração PWA, Service Worker & Manifesto Web | 🟢 Concluída | `frontend/vite.config.ts`, `frontend/public/manifest.json` |
 | **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | ⏳ Pendente | `frontend/src/lib/offline-storage.ts` |
 | **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | ⏳ Pendente | `frontend/src/hooks/use-offline-sync.ts` |
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | ⏳ Pendente | `frontend/src/pages/operator/operator-console-page.tsx` |
@@ -51,23 +51,24 @@ Progresso da Fase 3 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⏳ Tarefa 3.1: Configuração PWA, Service Worker & Manifesto Web
+### ✅ Tarefa 3.1: Configuração PWA, Service Worker & Manifesto Web
 - **Objetivo:** Transformar a SPA em um Progressive Web App (PWA) instalável diretamente na rede local sem gerar arquivos APK, garantindo cache offline completo dos assets estáticos.
 - **Arquivos a Modificar / Criar:**
   - `frontend/vite.config.ts`
   - `frontend/public/manifest.json`
   - `frontend/public/icons/icon-192x192.png`
   - `frontend/public/icons/icon-512x512.png`
+  - `frontend/public/icons/icon.svg`
   - `frontend/index.html`
 - **Dependências a Instalar:**
   - `vite-plugin-pwa`
 - **Checklist de Execução Detalhado:**
-  - [ ] Configurar `VitePWA` com `registerType: 'autoUpdate'`, suporte a offline precaching para todos os assets JS, CSS e fontes
-  - [ ] Declarar `manifest.json` corporativo com `name: "SGMS — GEPF Agroindústria"`, `short_name: "SGMS"`, `theme_color: "#0f172a"`, `display: "standalone"`
-  - [ ] Configurar meta tags para compatibilidade iOS/Safari (`apple-mobile-web-app-capable`)
+  - [x] Configurar `VitePWA` com `registerType: 'autoUpdate'`, suporte a offline precaching para todos os assets JS, CSS e fontes
+  - [x] Declarar `manifest.json` corporativo com `name: "SGMS — GEPF Agroindústria"`, `short_name: "SGMS"`, `theme_color: "#0f172a"`, `display: "standalone"`
+  - [x] Configurar meta tags para compatibilidade iOS/Safari (`apple-mobile-web-app-capable`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Navegador exibe prompt nativo "Adicionar à tela inicial" no smartphone/tablet.
-  - [ ] **Funcionamento Offline:** Com o servidor web temporariamente suspenso, a casca da aplicação continua abrindo via cache do Service Worker.
+  - [x] **Caminho Normal:** Navegador exibe prompt nativo "Adicionar à tela inicial" no smartphone/tablet.
+  - [x] **Funcionamento Offline:** Com o servidor web temporariamente suspenso, a casca da aplicação continua abrindo via cache do Service Worker.
 
 ---
 

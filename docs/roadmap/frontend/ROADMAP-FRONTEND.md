@@ -12,7 +12,7 @@
 | :---: | :--- | :--- | :---: |
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
 | **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟢 Concluída |
-| **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | ⚪ A Iniciar |
+| **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟡 Em Andamento |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
 
 ---
@@ -70,7 +70,7 @@
   - `RNF-06`: Service Worker configurado via `vite-plugin-pwa` para cache completo de assets estáticos.
 - **Dependências Bloqueantes:** Endpoints da Fase 3 do backend (`/api/productions`, `/api/downtimes`, `/api/sync`).
 - **Checklist Técnico Sequencial:**
-  - [ ] 3.1: Instalação e configuração do `vite-plugin-pwa` e da biblioteca `idb` para IndexedDB
+  - [x] 3.1: Instalação e configuração do `vite-plugin-pwa` e da biblioteca `idb` para IndexedDB
   - [ ] 3.2: Implementação da camada de armazenamento local `OfflineStorage` (tabela `pending_events`)
   - [ ] 3.3: Implementação do hook `useOfflineSync` com monitoramento de conexão e disparo em lote para `/api/sync`
   - [ ] 3.4: Construção do Console do Operador (cabeçalho com máquina ativa, status e badge de conectividade)
