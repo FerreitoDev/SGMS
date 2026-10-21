@@ -76,9 +76,9 @@
   - [x] 3.2: Implementação do `ProductionsModule` (DTOs com `IsPositive`, validação de alocação ativa e gravação)
   - [x] 3.3: Implementação do `DowntimesModule` (Início de parada em tempo real e resolução)
   - [x] 3.4: Apontamento retroativo e validação de justificativa para `OUTROS` (mín. 5 chars e null estrito)
-  - [ ] 3.5: Implementação do `SyncModule` (`POST /api/sync`) com processamento em lote transacional
-  - [ ] 3.6: Mecanismo de descarte idempotente de `clientUuid` pré-existente sem alterar dados
-  - [ ] 3.7: Testes de unidade e integração provando idempotência e rejeição de horários futuros
+  - [x] 3.5: Implementação do `SyncModule` (`POST /api/sync`) com processamento em lote transacional e descarte idempotente
+  - [ ] 3.6: Validação temporal estrita e bloqueio de timestamps futuros
+  - [ ] 3.7: Testes E2E de idempotência, auditoria Zero Fallback e homologação da Fase 3
 - **Plano de Execução Vinculado:** [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md)
 
 ---

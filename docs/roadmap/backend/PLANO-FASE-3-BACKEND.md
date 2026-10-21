@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 3 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 3 (Apontamento de Produção, Paradas & Sincronização Idempotente)  
-> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16 + Transações ACID)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Backend): [==================--------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 3 (Backend): [======================----------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 3 (Backend): [==================--------------] 57% Concluído
 | **3.2** | Módulo de Apontamento de Produção (`ProductionsModule`) | ✅ Concluída | `backend/src/modules/productions/*` |
 | **3.3** | Módulo de Paradas em Tempo Real (`DowntimesModule`) | ✅ Concluída | `backend/src/modules/downtimes/*` |
 | **3.4** | Apontamento de Paradas Retroativas e Validação de Motivos | ✅ Concluída | `backend/src/modules/downtimes/*` |
-| **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ⏳ Pendente | `backend/src/modules/sync/*` |
+| **3.5** | Módulo de Sincronização Offline em Lote (`SyncModule`) | ✅ Concluída | `backend/src/modules/sync/*` |
 | **3.6** | Validação Temporal Estrita e Bloqueio de Timestamps Futuros | ⏳ Pendente | `backend/src/common/pipes/date-validation.pipe.ts` |
 | **3.7** | Auditoria Zero Fallback, Testes E2E de Idempotência & Homologação | ⏳ Pendente | `backend/test/sync-idempotency.e2e-spec.ts` |
 
@@ -236,7 +236,7 @@ Progresso da Fase 3 (Backend): [==================--------------] 57% Concluído
 
 ---
 
-### ⏳ Tarefa 3.5: Módulo de Sincronização Offline em Lote (`SyncModule`)
+### ✅ Tarefa 3.5: Módulo de Sincronização Offline em Lote (`SyncModule`)
 - **Objetivo:** Processar o pacote de eventos acumulados no IndexedDB do operador após queda de rede/energia, assegurando atomicidade e descarte idempotente de registros repetidos.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/sync/dto/sync-batch.dto.ts`
@@ -264,15 +264,15 @@ Progresso da Fase 3 (Backend): [==================--------------] 57% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Abrir transação interativa gerenciada `this.prisma.$transaction`
-  - [ ] Para cada evento do lote:
+  - [x] Abrir transação interativa gerenciada `this.prisma.$transaction`
+  - [x] Para cada evento do lote:
     - Verificar existência prévia do `clientUuid` na tabela alvo
     - Se existir, ignorar inserção (idempotência preservada)
     - Se não existir, executar as validações de domínio correspondentes e persistir
-  - [ ] Retornar HTTP 200 com lista de `clientUuids` processados com sucesso
+  - [x] Retornar HTTP 200 com lista de `clientUuids` processados com sucesso
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Lote de 10 eventos gravado em bloco e confirmado.
-  - [ ] **Idempotência (RN-07):** Reenvio imediato do mesmo lote responde HTTP 200 sem duplicar registros no banco.
+  - [x] **Caminho Normal:** Lote de 10 eventos gravado em bloco e confirmado.
+  - [x] **Idempotência (RN-07):** Reenvio imediato do mesmo lote responde HTTP 200 sem duplicar registros no banco.
 
 ---
 

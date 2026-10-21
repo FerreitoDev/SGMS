@@ -10,6 +10,7 @@ import { ShiftsModule } from './modules/shifts/shifts.module';
 import { AllocationsModule } from './modules/allocations/allocations.module';
 import { ProductionsModule } from './modules/productions/productions.module';
 import { DowntimesModule } from './modules/downtimes/downtimes.module';
+import { SyncModule } from './modules/sync/sync.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { DowntimesModule } from './modules/downtimes/downtimes.module';
     AllocationsModule,
     ProductionsModule,
     DowntimesModule,
+    SyncModule,
   ],
   controllers: [AppController],
   providers: [AppService],
