@@ -103,3 +103,25 @@ export type DowntimeReason =
 
 export type DowntimeStatus = 'OPEN' | 'RESOLVED';
 
+export interface ProductionEntry {
+  id: string;
+  clientUuid: string;
+  allocationId: string;
+  quantity: number;
+  recordedAt: string;
+  createdAt: string;
+}
+
+export interface DowntimeRecord {
+  id: string;
+  clientUuid: string;
+  allocationId: string;
+  reason: DowntimeReason;
+  justification: string | null;
+  startTime: string;
+  endTime: string | null;
+  status: DowntimeStatus;
+  createdAt: string;
+}
+
+

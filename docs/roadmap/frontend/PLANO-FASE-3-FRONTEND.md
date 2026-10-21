@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -40,7 +40,7 @@ Progresso da Fase 3 (Frontend): [============--------------------] 43% Concluíd
 | **3.1** | Configuração PWA, Service Worker & Manifesto Web | 🟢 Concluída | `frontend/vite.config.ts`, `frontend/public/manifest.json` |
 | **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts`, `frontend/src/types/offline.ts` |
 | **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | 🟢 Concluída | `frontend/src/hooks/use-offline-sync.ts`, `frontend/src/components/sync/sync-badge.tsx` |
-| **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | ⏳ Pendente | `frontend/src/pages/operator/operator-console-page.tsx` |
+| **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/operator/*` |
 | **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | ⏳ Pendente | `frontend/src/components/production/*` |
 | **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | ⏳ Pendente | `frontend/src/components/downtime/*` |
 | **3.7** | Auditoria Zero Fallback, Simulação Offline & Build | ⏳ Pendente | Testes de desconexão e compilação de produção |
@@ -118,26 +118,26 @@ Progresso da Fase 3 (Frontend): [============--------------------] 43% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.4: Console Operacional do Chão de Fábrica (`OperatorConsolePage`)
+### ✅ Tarefa 3.4: Console Operacional do Chão de Fábrica (`OperatorConsolePage`)
 - **Objetivo:** Construir o painel de comando do operador para a sopradora em operação, destacando o status da máquina, contadores do turno e botões táteis primários.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/operator/operator-console-page.tsx`
   - `frontend/src/components/operator/operator-header.tsx`
   - `frontend/src/components/operator/production-summary-card.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Barra superior com código da máquina (`SOPRO-01`), nome do operador logado, turno ativo e o `SyncBadge`
-  - [ ] Card de Status da Máquina em destaque visual:
+  - [x] Barra superior com código da máquina (`SOPRO-01`), nome do operador logado, turno ativo e o `SyncBadge`
+  - [x] Card de Status da Máquina em destaque visual:
     - Se `RUNNING`: fundo verde sutil com texto "EM OPERAÇÃO"
     - Se `STOPPED`: fundo vermelho pulsante com cronômetro de parada ativo
-  - [ ] Card com totalizador acumulado de garrafas sopradas no turno corrente
-  - [ ] Botão de Ação Primária touch: "+ Apontar Produção" (classe `h-14 text-lg w-full touch-manipulation`)
-  - [ ] Botão de Parada:
+  - [x] Card com totalizador acumulado de garrafas sopradas no turno corrente
+  - [x] Botão de Ação Primária touch: "+ Apontar Produção" (classe `h-14 text-lg w-full touch-manipulation`)
+  - [x] Botão de Parada:
     - Se operando: botão vermelho "Parar Máquina" (abre modal de parada)
     - Se parada ativa: botão verde "Retomar Produção" (resolve a parada imediatamente)
-  - [ ] Link secundário: "Registrar Parada Retroativa"
+  - [x] Link secundário: "Registrar Parada Retroativa"
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Operador visualiza os dados em tempo real da máquina alocada.
-  - [ ] **Ergonomia:** Alvos de clique de grande dimensão facilitam toque com luvas industriais ou dedos úmidos.
+  - [x] **Caminho Normal:** Operador visualiza os dados em tempo real da máquina alocada.
+  - [x] **Ergonomia:** Alvos de clique de grande dimensão facilitam toque com luvas industriais ou dedos úmidos.
 
 ---
 

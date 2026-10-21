@@ -73,7 +73,7 @@
   - [x] 3.1: Instalação e configuração do `vite-plugin-pwa` e da biblioteca `idb` para IndexedDB
   - [x] 3.2: Implementação da camada de armazenamento local `OfflineStorage` (tabela `pending_events`)
   - [x] 3.3: Implementação do hook `useOfflineSync` com monitoramento de conexão e disparo em lote para `/api/sync`
-  - [ ] 3.4: Construção do Console do Operador (cabeçalho com máquina ativa, status e badge de conectividade)
+  - [x] 3.4: Construção do Console do Operador (cabeçalho com máquina ativa, status e badge de conectividade)
   - [ ] 3.5: Componente `ProductionDrawer` usando `Sheet` do shadcn com input `type="number" inputMode="numeric"`
   - [ ] 3.6: Componente `DowntimeModal` com cronômetro em tempo real para paradas ativas e aba para modo retroativo
   - [ ] 3.7: Validação Zod garantindo que o campo `justification` seja obrigatório se motivo for `OUTROS`
