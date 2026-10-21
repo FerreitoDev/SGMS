@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (2 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (3 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,14 +32,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [========------------------------] 29% Concluído (2 de 7 tarefas)
+Progresso da Fase 4 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **4.1** | Encerramento de Turno & Guard de Imutabilidade (RN-06) | 🟢 Concluída | `backend/src/modules/allocations/*`, `backend/src/common/guards/*` |
 | **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | 🟢 Concluída | `backend/src/modules/reports/reports.service.ts` |
-| **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | ⏳ Pendente | `backend/src/modules/reports/*` |
+| **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | 🟢 Concluída | `backend/src/modules/reports/*` |
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | ⏳ Pendente | `backend/src/modules/reports/generators/csv.generator.ts` |
 | **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | ⏳ Pendente | `backend/src/modules/reports/generators/pdf.generator.ts` |
 | **4.6** | Endpoints de Download com Streaming e Headers HTTP | ⏳ Pendente | `backend/src/modules/reports/reports.controller.ts` |
@@ -95,7 +95,7 @@ Progresso da Fase 4 (Backend): [========------------------------] 29% Concluído
 
 ---
 
-### ⏳ Tarefa 4.3: Módulo de Relatórios e DTO de Filtros Analíticos
+### ✅ Tarefa 4.3: Módulo de Relatórios e DTO de Filtros Analíticos
 - **Objetivo:** Estabelecer a estrutura modular de relatórios e a validação estrita dos filtros de busca por período, máquina e turno.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/dto/report-filter.dto.ts`
@@ -122,12 +122,12 @@ Progresso da Fase 4 (Backend): [========------------------------] 29% Concluído
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Validar que `endDate >= startDate`, lançando `BadRequestException` caso invertido
-  - [ ] Proteger endpoints do módulo exclusivamente para o perfil `Role.GERENTE`
-  - [ ] Configurar injeção do `PrismaService` no `ReportsModule`
+  - [x] Validar que `endDate >= startDate`, lançando `BadRequestException` caso invertido
+  - [x] Proteger endpoints do módulo exclusivamente para o perfil `Role.GERENTE`
+  - [x] Configurar injeção do `PrismaService` no `ReportsModule`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Filtros válidos retornam payload JSON em `GET /api/reports/dashboard`.
-  - [ ] **Violação de Contrato:** Operador tentando consultar relatórios recebe HTTP 403 Forbidden.
+  - [x] **Caminho Normal:** Filtros válidos retornam payload JSON em `GET /api/reports/dashboard`.
+  - [x] **Violação de Contrato:** Operador tentando consultar relatórios recebe HTTP 403 Forbidden.
 
 ---
 

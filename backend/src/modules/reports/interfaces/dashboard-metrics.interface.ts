@@ -18,12 +18,7 @@ export interface DashboardMetrics {
   pareto: ParetoItem[];
 }
 
-export interface ReportFilterDto {
-  startDate: string;
-  endDate: string;
-  machineId?: string;
-  shiftId?: string;
-}
+export { ReportFilterDto } from '../dto/report-filter.dto';
 
 export interface AllocationReportRow {
   allocationId: string;

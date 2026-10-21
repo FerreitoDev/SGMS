@@ -11,6 +11,7 @@ import { AllocationsModule } from './modules/allocations/allocations.module';
 import { ProductionsModule } from './modules/productions/productions.module';
 import { DowntimesModule } from './modules/downtimes/downtimes.module';
 import { SyncModule } from './modules/sync/sync.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SyncModule } from './modules/sync/sync.module';
     ProductionsModule,
     DowntimesModule,
     SyncModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
