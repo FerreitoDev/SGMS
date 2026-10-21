@@ -68,8 +68,9 @@ export function ProductionDrawer({
   }, [open, reset]);
 
   const handleIncrement = (amount: number): void => {
-    const current = Number(currentQuantity) || 0;
-    setValue('quantity', current + amount, { shouldValidate: true });
+    const current = Number(currentQuantity);
+    const next = Number.isFinite(current) ? current + amount : amount;
+    setValue('quantity', next, { shouldValidate: true });
   };
 
   const onSubmit = async (data: ProductionFormData): Promise<void> => {
@@ -85,7 +86,7 @@ export function ProductionDrawer({
       payload: {
         allocationId,
         quantity: data.quantity,
-        recordedAt: recordedAtIso,
+        timestamp: recordedAtIso,
       },
       createdAt: nowIso,
       status: 'PENDING',
@@ -101,7 +102,7 @@ export function ProductionDrawer({
         clientUuid,
         allocationId,
         quantity: data.quantity,
-        recordedAt: recordedAtIso,
+        timestamp: recordedAtIso,
       });
 
       // Sucesso na API: marca como sincronizado no IndexedDB

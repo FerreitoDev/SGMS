@@ -5,7 +5,7 @@ export interface CreateProductionPayload {
   clientUuid: string;
   allocationId: string;
   quantity: number;
-  recordedAt: string;
+  timestamp: string;
 }
 
 export const productionsService = {

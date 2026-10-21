@@ -6,7 +6,7 @@ export type OfflineEventStatus = 'PENDING' | 'SYNCED';
 export interface ProductionPayload {
   allocationId: string;
   quantity: number;
-  recordedAt: string;
+  timestamp: string;
 }
 
 export interface DowntimePayload {
@@ -18,13 +18,28 @@ export interface DowntimePayload {
   status: DowntimeStatus;
 }
 
-export interface OfflineEvent<T = Record<string, unknown>> {
+export interface ResolveDowntimePayload {
+  allocationId: string;
+  endTime: string;
+}
+
+export type OfflinePayload = ProductionPayload | DowntimePayload | ResolveDowntimePayload;
+
+export interface OfflineEvent<T = OfflinePayload> {
   clientUuid: string;
   type: OfflineEventType;
   endpoint: string;
   payload: T;
   createdAt: string;
   status: OfflineEventStatus;
+}
+
+export interface ProductionOfflineEvent extends OfflineEvent<ProductionPayload> {
+  type: 'PRODUCTION';
+}
+
+export interface DowntimeOfflineEvent extends OfflineEvent<DowntimePayload> {
+  type: 'DOWNTIME';
 }
 
 export interface SyncBatchResponse {

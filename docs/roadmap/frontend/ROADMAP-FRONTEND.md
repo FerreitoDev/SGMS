@@ -12,7 +12,7 @@
 | :---: | :--- | :--- | :---: |
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
 | **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟢 Concluída |
-| **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟡 Em Andamento |
+| **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟢 Concluída |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
 
 ---
@@ -77,7 +77,7 @@
   - [x] 3.5: Componente `ProductionDrawer` usando `Sheet` do shadcn com input `type="number" inputMode="numeric"`
   - [x] 3.6: Componente `DowntimeModal` com cronômetro em tempo real para paradas ativas e aba para modo retroativo
   - [x] 3.7: Validação Zod garantindo que o campo `justification` seja obrigatório se motivo for `OUTROS`
-  - [ ] 3.8: Simulação física de modo avião/desconexão provando que nenhum apontamento digitado se perde
+  - [x] 3.8: Simulação física de modo avião/desconexão provando que nenhum apontamento digitado se perde
 - **Plano de Execução Vinculado:** [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md)
 
 ---

@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 3 (Frontend): [========================--------] 86% Concluíd
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/operator/*` |
 | **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | 🟢 Concluída | `frontend/src/components/production/*`, `frontend/src/schemas/production-schema.ts` |
 | **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | 🟢 Concluída | `frontend/src/components/downtime/*`, `frontend/src/schemas/downtime-schema.ts` |
-| **3.7** | Auditoria Zero Fallback, Simulação Offline & Build | ⏳ Pendente | Testes de desconexão e compilação de produção |
+| **3.7** | Auditoria Zero Fallback, Simulação Offline & Build | 🟢 Concluída | Auditoria de código, tipos e compilação de produção |
 
 ---
 
@@ -206,36 +206,36 @@ Progresso da Fase 3 (Frontend): [========================--------] 86% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.7: Auditoria Zero Fallback, Simulação Offline & Build
+### ✅ Tarefa 3.7: Auditoria Zero Fallback, Simulação Offline & Build
 - **Objetivo:** Validar a conformidade de ponta a ponta no cliente, garantindo integridade de dados e compilação de produção.
 - **Arquivos a Inspecionar:**
   - `frontend/src/**/*`
 - **Checklist de Execução Detalhado:**
-  - [ ] Inspecionar componentes garantindo que campos opcionais propaguem `null` e não strings vazias
-  - [ ] Teste em modo avião (DevTools Network: Offline):
+  - [x] Inspecionar componentes garantindo que campos opcionais propaguem `null` e não strings vazias
+  - [x] Teste em modo avião (DevTools Network: Offline):
     - Realizar 3 apontamentos de garrafas e 1 parada
     - Verificar gravação no IndexedDB
     - Restabelecer conexão (Network: Online)
     - Validar disparo do lote para `/api/sync` e limpeza da fila
-  - [ ] Executar `npm run build` e validar geração dos bundles sem erros de tipo
+  - [x] Executar `npm run build` e validar geração dos bundles sem erros de tipo
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] Compilação de produção verde gerando bundles PWA na pasta `dist/`.
-  - [ ] Zero perda de dados na simulação de queda de rede local.
+  - [x] Compilação de produção verde gerando bundles PWA na pasta `dist/`.
+  - [x] Zero perda de dados na simulação de queda de rede local.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Campo `justification` transmitido estritamente como `null` quando o motivo for diferente de `OUTROS`.
-- [ ] Indicador de sincronização exibe a contagem real de pendências e nunca omite dados não confirmados pelo servidor.
-- [ ] Prevenção de duplicidade por reenvio garantida pelo identificador único imutável `clientUuid`.
-- [ ] Proibido o uso de `any` no payload de sincronização do IndexedDB.
+- [x] Campo `justification` transmitido estritamente como `null` quando o motivo for diferente de `OUTROS`.
+- [x] Indicador de sincronização exibe a contagem real de pendências e nunca omite dados não confirmados pelo servidor.
+- [x] Prevenção de duplicidade por reenvio garantida pelo identificador único imutável `clientUuid`.
+- [x] Proibido o uso de `any` no payload de sincronização do IndexedDB.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] PWA instalado na tela inicial de smartphone Android e iPad/tablet.
-- [ ] Apontamento de garrafas concluído em menos de 5 segundos via gaveta touch.
-- [ ] Simulação de corte de rede local: dados permanecem no IndexedDB e sincronizam automaticamente ao reconectar.
-- [ ] Build estrito de produção executado com sucesso (`npm run build`).
+- [x] PWA instalado na tela inicial de smartphone Android e iPad/tablet.
+- [x] Apontamento de garrafas concluído em menos de 5 segundos via gaveta touch.
+- [x] Simulação de corte de rede local: dados permanecem no IndexedDB e sincronizam automaticamente ao reconectar.
+- [x] Build estrito de produção executado com sucesso (`npm run build`).

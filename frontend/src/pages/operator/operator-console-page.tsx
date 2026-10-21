@@ -75,8 +75,8 @@ export function OperatorConsolePage(): React.ReactElement {
 
       // Quantidade pendente no buffer local pertencente a esta alocação
       const offlineQty = offlineEvents
-        .filter((e) => e.type === 'PRODUCTION' && (e.payload as unknown as ProductionPayload).allocationId === allocation.id)
-        .reduce((acc, curr) => acc + (Number((curr.payload as unknown as ProductionPayload).quantity) || 0), 0);
+        .filter((e) => e.type === 'PRODUCTION' && (e.payload as ProductionPayload).allocationId === allocation.id)
+        .reduce((acc, curr) => acc + (curr.payload as ProductionPayload).quantity, 0);
 
       setPendingProductionsQty(offlineQty);
     } catch (err) {

@@ -1,10 +1,10 @@
 import { apiClient } from '@/lib/api-client';
-import type { SyncBatchResponse } from '@/types/offline';
+import type { OfflinePayload, SyncBatchResponse } from '@/types/offline';
 
 export interface SyncEventItemPayload {
   clientUuid: string;
   type: 'PRODUCTION' | 'DOWNTIME';
-  payload: Record<string, unknown>;
+  payload: OfflinePayload;
 }
 
 export interface SyncBatchRequest {

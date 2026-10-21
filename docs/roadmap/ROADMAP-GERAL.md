@@ -12,7 +12,7 @@
 | :---: | :--- | :--- | :---: | :--- |
 | **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | 🟢 Concluída | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟢 Concluída | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
-| **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟡 Em Andamento | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
+| **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟢 Concluída | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | ⚪ A Iniciar | RF-10, RF-11, RNF-01, RNF-05 |
 
 ---
@@ -78,10 +78,10 @@
   - [x] Módulo `ProductionsModule` (lançamentos de produção com validação $Q > 0$)
   - [x] Módulo `DowntimesModule` (paradas em tempo real e retroativas com validação de justificativa)
   - [x] Módulo `SyncModule` (endpoint transacional idempotente `POST /api/sync`)
-  - [ ] Camada de armazenamento cliente no IndexedDB (tabela local `pending_events`)
-  - [ ] Gaveta touch rápida no frontend com teclado numérico nativo e alvos $\ge 44\text{px}$
-  - [ ] Modal de registro de parada com cronômetro em tempo real e modo retroativo
-  - [ ] Hook de sincronização automática com feedback visual de status de rede
+  - [x] Camada de armazenamento cliente no IndexedDB (tabela local `pending_events`)
+  - [x] Gaveta touch rápida no frontend com teclado numérico nativo e alvos $\ge 44\text{px}$
+  - [x] Modal de registro de parada com cronômetro em tempo real e modo retroativo
+  - [x] Hook de sincronização automática com feedback visual de status de rede
 - **Critérios de Conclusão da Fase:**
   - Apontamento gravado com dispositivo desconectado da rede local permanece no IndexedDB e sincroniza automaticamente ao reconectar.
   - Reenvio acidental do mesmo lote offline não gera duplicidade de garrafas ou paradas no banco.
