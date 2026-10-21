@@ -32,14 +32,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 3 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
+Progresso da Fase 3 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **3.1** | Configuração PWA, Service Worker & Manifesto Web | 🟢 Concluída | `frontend/vite.config.ts`, `frontend/public/manifest.json` |
 | **3.2** | Camada de Armazenamento Offline IndexedDB (`idb`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts`, `frontend/src/types/offline.ts` |
-| **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | ⏳ Pendente | `frontend/src/hooks/use-offline-sync.ts` |
+| **3.3** | Hook de Sincronização Automática (`useOfflineSync`) | 🟢 Concluída | `frontend/src/hooks/use-offline-sync.ts`, `frontend/src/components/sync/sync-badge.tsx` |
 | **3.4** | Console Operacional do Chão de Fábrica (`OperatorConsolePage`) | ⏳ Pendente | `frontend/src/pages/operator/operator-console-page.tsx` |
 | **3.5** | Gaveta Touch de Apontamento de Garrafas (`ProductionDrawer`) | ⏳ Pendente | `frontend/src/components/production/*` |
 | **3.6** | Modal de Paradas em Tempo Real e Retroativas (`DowntimeModal`) | ⏳ Pendente | `frontend/src/components/downtime/*` |
@@ -98,22 +98,23 @@ Progresso da Fase 3 (Frontend): [========------------------------] 28% Concluíd
 
 ---
 
-### ⏳ Tarefa 3.3: Hook de Sincronização Automática (`useOfflineSync`)
+### ✅ Tarefa 3.3: Hook de Sincronização Automática (`useOfflineSync`)
 - **Objetivo:** Monitorar o status de conectividade do dispositivo e despachar a fila acumulada no IndexedDB para o backend (`POST /api/sync`) assim que a rede local for restabelecida.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/hooks/use-offline-sync.ts`
   - `frontend/src/components/sync/sync-badge.tsx`
+  - `frontend/src/services/sync-service.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Registrar listeners de eventos `window.addEventListener('online')` e `window.addEventListener('offline')`
-  - [ ] Disparar rotina de sincronização:
+  - [x] Registrar listeners de eventos `window.addEventListener('online')` e `window.addEventListener('offline')`
+  - [x] Disparar rotina de sincronização:
     1. Ler eventos com status `PENDING` do IndexedDB
     2. Se houver pendências, enviar payload `{ events }` para `POST /api/sync`
     3. Recebendo HTTP 200 com a lista de `clientUuids` processados, marcar ou remover do IndexedDB
     4. Atualizar badge visual com toast discreto: "X apontamentos sincronizados com sucesso"
-  - [ ] Tratar falhas de rede sem remover os dados locais, reagendando nova tentativa
+  - [x] Tratar falhas de rede sem remover os dados locais, reagendando nova tentativa
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Ao reconectar à rede, o hook esvazia a fila local com sucesso.
-  - [ ] **Resiliência:** Quedas súbitas durante o envio mantêm os registros locais intactos para o próximo ciclo.
+  - [x] **Caminho Normal:** Ao reconectar à rede, o hook esvazia a fila local com sucesso.
+  - [x] **Resiliência:** Quedas súbitas durante o envio mantêm os registros locais intactos para o próximo ciclo.
 
 ---
 
