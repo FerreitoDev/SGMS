@@ -23,6 +23,7 @@ describe('ReportsModule (e2e)', () => {
 
   let machineId: string;
   let shiftId: string;
+  let operatorId: string;
   let allocationId: string;
 
   const mgrUsername = 'e2e.rep.mgr';
@@ -102,6 +103,7 @@ describe('ReportsModule (e2e)', () => {
         isActive: true,
       },
     });
+    operatorId = op.id;
 
     // Login Gerente
     const mgrLogin = await request(app.getHttpServer())
@@ -444,6 +446,59 @@ describe('ReportsModule (e2e)', () => {
 
       expect(response.status).toBe(403);
       expect(response.body.code).toBe('FORBIDDEN_ROLE');
+    });
+
+    it('deve gerar o PDF corporativo sob carga de 500 alocações em tempo inferior a 3 segundos (RNF-05)', async () => {
+      const loadDate = '2026-11-15';
+      const allocationsToCreate = Array.from({ length: 500 }, () => ({
+        machineId,
+        shiftId,
+        operatorId,
+        shiftDate: new Date(`${loadDate}T00:00:00.000Z`),
+        status: ShiftAllocationStatus.CLOSED,
+      }));
+
+      await prisma.shiftAllocation.createMany({
+        data: allocationsToCreate,
+      });
+
+      try {
+        const startTime = Date.now();
+        const response = await request(app.getHttpServer())
+          .get('/api/reports/pdf')
+          .query({
+            startDate: loadDate,
+            endDate: loadDate,
+          })
+          .set('Authorization', `Bearer ${managerToken}`)
+          .buffer(true)
+          .parse((res, callback) => {
+            res.setEncoding('binary');
+            let data = '';
+            res.on('data', (chunk) => {
+              data += chunk;
+            });
+            res.on('end', () => {
+              callback(null, Buffer.from(data, 'binary'));
+            });
+          });
+
+        const durationMs = Date.now() - startTime;
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toContain('application/pdf');
+        const buffer = response.body as Buffer;
+        expect(buffer.subarray(0, 5).toString('ascii')).toBe('%PDF-');
+        // RNF-05: Geração de PDF em tempo <= 3000ms
+        expect(durationMs).toBeLessThan(3000);
+      } finally {
+        await prisma.shiftAllocation.deleteMany({
+          where: {
+            shiftDate: new Date(`${loadDate}T00:00:00.000Z`),
+            machine: { code: { startsWith: 'E2E-REP-' } },
+          },
+        });
+      }
     });
   });
 });

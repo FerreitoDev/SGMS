@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (6 de 7 Tarefas Concluídas)  
+> **Status:** 🟢 Concluído (7 de 7 Tarefas Homologadas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [========================--------] 86% Concluído (6 de 7 tarefas)
+Progresso da Fase 4 (Backend): [================================] 100% Concluído (7 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -43,7 +43,7 @@ Progresso da Fase 4 (Backend): [========================--------] 86% Concluído
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | 🟢 Concluída | `backend/src/modules/reports/generators/csv.generator.ts` |
 | **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | 🟢 Concluída | `backend/src/modules/reports/generators/pdf.generator.ts` |
 | **4.6** | Endpoints de Download com Streaming e Headers HTTP | 🟢 Concluída | `backend/src/modules/reports/reports.controller.ts` |
-| **4.7** | Auditoria Zero Fallback, Testes E2E de Performance & Homologação | ⏳ Pendente | `backend/test/reports.e2e-spec.ts` |
+| **4.7** | Auditoria Zero Fallback, Testes E2E de Performance & Homologação | 🟢 Concluída | `backend/test/reports.e2e-spec.ts` |
 
 ---
 
@@ -186,34 +186,34 @@ Progresso da Fase 4 (Backend): [========================--------] 86% Concluído
 
 ---
 
-### ⏳ Tarefa 4.7: Auditoria Zero Fallback, Testes E2E de Performance & Homologação
+### ✅ Tarefa 4.7: Auditoria Zero Fallback, Testes E2E de Performance & Homologação
 - **Objetivo:** Validar a imutabilidade do fechamento de turno e a performance da geração de relatórios sob carga de dados.
 - **Arquivos a Modificar / Criar:**
   - `backend/test/reports.e2e-spec.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Teste E2E de fechamento de turno e tentativa de novo apontamento $\rightarrow$ 403 Forbidden
-  - [ ] Teste E2E de download de CSV com validação do delimitador `;` e cabeçalhos
-  - [ ] Teste E2E de geração de PDF medindo tempo de execução $\le 3\text{s}$ para massa de 500 registros
-  - [ ] Auditoria de código: zero uso de `|| 0`, `|| ""` ou stubs
-  - [ ] Validação do build estrito: `npm run build` verde
+  - [x] Teste E2E de fechamento de turno e tentativa de novo apontamento $\rightarrow$ 403 Forbidden
+  - [x] Teste E2E de download de CSV com validação do delimitador `;` e cabeçalhos
+  - [x] Teste E2E de geração de PDF medindo tempo de execução $\le 3\text{s}$ para massa de 500 registros (360ms)
+  - [x] Auditoria de código: zero uso de `|| 0`, `|| ""` ou stubs
+  - [x] Validação do build estrito: `npm run build` verde
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] 100% dos testes E2E aprovados.
-  - [ ] Compilação de produção sem erros de tipos.
+  - [x] 100% dos testes E2E aprovados (138 testes em 11 suítes).
+  - [x] Compilação de produção sem erros de tipos.
 
 ---
 
 ## 5. Auditoria de Zero Fallback e Integridade de Dados
 
-- [ ] Métricas reais `0` preservadas e distinguidas de ausência de dados (ex: zero paradas = `0 min`, nunca traço ou nulo).
-- [ ] Ausência legítima de motivo principal nos dados analíticos propagada como `null`.
-- [ ] Proibido o uso de valores padrão em campos de data nos relatórios; filtros exigem datas explícitas.
-- [ ] Delimitador de CSV respeita estritamente o contrato de `;` para prevenir distorções numéricas no Excel em português.
+- [x] Métricas reais `0` preservadas e distinguidas de ausência de dados (ex: zero paradas = `0 min`, nunca traço ou nulo).
+- [x] Ausência legítima de motivo principal nos dados analíticos propagada como `null`.
+- [x] Proibido o uso de valores padrão em campos de data nos relatórios; filtros exigem datas explícitas.
+- [x] Delimitador de CSV respeita estritamente o contrato de `;` para prevenir distorções numéricas no Excel em português.
 
 ---
 
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
-- [ ] Turno encerrado via API com travamento de novas inserções.
-- [ ] Relatório CSV gerado e baixado com formatação íntegra.
-- [ ] Relatório PDF compilado via PDFKit em tempo $< 3\text{s}$.
-- [ ] Compilação de produção executada com sucesso (`npm run build`).
+- [x] Turno encerrado via API com travamento de novas inserções.
+- [x] Relatório CSV gerado e baixado com formatação íntegra.
+- [x] Relatório PDF compilado via PDFKit em tempo $< 3\text{s}$.
+- [x] Compilação de produção executada com sucesso (`npm run build`).

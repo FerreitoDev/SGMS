@@ -96,10 +96,10 @@
   - `RF-11`: Extração de relatórios gerenciais estruturados em CSV e PDF.
   - `RNF-05`: Desempenho de consulta $\le 100\text{ms}$ e exportação de PDF em $\le 3\text{s}$.
 - **Checklist Macro de Entregas:**
-  - [ ] Rota de fechamento formal de turno (`POST /api/allocations/:id/close`) com congelamento de inserções (RN-06)
-  - [ ] Consultas analíticas agregadas no backend (disponibilidade operacional, ritmo garrafas/hora e Pareto)
-  - [ ] Módulo `ReportsModule` com geração em streaming de CSV (delimitador `;`, UTF-8 BOM)
-  - [ ] Compilador de relatórios corporativos em PDF utilizando PDFKit
+  - [x] Rota de fechamento formal de turno (`POST /api/allocations/:id/close`) com congelamento de inserções (RN-06)
+  - [x] Consultas analíticas agregadas no backend (disponibilidade operacional, ritmo garrafas/hora e Pareto)
+  - [x] Módulo `ReportsModule` com geração em streaming de CSV (delimitador `;`, UTF-8 BOM)
+  - [x] Compilador de relatórios corporativos em PDF utilizando PDFKit
   - [ ] Dashboard gerencial para desktop com cartões de status e gráficos limpos (shadcn/ui + Recharts)
   - [ ] Filtros por período, máquina, turno e operador na interface de relatórios
 - **Critérios de Conclusão da Fase:**
