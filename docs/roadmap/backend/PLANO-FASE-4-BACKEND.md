@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (3 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (4 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 4 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -40,7 +40,7 @@ Progresso da Fase 4 (Backend): [============--------------------] 43% Concluído
 | **4.1** | Encerramento de Turno & Guard de Imutabilidade (RN-06) | 🟢 Concluída | `backend/src/modules/allocations/*`, `backend/src/common/guards/*` |
 | **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | 🟢 Concluída | `backend/src/modules/reports/reports.service.ts` |
 | **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | 🟢 Concluída | `backend/src/modules/reports/*` |
-| **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | ⏳ Pendente | `backend/src/modules/reports/generators/csv.generator.ts` |
+| **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | 🟢 Concluída | `backend/src/modules/reports/generators/csv.generator.ts` |
 | **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | ⏳ Pendente | `backend/src/modules/reports/generators/pdf.generator.ts` |
 | **4.6** | Endpoints de Download com Streaming e Headers HTTP | ⏳ Pendente | `backend/src/modules/reports/reports.controller.ts` |
 | **4.7** | Auditoria Zero Fallback, Testes E2E de Performance & Homologação | ⏳ Pendente | `backend/test/reports.e2e-spec.ts` |
@@ -131,21 +131,21 @@ Progresso da Fase 4 (Backend): [============--------------------] 43% Concluído
 
 ---
 
-### ⏳ Tarefa 4.4: Compilador de Relatório CSV com Streaming & UTF-8 BOM
+### ✅ Tarefa 4.4: Compilador de Relatório CSV com Streaming & UTF-8 BOM
 - **Objetivo:** Implementar o gerador de planilhas CSV utilizando streaming com Fast-CSV, assegurando compatibilidade com Excel e consumo mínimo de memória.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/generators/csv.generator.ts`
 - **Dependências a Instalar:**
   - `fast-csv`
 - **Checklist de Execução Detalhado:**
-  - [ ] Inserir caractere BOM UTF-8 (`\uFEFF`) no início do stream
-  - [ ] Configurar opções do formatador: `{ delimiter: ';', quoteHeaders: true }`
-  - [ ] Definir cabeçalhos colunares:
+  - [x] Inserir caractere BOM UTF-8 (`\uFEFF`) no início do stream
+  - [x] Configurar opções do formatador: `{ delimiter: ';', quoteHeaders: true }`
+  - [x] Definir cabeçalhos colunares:
     `["Data", "Turno", "Máquina", "Operador", "Garrafas Boas", "Tempo Parado (min)", "Disponibilidade (%)", "Ritmo (garrafas/h)", "Principal Gargalo"]`
-  - [ ] Fazer streaming linha a linha diretamente para a resposta HTTP `res`
+  - [x] Fazer streaming linha a linha diretamente para a resposta HTTP `res`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Arquivo CSV gerado abre no Excel com acentuação correta e colunas separadas.
-  - [ ] **Zero Fallback:** Valores ausentes gravados como campo vazio `; ;`, sem palavras fictícias como `"N/A"`.
+  - [x] **Caminho Normal:** Arquivo CSV gerado abre no Excel com acentuação correta e colunas separadas.
+  - [x] **Zero Fallback:** Valores ausentes gravados como campo vazio `; ;`, sem palavras fictícias como `"N/A"`.
 
 ---
 
