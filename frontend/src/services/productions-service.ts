@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api-client';
-import type { ProductionEntry } from '@/types/domain';
+import type { AllocationProductionsResponse, ProductionEntry } from '@/types/domain';
 
 export interface CreateProductionPayload {
   clientUuid: string;
@@ -9,8 +9,8 @@ export interface CreateProductionPayload {
 }
 
 export const productionsService = {
-  async listByAllocation(allocationId: string): Promise<ProductionEntry[]> {
-    const response = await apiClient.get<ProductionEntry[]>(`/productions/allocation/${allocationId}`);
+  async listByAllocation(allocationId: string): Promise<AllocationProductionsResponse> {
+    const response = await apiClient.get<AllocationProductionsResponse>(`/productions/allocation/${allocationId}`);
     return response.data;
   },
 

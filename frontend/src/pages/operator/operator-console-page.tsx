@@ -65,13 +65,13 @@ export function OperatorConsolePage(): React.ReactElement {
 
     try {
       const [remoteProductions, remoteDowntimes, offlineEvents] = await Promise.all([
-        productionsService.listByAllocation(allocation.id).catch(() => []),
-        downtimesService.listByAllocation(allocation.id).catch(() => []),
-        OfflineStorage.getPendingEvents().catch(() => []),
+        productionsService.listByAllocation(allocation.id),
+        downtimesService.listByAllocation(allocation.id),
+        OfflineStorage.getPendingEvents(),
       ]);
 
-      setProductions(remoteProductions);
-      setDowntimes(remoteDowntimes);
+      setProductions(remoteProductions.entries);
+      setDowntimes(remoteDowntimes.records);
 
       // Quantidade pendente no buffer local pertencente a esta alocação
       const offlineQty = offlineEvents
@@ -387,7 +387,7 @@ export function OperatorConsolePage(): React.ReactElement {
                     </span>
                   </div>
                   <span className="text-muted-foreground">
-                    {new Date(prod.recordedAt).toLocaleTimeString('pt-BR', {
+                    {new Date(prod.timestamp).toLocaleTimeString('pt-BR', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

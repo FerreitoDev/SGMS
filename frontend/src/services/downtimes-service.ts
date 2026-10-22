@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api-client';
-import type { DowntimeRecord, DowntimeReason } from '@/types/domain';
+import type { AllocationDowntimesResponse, DowntimeRecord, DowntimeReason } from '@/types/domain';
 
 export interface StartDowntimePayload {
   clientUuid: string;
@@ -23,8 +23,8 @@ export interface RetroactiveDowntimePayload {
 }
 
 export const downtimesService = {
-  async listByAllocation(allocationId: string): Promise<DowntimeRecord[]> {
-    const response = await apiClient.get<DowntimeRecord[]>(`/downtimes/allocation/${allocationId}`);
+  async listByAllocation(allocationId: string): Promise<AllocationDowntimesResponse> {
+    const response = await apiClient.get<AllocationDowntimesResponse>(`/downtimes/allocation/${allocationId}`);
     return response.data;
   },
 

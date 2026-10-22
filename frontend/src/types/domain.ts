@@ -108,8 +108,14 @@ export interface ProductionEntry {
   clientUuid: string;
   allocationId: string;
   quantity: number;
-  recordedAt: string;
+  timestamp: string;
   createdAt: string;
+}
+
+export interface AllocationProductionsResponse {
+  allocationId: string;
+  totalQuantity: number;
+  entries: ProductionEntry[];
 }
 
 export interface DowntimeRecord {
@@ -122,6 +128,13 @@ export interface DowntimeRecord {
   endTime: string | null;
   status: DowntimeStatus;
   createdAt: string;
+}
+
+export interface AllocationDowntimesResponse {
+  allocationId: string;
+  totalDurationMinutes: number;
+  activeDowntime: DowntimeRecord | null;
+  records: DowntimeRecord[];
 }
 
 
