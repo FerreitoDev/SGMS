@@ -357,4 +357,93 @@ describe('ReportsModule (e2e)', () => {
       expect(response.body.code).toBe('INVALID_DATE_RANGE');
     });
   });
+
+  describe('GET /api/reports/csv', () => {
+    it('deve transmitir relatório em streaming CSV com headers de anexo e UTF-8 BOM', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/reports/csv')
+        .query({
+          startDate: todayStr,
+          endDate: todayStr,
+        })
+        .set('Authorization', `Bearer ${managerToken}`)
+        .buffer(true)
+        .parse((res, callback) => {
+          res.setEncoding('binary');
+          let data = '';
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+          res.on('end', () => {
+            callback(null, Buffer.from(data, 'binary'));
+          });
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toContain('text/csv');
+      expect(response.headers['content-disposition']).toMatch(/attachment; filename="relatorio-producao-sgms-.*\.csv"/);
+
+      const buffer = response.body as Buffer;
+      const text = buffer.toString('utf-8');
+      expect(text.startsWith('\uFEFF')).toBe(true);
+      expect(text).toContain('"Data";"Turno";"Máquina";"Operador";"Garrafas Boas"');
+      expect(text).toContain('E2E-REP-M01');
+    });
+
+    it('deve rejeitar download de CSV por Operador retornando HTTP 403 Forbidden', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/reports/csv')
+        .query({
+          startDate: todayStr,
+          endDate: todayStr,
+        })
+        .set('Authorization', `Bearer ${operatorToken}`);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('FORBIDDEN_ROLE');
+    });
+  });
+
+  describe('GET /api/reports/pdf', () => {
+    it('deve transmitir relatório em streaming PDF com headers de anexo e cabeçalho vetorial', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/reports/pdf')
+        .query({
+          startDate: todayStr,
+          endDate: todayStr,
+        })
+        .set('Authorization', `Bearer ${managerToken}`)
+        .buffer(true)
+        .parse((res, callback) => {
+          res.setEncoding('binary');
+          let data = '';
+          res.on('data', (chunk) => {
+            data += chunk;
+          });
+          res.on('end', () => {
+            callback(null, Buffer.from(data, 'binary'));
+          });
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toContain('application/pdf');
+      expect(response.headers['content-disposition']).toMatch(/attachment; filename="relatorio-gerencial-sgms-.*\.pdf"/);
+
+      const buffer = response.body as Buffer;
+      expect(buffer.subarray(0, 5).toString('ascii')).toBe('%PDF-');
+    });
+
+    it('deve rejeitar download de PDF por Operador retornando HTTP 403 Forbidden', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/reports/pdf')
+        .query({
+          startDate: todayStr,
+          endDate: todayStr,
+        })
+        .set('Authorization', `Bearer ${operatorToken}`);
+
+      expect(response.status).toBe(403);
+      expect(response.body.code).toBe('FORBIDDEN_ROLE');
+    });
+  });
 });

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (5 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (6 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 4 (Backend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 4 (Backend): [====================------------] 71% Concluído
 | **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | 🟢 Concluída | `backend/src/modules/reports/*` |
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | 🟢 Concluída | `backend/src/modules/reports/generators/csv.generator.ts` |
 | **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | 🟢 Concluída | `backend/src/modules/reports/generators/pdf.generator.ts` |
-| **4.6** | Endpoints de Download com Streaming e Headers HTTP | ⏳ Pendente | `backend/src/modules/reports/reports.controller.ts` |
+| **4.6** | Endpoints de Download com Streaming e Headers HTTP | 🟢 Concluída | `backend/src/modules/reports/reports.controller.ts` |
 | **4.7** | Auditoria Zero Fallback, Testes E2E de Performance & Homologação | ⏳ Pendente | `backend/test/reports.e2e-spec.ts` |
 
 ---
@@ -171,18 +171,18 @@ Progresso da Fase 4 (Backend): [====================------------] 71% Concluído
 
 ---
 
-### ⏳ Tarefa 4.6: Endpoints de Download com Streaming e Headers HTTP
+### ✅ Tarefa 4.6: Endpoints de Download com Streaming e Headers HTTP
 - **Objetivo:** Configurar os endpoints REST que transmitem os relatórios em formato de download binário no navegador.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/reports.controller.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Endpoint `GET /api/reports/csv`:
+  - [x] Endpoint `GET /api/reports/csv`:
     - Headers: `Content-Type: text/csv; charset=utf-8`, `Content-Disposition: attachment; filename="relatorio-producao-sgms-[data].csv"`
-  - [ ] Endpoint `GET /api/reports/pdf`:
+  - [x] Endpoint `GET /api/reports/pdf`:
     - Headers: `Content-Type: application/pdf`, `Content-Disposition: attachment; filename="relatorio-gerencial-sgms-[data].pdf"`
-  - [ ] Pipe direto do stream do gerador para o objeto `res` do Express
+  - [x] Pipe direto do stream do gerador para o objeto `res` do Express
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Requisição GET via navegador dispara imediatamente o download do arquivo.
+  - [x] **Caminho Normal:** Requisição GET via navegador dispara imediatamente o download do arquivo.
 
 ---
 
