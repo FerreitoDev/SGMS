@@ -96,7 +96,7 @@
   - [x] 4.2: Guard e validação impedindo apontamentos em alocações com status `CLOSED` (RN-06)
   - [x] 4.3: Implementação de queries de agregação analítica (tempo total parado, ritmo garrafas/hora e Pareto de motivos)
   - [x] 4.4: Implementação do `ReportsModule` com gerador de CSV via Fast-CSV (delimitador `;` e codificação UTF-8 com BOM)
-  - [ ] 4.5: Implementação do compilador de relatórios corporativos em PDF utilizando PDFKit com layout limpo
+  - [x] 4.5: Implementação do compilador de relatórios corporativos em PDF utilizando PDFKit com layout limpo
   - [ ] 4.6: Endpoints de download binário (`GET /api/reports/csv` e `GET /api/reports/pdf`) com headers de streaming
   - [ ] 4.7: Testes de performance garantindo geração do PDF em tempo $< 3\text{s}$ para 500 registros
 - **Plano de Execução Vinculado:** [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md)

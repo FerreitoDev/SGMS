@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Agregações & Relatórios CSV/PDFKit)  
-> **Status:** 🟡 Em Execução Atômica (4 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução Atômica (5 de 7 Tarefas Concluídas)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + Fast-CSV + PDFKit + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Backend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 4 (Backend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 4 (Backend): [================----------------] 57% Concluído
 | **4.2** | Consultas Analíticas Agregadas (Disponibilidade & Pareto) | 🟢 Concluída | `backend/src/modules/reports/reports.service.ts` |
 | **4.3** | Módulo de Relatórios e DTO de Filtros Analíticos | 🟢 Concluída | `backend/src/modules/reports/*` |
 | **4.4** | Compilador de Relatório CSV com Streaming & UTF-8 BOM | 🟢 Concluída | `backend/src/modules/reports/generators/csv.generator.ts` |
-| **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | ⏳ Pendente | `backend/src/modules/reports/generators/pdf.generator.ts` |
+| **4.5** | Compilador de Relatório PDF Corporativo (PDFKit) | 🟢 Concluída | `backend/src/modules/reports/generators/pdf.generator.ts` |
 | **4.6** | Endpoints de Download com Streaming e Headers HTTP | ⏳ Pendente | `backend/src/modules/reports/reports.controller.ts` |
 | **4.7** | Auditoria Zero Fallback, Testes E2E de Performance & Homologação | ⏳ Pendente | `backend/test/reports.e2e-spec.ts` |
 
@@ -149,25 +149,25 @@ Progresso da Fase 4 (Backend): [================----------------] 57% Concluído
 
 ---
 
-### ⏳ Tarefa 4.5: Compilador de Relatório PDF Corporativo (PDFKit)
+### ✅ Tarefa 4.5: Compilador de Relatório PDF Corporativo (PDFKit)
 - **Objetivo:** Construir o gerador de relatórios em PDF corporativo utilizando PDFKit, produzindo um documento executivo limpo com layout profissional.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/generators/pdf.generator.ts`
 - **Dependências a Instalar:**
   - `pdfkit`, `@types/pdfkit`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar documento PDF com orientação Retrato (A4), margens de 40pt
-  - [ ] Cabeçalho corporativo:
+  - [x] Criar documento PDF com orientação Retrato (A4), margens de 40pt
+  - [x] Cabeçalho corporativo:
     - Título: **GEPF AGROINDÚSTRIA — SGMS**
     - Subtítulo: *Relatório Analítico de Produção e Disponibilidade de Linha*
     - Metadados: Período analisado, Data de Emissão e Usuário Gerador
-  - [ ] Quadro resumo de KPIs (cards cinza claro com borda fina): Total de Garrafas, Tempo Total Parado, Taxa de Disponibilidade Geral
-  - [ ] Tabela de Paradas por Motivo (Pareto) com colunas: Motivo, Ocorrências, Minutos Totais, % do Tempo Parado
-  - [ ] Tabela detalhada de alocações e turnos com linhas alternadas (zebrado suave `#f8fafc`)
-  - [ ] Rodapé com numeração de páginas ("Página X de Y")
+  - [x] Quadro resumo de KPIs (cards cinza claro com borda fina): Total de Garrafas, Tempo Total Parado, Taxa de Disponibilidade Geral
+  - [x] Tabela de Paradas por Motivo (Pareto) com colunas: Motivo, Ocorrências, Minutos Totais, % do Tempo Parado
+  - [x] Tabela detalhada de alocações e turnos com linhas alternadas (zebrado suave `#f8fafc`)
+  - [x] Rodapé com numeração de páginas ("Página X de Y")
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Documento PDF legível e profissional gerado com formatação vetorial limpa.
-  - [ ] **Performance (RNF-05):** Geração de relatório com 500 registros concluída em menos de 3 segundos.
+  - [x] **Caminho Normal:** Documento PDF legível e profissional gerado com formatação vetorial limpa.
+  - [x] **Performance (RNF-05):** Geração de relatório com 500 registros concluída em menos de 3 segundos (149ms).
 
 ---
 

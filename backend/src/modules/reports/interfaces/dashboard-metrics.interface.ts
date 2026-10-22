@@ -34,3 +34,14 @@ export interface AllocationReportRow {
   paceBottlesPerHour: number;
   mainBottleneck: string | null;
 }
+
+export interface PdfReportData {
+  metrics: DashboardMetrics;
+  rows: AllocationReportRow[];
+  metadata: {
+    startDate: string;
+    endDate: string;
+    generatedAt: Date;
+    generatedBy: string;
+  };
+}
