@@ -6,13 +6,14 @@ import { LoginPage } from '@/pages/login-page';
 import { UsersPage } from '@/pages/users-page';
 import { MachinesPage } from '@/pages/admin/machines-page';
 import { ShiftsPage } from '@/pages/admin/shifts-page';
+import { ManagerDashboardPage } from '@/pages/admin/dashboard-page';
 import { AllocationPage } from '@/pages/operator/allocation-page';
 import { OperatorConsolePage } from '@/pages/operator/operator-console-page';
 
 export function HomeRedirect(): React.ReactElement {
   const { user } = useAuth();
   if (user?.role === 'GERENTE') {
-    return <Navigate to="/admin/machines" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
   return <Navigate to="/chao-de-fabrica/alocacao" replace />;
 }
@@ -37,6 +38,7 @@ export function AppRoutes(): React.ReactElement {
 
       {/* Rota Protegida Exclusiva: exige perfil GERENTE */}
       <Route element={<ProtectedRoute requiredRole="GERENTE" />}>
+        <Route path="/admin/dashboard" element={<ManagerDashboardPage />} />
         <Route path="/admin/users" element={<UsersPage />} />
         <Route path="/admin/machines" element={<MachinesPage />} />
         <Route path="/admin/shifts" element={<ShiftsPage />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LogOut, Users, Cpu, Clock } from 'lucide-react';
+import { LogOut, Users, Cpu, Clock, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,6 +36,20 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
             {/* Navegação Administrativa (visível para perfil GERENTE) */}
             {user?.role === 'GERENTE' && (
               <nav className="hidden md:flex items-center gap-1 border-l border-border pl-6">
+                <NavLink
+                  to="/admin/dashboard"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors touch-manipulation ${
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`
+                  }
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </NavLink>
+
                 <NavLink
                   to="/admin/machines"
                   className={({ isActive }) =>
@@ -118,6 +132,19 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
         {/* Navegação Secundária Mobile para perfil GERENTE */}
         {user?.role === 'GERENTE' && (
           <div className="flex md:hidden border-t border-border bg-muted/20 px-3 py-1 gap-1 overflow-x-auto">
+            <NavLink
+              to="/admin/dashboard"
+              className={({ isActive }) =>
+                `flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors touch-manipulation ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`
+              }
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Dashboard</span>
+            </NavLink>
             <NavLink
               to="/admin/machines"
               className={({ isActive }) =>

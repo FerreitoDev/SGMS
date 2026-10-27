@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 4 (Frontend): [================----------------] 57% Concluíd
 | **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | 🟢 Concluída | `frontend/src/services/reports-service.ts`, `frontend/src/types/reports.ts` |
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | 🟢 Concluída | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | 🟢 Concluída | `frontend/src/components/dashboard/pareto-chart.tsx` |
-| **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | ⏳ Pendente | `frontend/src/pages/admin/dashboard-page.tsx` |
+| **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | 🟢 Concluída | `frontend/src/pages/admin/dashboard-page.tsx` |
 | **4.6** | Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`) | ⏳ Pendente | `frontend/src/pages/admin/reports-page.tsx` |
 | **4.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais e compilação de produção |
 
@@ -143,18 +143,18 @@ Progresso da Fase 4 (Frontend): [================----------------] 57% Concluíd
 
 ---
 
-### ⏳ Tarefa 4.5: Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`)
+### ✅ Tarefa 4.5: Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`)
 - **Objetivo:** Integrar os cards de KPIs, o gráfico de Pareto e os seletores de período na tela principal do Gerente de Produção.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/dashboard-page.tsx`
   - `frontend/src/components/layout/app-layout.tsx` (inclusão do item "Dashboard" no menu)
 - **Checklist de Execução Detalhado:**
-  - [ ] Barra superior de filtros rápidos: "Hoje", "Últimos 7 dias", "Este Mês" e seletor customizado de datas
-  - [ ] Grade de máquinas em tempo real: cartões compactos indicando quais sopradoras estão operando agora no galpão
-  - [ ] Renderização dos `KpiCards` e do `ParetoChart`
-  - [ ] Tratamento de loading states via Skeleton screens do shadcn
+  - [x] Barra superior de filtros rápidos: "Hoje", "Últimos 7 dias", "Este Mês" e seletor customizado de datas
+  - [x] Grade de máquinas em tempo real: cartões compactos indicando quais sopradoras estão operando agora no galpão
+  - [x] Renderização dos `KpiCards` e do `ParetoChart`
+  - [x] Tratamento de loading states via Skeleton screens do shadcn
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Gerente seleciona período e visualiza imediatamente as métricas consolidadas.
+  - [x] **Caminho Normal:** Gerente seleciona período e visualiza imediatamente as métricas consolidadas.
 
 ---
 
@@ -201,6 +201,6 @@ Progresso da Fase 4 (Frontend): [================----------------] 57% Concluíd
 ## 6. Homologação Final da Fase e Critérios de Encerramento
 
 - [ ] Encerramento de turno testado no Console com travamento de novas inserções.
-- [ ] Dashboard gerencial exibindo KPIs e gráfico de Pareto integrado.
+- [x] Dashboard gerencial exibindo KPIs e gráfico de Pareto integrado.
 - [ ] Relatórios em CSV e PDF baixados e validados no ambiente local.
 - [ ] Compilação de produção executada com sucesso (`npm run build`).
