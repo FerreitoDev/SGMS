@@ -109,12 +109,14 @@ describe('TemporalValidation (e2e)', () => {
       },
     });
 
+    const todayIso = new Date().toISOString().split('T')[0];
+
     const allocation = await prisma.shiftAllocation.create({
       data: {
         machineId: machine.id,
         shiftId: shift.id,
         operatorId: opId,
-        shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+        shiftDate: new Date(`${todayIso}T00:00:00.000Z`),
         status: ShiftAllocationStatus.ACTIVE,
       },
     });
@@ -188,7 +190,7 @@ describe('TemporalValidation (e2e)', () => {
     });
 
     it('deve rejeitar evento com data discrepante fora da janela do turno com HTTP 422 (OUT_OF_SHIFT_WINDOW)', async () => {
-      const pastDate = new Date('2026-10-10T10:00:00.000Z').toISOString(); // 11 dias antes do turno da alocação
+      const pastDate = new Date('2025-01-01T10:00:00.000Z').toISOString(); // Fora da janela de turno da alocação
       const response = await request(app.getHttpServer())
         .post('/api/productions')
         .set('Authorization', `Bearer ${opToken}`)
@@ -212,7 +214,7 @@ describe('TemporalValidation (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.ELETRICA,
-          startTime: '2026-10-21T08:00:00.000Z',
+          startTime: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
           endTime: farFuture,
         });
 

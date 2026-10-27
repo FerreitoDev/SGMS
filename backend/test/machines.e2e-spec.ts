@@ -41,10 +41,29 @@ describe('MachinesModule (e2e)', () => {
     const passwordHash = await bcrypt.hash(rawPassword, 10);
 
     // Limpeza prévia
-    await prisma.productionEntry.deleteMany({});
-    await prisma.downtimeRecord.deleteMany({});
-    await prisma.shiftAllocation.deleteMany({});
-    await prisma.shift.deleteMany({});
+    await prisma.productionEntry.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-' } } },
+      },
+    });
+    await prisma.downtimeRecord.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-' } } },
+      },
+    });
+    await prisma.shiftAllocation.deleteMany({
+      where: {
+        OR: [
+          { machine: { code: { startsWith: 'E2E-' } } },
+          { shift: { name: { startsWith: 'Turno Teste E2E' } } },
+        ],
+      },
+    });
+    await prisma.shift.deleteMany({
+      where: {
+        name: { startsWith: 'Turno Teste E2E' },
+      },
+    });
     await prisma.machine.deleteMany({
       where: {
         code: { startsWith: 'E2E-' },
@@ -91,10 +110,29 @@ describe('MachinesModule (e2e)', () => {
   });
 
   afterAll(async () => {
-    await prisma.productionEntry.deleteMany({});
-    await prisma.downtimeRecord.deleteMany({});
-    await prisma.shiftAllocation.deleteMany({});
-    await prisma.shift.deleteMany({});
+    await prisma.productionEntry.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-' } } },
+      },
+    });
+    await prisma.downtimeRecord.deleteMany({
+      where: {
+        allocation: { machine: { code: { startsWith: 'E2E-' } } },
+      },
+    });
+    await prisma.shiftAllocation.deleteMany({
+      where: {
+        OR: [
+          { machine: { code: { startsWith: 'E2E-' } } },
+          { shift: { name: { startsWith: 'Turno Teste E2E' } } },
+        ],
+      },
+    });
+    await prisma.shift.deleteMany({
+      where: {
+        name: { startsWith: 'Turno Teste E2E' },
+      },
+    });
     await prisma.machine.deleteMany({
       where: {
         code: { startsWith: 'E2E-' },

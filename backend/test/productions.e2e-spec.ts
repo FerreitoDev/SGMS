@@ -140,13 +140,21 @@ describe('ProductionsModule (e2e)', () => {
       },
     });
 
+    const todayIso = new Date().toISOString().split('T')[0];
+    const todayDate = new Date(`${todayIso}T00:00:00.000Z`);
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayIso = yesterday.toISOString().split('T')[0];
+    const yesterdayDate = new Date(`${yesterdayIso}T00:00:00.000Z`);
+
     // Criar Alocação ATIVA para op1
     const activeAlloc = await prisma.shiftAllocation.create({
       data: {
         machineId: machine.id,
         shiftId: shift.id,
         operatorId: op1Id,
-        shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+        shiftDate: todayDate,
         status: ShiftAllocationStatus.ACTIVE,
       },
     });
@@ -158,9 +166,9 @@ describe('ProductionsModule (e2e)', () => {
         machineId: machine.id,
         shiftId: shift.id,
         operatorId: op1Id,
-        shiftDate: new Date('2026-10-20T00:00:00.000Z'),
+        shiftDate: yesterdayDate,
         status: ShiftAllocationStatus.CLOSED,
-        closedAt: new Date('2026-10-20T14:00:00.000Z'),
+        closedAt: new Date(),
       },
     });
     closedAllocationId = closedAlloc.id;

@@ -32,6 +32,8 @@ describe('DowntimesModule (e2e)', () => {
   const op1Username = 'e2e.down.op1';
   const op2Username = 'e2e.down.op2';
   const rawPassword = 'password123';
+  const todayIso = new Date().toISOString().split('T')[0];
+  const yesterdayIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -154,7 +156,7 @@ describe('DowntimesModule (e2e)', () => {
         machineId: machine.id,
         shiftId: shift.id,
         operatorId: op1Id,
-        shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+        shiftDate: new Date(`${todayIso}T00:00:00.000Z`),
         status: ShiftAllocationStatus.ACTIVE,
       },
     });
@@ -166,9 +168,9 @@ describe('DowntimesModule (e2e)', () => {
         machineId: machine.id,
         shiftId: shift.id,
         operatorId: op1Id,
-        shiftDate: new Date('2026-10-20T00:00:00.000Z'),
+        shiftDate: new Date(`${yesterdayIso}T00:00:00.000Z`),
         status: ShiftAllocationStatus.CLOSED,
-        closedAt: new Date('2026-10-20T14:00:00.000Z'),
+        closedAt: new Date(`${yesterdayIso}T14:00:00.000Z`),
       },
     });
     closedAllocationId = closedAlloc.id;
@@ -463,8 +465,8 @@ describe('DowntimesModule (e2e)', () => {
   describe('POST /api/downtimes/retroactive', () => {
     it('deve registrar parada retroativa com status RESOLVED, calcular durationMinutes e NÃO alterar o status da máquina', async () => {
       const clientUuid = randomUUID();
-      const startTime = '2026-10-21T10:00:00.000Z';
-      const endTime = '2026-10-21T10:45:00.000Z';
+      const startTime = `${todayIso}T10:00:00.000Z`;
+      const endTime = `${todayIso}T10:45:00.000Z`;
 
       // Verificar status prévio da máquina
       const machineBefore = await prisma.machine.findUnique({ where: { id: machineId } });
@@ -498,8 +500,8 @@ describe('DowntimesModule (e2e)', () => {
 
     it('deve retornar idempotência HTTP 200 ao reenviar mesmo clientUuid (RN-07)', async () => {
       const clientUuid = randomUUID();
-      const startTime = '2026-10-21T11:00:00.000Z';
-      const endTime = '2026-10-21T11:20:00.000Z';
+      const startTime = `${todayIso}T11:00:00.000Z`;
+      const endTime = `${todayIso}T11:20:00.000Z`;
 
       const payload = {
         clientUuid,
@@ -535,8 +537,8 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.OUTROS,
-          startTime: '2026-10-21T12:00:00.000Z',
-          endTime: '2026-10-21T12:15:00.000Z',
+          startTime: `${todayIso}T12:00:00.000Z`,
+          endTime: `${todayIso}T12:15:00.000Z`,
         });
 
       expect(resWithout.status).toBe(400);
@@ -551,8 +553,8 @@ describe('DowntimesModule (e2e)', () => {
           allocationId: activeAllocationId,
           reason: DowntimeReason.OUTROS,
           justification: 'abc',
-          startTime: '2026-10-21T12:00:00.000Z',
-          endTime: '2026-10-21T12:15:00.000Z',
+          startTime: `${todayIso}T12:00:00.000Z`,
+          endTime: `${todayIso}T12:15:00.000Z`,
         });
 
       expect(resShort.status).toBe(400);
@@ -568,8 +570,8 @@ describe('DowntimesModule (e2e)', () => {
           allocationId: activeAllocationId,
           reason: DowntimeReason.OUTROS,
           justification: 'Falta de ar comprimido na linha geral',
-          startTime: '2026-10-21T12:00:00.000Z',
-          endTime: '2026-10-21T12:30:00.000Z',
+          startTime: `${todayIso}T12:00:00.000Z`,
+          endTime: `${todayIso}T12:30:00.000Z`,
         });
 
       expect(response.status).toBe(201);
@@ -587,8 +589,8 @@ describe('DowntimesModule (e2e)', () => {
           allocationId: activeAllocationId,
           reason: DowntimeReason.MOLDE,
           justification: 'Texto qualquer que deve ser ignorado',
-          startTime: '2026-10-21T13:00:00.000Z',
-          endTime: '2026-10-21T13:10:00.000Z',
+          startTime: `${todayIso}T13:00:00.000Z`,
+          endTime: `${todayIso}T13:10:00.000Z`,
         });
 
       expect(response.status).toBe(201);
@@ -605,8 +607,8 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.MECANICA,
-          startTime: '2026-10-21T14:00:00.000Z',
-          endTime: '2026-10-21T13:00:00.000Z',
+          startTime: `${todayIso}T14:00:00.000Z`,
+          endTime: `${todayIso}T13:00:00.000Z`,
         });
 
       expect(response.status).toBe(422);
@@ -622,7 +624,7 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.MECANICA,
-          startTime: '2026-10-21T10:00:00.000Z',
+          startTime: `${todayIso}T10:00:00.000Z`,
           endTime: futureDate,
         });
 
@@ -638,8 +640,8 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.MECANICA,
-          startTime: '2026-10-21T10:00:00.000Z',
-          endTime: '2026-10-21T10:15:00.000Z',
+          startTime: `${todayIso}T10:00:00.000Z`,
+          endTime: `${todayIso}T10:15:00.000Z`,
         });
 
       expect(response.status).toBe(403);
@@ -654,8 +656,8 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: closedAllocationId,
           reason: DowntimeReason.MECANICA,
-          startTime: '2026-10-20T10:00:00.000Z',
-          endTime: '2026-10-20T10:30:00.000Z',
+          startTime: `${yesterdayIso}T10:00:00.000Z`,
+          endTime: `${yesterdayIso}T10:30:00.000Z`,
         });
 
       expect(response.status).toBe(403);
@@ -670,8 +672,8 @@ describe('DowntimesModule (e2e)', () => {
           clientUuid: randomUUID(),
           allocationId: activeAllocationId,
           reason: DowntimeReason.COMPRESSOR,
-          startTime: '2026-10-21T15:00:00.000Z',
-          endTime: '2026-10-21T15:25:00.000Z',
+          startTime: `${todayIso}T15:00:00.000Z`,
+          endTime: `${todayIso}T15:25:00.000Z`,
         });
 
       expect(response.status).toBe(201);

@@ -28,6 +28,7 @@ describe('AllocationsModule (e2e)', () => {
   const op2Username = 'e2e.alc.op2';
   const mgrUsername = 'e2e.alc.mgr';
   const rawPassword = 'password123';
+  const todayStr = new Date().toISOString().split('T')[0];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -193,7 +194,7 @@ describe('AllocationsModule (e2e)', () => {
         .send({
           machineId: machine.id,
           shiftId: shift.id,
-          shiftDate: '2026-10-21',
+          shiftDate: todayStr,
         });
 
       expect(response.status).toBe(201);
@@ -225,7 +226,7 @@ describe('AllocationsModule (e2e)', () => {
         .send({
           machineId: machine!.id,
           shiftId: shift!.id,
-          shiftDate: '2026-10-21',
+          shiftDate: todayStr,
         });
 
       expect(response.status).toBe(409);
@@ -254,7 +255,7 @@ describe('AllocationsModule (e2e)', () => {
         .send({
           machineId: machine2.id,
           shiftId: shift!.id,
-          shiftDate: '2026-10-21',
+          shiftDate: todayStr,
         });
 
       expect(response.status).toBe(409);
@@ -280,7 +281,7 @@ describe('AllocationsModule (e2e)', () => {
         .send({
           machineId: inactiveMachine.id,
           shiftId: shift!.id,
-          shiftDate: '2026-10-21',
+          shiftDate: todayStr,
         });
 
       expect(response.status).toBe(422);
@@ -293,7 +294,7 @@ describe('AllocationsModule (e2e)', () => {
         .send({
           machineId: '00000000-0000-4000-8000-000000000000',
           shiftId: '00000000-0000-4000-8000-000000000000',
-          shiftDate: '2026-10-21',
+          shiftDate: todayStr,
         });
 
       expect(response.status).toBe(401);
