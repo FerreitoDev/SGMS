@@ -1,8 +1,8 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟡 Planejamento Ativo (Fase 1 em Preparação)  
+> **Status Geral do Projeto:** 🟢 MVP Concluído (Fases 1, 2, 3 e 4 Homologadas)  
 > **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md)  
-> **Última Atualização:** 2026-10-19  
+> **Última Atualização:** 2026-10-27  
 
 ---
 
@@ -13,7 +13,7 @@
 | **1** | Fundação, Autenticação e Perfis (RBAC) | Backend + Frontend | 🟢 Concluída | RF-01, RF-02, RNF-01, RNF-02, RNF-06, RNF-07 |
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟢 Concluída | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟢 Concluída | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
-| **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟡 Em Andamento | RF-10, RF-11, RNF-01, RNF-05 |
+| **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
 
 ---
 
@@ -100,8 +100,8 @@
   - [x] Consultas analíticas agregadas no backend (disponibilidade operacional, ritmo garrafas/hora e Pareto)
   - [x] Módulo `ReportsModule` com geração em streaming de CSV (delimitador `;`, UTF-8 BOM)
   - [x] Compilador de relatórios corporativos em PDF utilizando PDFKit
-  - [ ] Dashboard gerencial para desktop com cartões de status e gráficos limpos (shadcn/ui + Recharts)
-  - [ ] Filtros por período, máquina, turno e operador na interface de relatórios
+  - [x] Dashboard gerencial para desktop com cartões de status e gráficos limpos (shadcn/ui + Recharts)
+  - [x] Filtros por período, máquina, turno e operador na interface de relatórios
 - **Critérios de Conclusão da Fase:**
   - Gerente consegue visualizar em tela o gráfico de Pareto dos principais gargalos da semana.
   - Exportação de relatório em PDF de até 500 registros gerada e baixada no navegador em menos de 3 segundos.

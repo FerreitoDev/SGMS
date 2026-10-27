@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   FileSpreadsheet,
   FileText,
@@ -124,8 +125,9 @@ export function ReportsPage(): React.ReactElement {
       const filename = `relatorio-producao-${startDate}-a-${endDate}.csv`;
       triggerBlobDownload(blob, filename);
       toast.success('Planilha CSV gerada e baixada com sucesso!');
-    } catch (error: any) {
-      const errorMsg = await parseBlobErrorResponse(error?.response?.data);
+    } catch (error: unknown) {
+      const errorData = axios.isAxiosError(error) ? error.response?.data : null;
+      const errorMsg = await parseBlobErrorResponse(errorData);
       toast.error(errorMsg);
     } finally {
       setIsDownloadingCsv(false);
@@ -142,8 +144,9 @@ export function ReportsPage(): React.ReactElement {
       const filename = `relatorio-executivo-${startDate}-a-${endDate}.pdf`;
       triggerBlobDownload(blob, filename);
       toast.success('Relatório executivo PDF baixado com sucesso!');
-    } catch (error: any) {
-      const errorMsg = await parseBlobErrorResponse(error?.response?.data);
+    } catch (error: unknown) {
+      const errorData = axios.isAxiosError(error) ? error.response?.data : null;
+      const errorMsg = await parseBlobErrorResponse(errorData);
       toast.error(errorMsg);
     } finally {
       setIsDownloadingPdf(false);

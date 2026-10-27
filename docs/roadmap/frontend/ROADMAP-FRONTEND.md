@@ -97,5 +97,5 @@
   - [x] 4.4: Tela de Relatórios com seletores de período (`DateRangePicker`), filtro por Máquina e Turno
   - [x] 4.5: Mecanismo de download via streaming de blobs binários (`text/csv` e `application/pdf`)
   - [x] 4.6: Tratamento de loading states e feedback de progresso durante a geração dos relatórios
-  - [ ] 4.7: Homologação visual integrada de toda a jornada nos navegadores alvo (Chrome e Safari)
+  - [x] 4.7: Homologação visual integrada de toda a jornada nos navegadores alvo (Chrome e Safari)
 - **Plano de Execução Vinculado:** [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md)
