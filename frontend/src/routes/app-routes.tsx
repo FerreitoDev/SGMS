@@ -7,6 +7,7 @@ import { UsersPage } from '@/pages/users-page';
 import { MachinesPage } from '@/pages/admin/machines-page';
 import { ShiftsPage } from '@/pages/admin/shifts-page';
 import { ManagerDashboardPage } from '@/pages/admin/dashboard-page';
+import { ReportsPage } from '@/pages/admin/reports-page';
 import { AllocationPage } from '@/pages/operator/allocation-page';
 import { OperatorConsolePage } from '@/pages/operator/operator-console-page';
 
@@ -39,6 +40,7 @@ export function AppRoutes(): React.ReactElement {
       {/* Rota Protegida Exclusiva: exige perfil GERENTE */}
       <Route element={<ProtectedRoute requiredRole="GERENTE" />}>
         <Route path="/admin/dashboard" element={<ManagerDashboardPage />} />
+        <Route path="/admin/relatorios" element={<ReportsPage />} />
         <Route path="/admin/users" element={<UsersPage />} />
         <Route path="/admin/machines" element={<MachinesPage />} />
         <Route path="/admin/shifts" element={<ShiftsPage />} />

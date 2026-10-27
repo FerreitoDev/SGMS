@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api-client';
+import { triggerBlobDownload } from '@/lib/download-helper';
 import type { DashboardMetrics, ReportFilter } from '@/types/reports';
 
 export const reportsService = {
@@ -38,13 +39,9 @@ export const reportsService = {
    * Helper utilitário para acionar download de arquivo Blob no navegador
    */
   triggerBlobDownload(blob: Blob, filename: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode?.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    triggerBlobDownload(blob, filename);
   },
 };
+
+export { triggerBlobDownload };
+

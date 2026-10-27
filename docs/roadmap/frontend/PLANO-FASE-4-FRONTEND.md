@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [====================------------] 71% Concluído (5 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [========================--------] 86% Concluído (6 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 4 (Frontend): [====================------------] 71% Concluíd
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | 🟢 Concluída | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | 🟢 Concluída | `frontend/src/components/dashboard/pareto-chart.tsx` |
 | **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | 🟢 Concluída | `frontend/src/pages/admin/dashboard-page.tsx` |
-| **4.6** | Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`) | ⏳ Pendente | `frontend/src/pages/admin/reports-page.tsx` |
+| **4.6** | Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`) | 🟢 Concluída | `frontend/src/pages/admin/reports-page.tsx` |
 | **4.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais e compilação de produção |
 
 ---
@@ -158,19 +158,19 @@ Progresso da Fase 4 (Frontend): [====================------------] 71% Concluíd
 
 ---
 
-### ⏳ Tarefa 4.6: Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`)
+### ✅ Tarefa 4.6: Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`)
 - **Objetivo:** Criar a interface de exportação formal de relatórios com suporte a download em streaming sem recarregar a página.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/admin/reports-page.tsx`
   - `frontend/src/lib/download-helper.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Formulário com: Data Inicial, Data Final, Seletor de Máquina (opcional) e Seletor de Turno (opcional)
-  - [ ] Helper `triggerBlobDownload(blob, filename)` para disparar o download no navegador
-  - [ ] Botão primário: "Exportar Planilha (CSV)" com ícone de tabela
-  - [ ] Botão secundário: "Exportar Relatório Executivo (PDF)" com ícone de documento
-  - [ ] Desabilitar botões durante o download com spinner de carregamento e toast de confirmação
+  - [x] Formulário com: Data Inicial, Data Final, Seletor de Máquina (opcional) e Seletor de Turno (opcional)
+  - [x] Helper `triggerBlobDownload(blob, filename)` para disparar o download no navegador
+  - [x] Botão primário: "Exportar Planilha (CSV)" com ícone de tabela
+  - [x] Botão secundário: "Exportar Relatório Executivo (PDF)" com ícone de documento
+  - [x] Desabilitar botões durante o download com spinner de carregamento e toast de confirmação
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Clique em exportar baixa o arquivo no navegador em menos de 3 segundos.
+  - [x] **Caminho Normal:** Clique em exportar baixa o arquivo no navegador em menos de 3 segundos.
 
 ---
 
@@ -202,5 +202,5 @@ Progresso da Fase 4 (Frontend): [====================------------] 71% Concluíd
 
 - [ ] Encerramento de turno testado no Console com travamento de novas inserções.
 - [x] Dashboard gerencial exibindo KPIs e gráfico de Pareto integrado.
-- [ ] Relatórios em CSV e PDF baixados e validados no ambiente local.
+- [x] Relatórios em CSV e PDF baixados e validados no ambiente local.
 - [ ] Compilação de produção executada com sucesso (`npm run build`).

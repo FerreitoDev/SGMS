@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LogOut, Users, Cpu, Clock, LayoutDashboard } from 'lucide-react';
+import { LogOut, Users, Cpu, Clock, LayoutDashboard, FileSpreadsheet } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -90,6 +90,20 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
                 >
                   <Clock className="h-4 w-4" />
                   <span>Turnos</span>
+                </NavLink>
+
+                <NavLink
+                  to="/admin/relatorios"
+                  className={({ isActive }) =>
+                    `flex min-h-[44px] items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors touch-manipulation ${
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`
+                  }
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>Relatórios</span>
                 </NavLink>
               </nav>
             )}
@@ -183,6 +197,19 @@ export function AppLayout({ children }: AppLayoutProps): React.ReactElement {
             >
               <Clock className="h-4 w-4" />
               <span>Turnos</span>
+            </NavLink>
+            <NavLink
+              to="/admin/relatorios"
+              className={({ isActive }) =>
+                `flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors touch-manipulation ${
+                  isActive
+                    ? 'bg-primary/15 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`
+              }
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              <span>Relatórios</span>
             </NavLink>
           </div>
         )}
