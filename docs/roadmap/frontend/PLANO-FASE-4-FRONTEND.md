@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios)  
-> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas — 43%)  
+> **Status:** 🟡 Em Execução (4 de 7 Tarefas Concluídas — 57%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Recharts + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,7 +32,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [================----------------] 57% Concluído (4 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -40,7 +40,7 @@ Progresso da Fase 4 (Frontend): [============--------------------] 43% Concluíd
 | **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | 🟢 Concluída | `frontend/src/components/operator/*` |
 | **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | 🟢 Concluída | `frontend/src/services/reports-service.ts`, `frontend/src/types/reports.ts` |
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | 🟢 Concluída | `frontend/src/components/dashboard/*` |
-| **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | ⏳ Pendente | `frontend/src/components/dashboard/pareto-chart.tsx` |
+| **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | 🟢 Concluída | `frontend/src/components/dashboard/pareto-chart.tsx` |
 | **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | ⏳ Pendente | `frontend/src/pages/admin/dashboard-page.tsx` |
 | **4.6** | Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`) | ⏳ Pendente | `frontend/src/pages/admin/reports-page.tsx` |
 | **4.7** | Auditoria Zero Fallback, Responsividade & Build de Produção | ⏳ Pendente | Testes visuais e compilação de produção |
@@ -124,22 +124,22 @@ Progresso da Fase 4 (Frontend): [============--------------------] 43% Concluíd
 
 ---
 
-### ⏳ Tarefa 4.4: Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts)
+### ✅ Tarefa 4.4: Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts)
 - **Objetivo:** Desenvolver o componente de visualização gráfica para análise de gargalos operacionais da linha de sopro.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/dashboard/pareto-chart.tsx`
 - **Dependências a Instalar:**
   - `recharts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar gráfico composto `ComposedChart` responsivo (`ResponsiveContainer`)
-  - [ ] Eixo X: rótulos amigáveis dos motivos de parada (ex: "Forno", "Molde", "Pré-forma", "Compressor", "Mecânica", "Elétrica", "Outros")
-  - [ ] Eixo Y Esquerdo: Minutos totais de parada (barras azuis corporativas)
-  - [ ] Eixo Y Direito: Percentual acumulado de 0 a 100% (linha vermelha com pontos destacados)
-  - [ ] Tooltip customizado apresentando: Ocorrências, Minutos Totais e % Acumulado
-  - [ ] Linha de referência horizontal tracejada na marca de 80% (Princípio de Pareto)
+  - [x] Criar gráfico composto `ComposedChart` responsivo (`ResponsiveContainer`)
+  - [x] Eixo X: rótulos amigáveis dos motivos de parada (ex: "Forno", "Molde", "Pré-forma", "Compressor", "Mecânica", "Elétrica", "Outros")
+  - [x] Eixo Y Esquerdo: Minutos totais de parada (barras azuis corporativas)
+  - [x] Eixo Y Direito: Percentual acumulado de 0 a 100% (linha vermelha com pontos destacados)
+  - [x] Tooltip customizado apresentando: Ocorrências, Minutos Totais e % Acumulado
+  - [x] Linha de referência horizontal tracejada na marca de 80% (Princípio de Pareto)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Gráfico renderiza barras ordenadas decrescentemente com linha percentual correta.
-  - [ ] **Estado Vazio:** Se não houver paradas no período, exibir mensagem corporativa amigável ("Nenhuma parada registrada no período selecionado").
+  - [x] **Caminho Normal:** Gráfico renderiza barras ordenadas decrescentemente com linha percentual correta.
+  - [x] **Estado Vazio:** Se não houver paradas no período, exibir mensagem corporativa amigável ("Nenhuma parada registrada no período selecionado").
 
 ---
 

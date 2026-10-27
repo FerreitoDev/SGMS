@@ -93,7 +93,7 @@
 - **Checklist Técnico Sequencial:**
   - [x] 4.1: Componente de encerramento de turno no Console do Operador com painel Sheet de confirmação irreversível
   - [ ] 4.2: Tela de Dashboard Gerencial para desktop (cards de KPIs: Produção Total, Disponibilidade %, Tempo Parado)
-  - [ ] 4.3: Gráfico de Pareto de paradas com `Recharts` ou componentes customizados shadcn
+  - [x] 4.3: Gráfico de Pareto de paradas com `Recharts` ou componentes customizados shadcn
   - [ ] 4.4: Tela de Relatórios com seletores de período (`DateRangePicker`), filtro por Máquina e Turno
   - [ ] 4.5: Mecanismo de download via streaming de blobs binários (`text/csv` e `application/pdf`)
   - [ ] 4.6: Tratamento de loading states e feedback de progresso durante a geração dos relatórios
