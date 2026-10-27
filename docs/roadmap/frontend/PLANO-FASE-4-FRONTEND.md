@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios)  
-> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas — 14%)  
+> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas — 28%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Recharts + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,13 +32,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | 🟢 Concluída | `frontend/src/components/operator/*` |
-| **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | ⏳ Pendente | `frontend/src/services/reports-service.ts` |
+| **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | 🟢 Concluída | `frontend/src/services/reports-service.ts`, `frontend/src/types/reports.ts` |
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | ⏳ Pendente | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | ⏳ Pendente | `frontend/src/components/dashboard/pareto-chart.tsx` |
 | **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | ⏳ Pendente | `frontend/src/pages/admin/dashboard-page.tsx` |
@@ -68,7 +68,7 @@ Progresso da Fase 4 (Frontend): [====----------------------------] 14% Concluíd
 
 ---
 
-### ⏳ Tarefa 4.2: Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`)
+### ✅ Tarefa 4.2: Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`)
 - **Objetivo:** Declarar os contratos de dados dos indicadores analíticos e implementar os métodos de consulta e download binário no cliente HTTP.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/types/reports.ts`
@@ -101,11 +101,11 @@ Progresso da Fase 4 (Frontend): [====----------------------------] 14% Concluíd
   }
   ```
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar `reportsService.getDashboardMetrics(filters)` retornando `DashboardMetrics`
-  - [ ] Implementar `reportsService.downloadCsv(filters)` com `responseType: 'blob'`
-  - [ ] Implementar `reportsService.downloadPdf(filters)` com `responseType: 'blob'`
+  - [x] Implementar `reportsService.getDashboardMetrics(filters)` retornando `DashboardMetrics`
+  - [x] Implementar `reportsService.downloadCsv(filters)` com `responseType: 'blob'`
+  - [x] Implementar `reportsService.downloadPdf(filters)` com `responseType: 'blob'`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Métodos tipados sem `any` com suporte a blobs binários.
+  - [x] **Caminho Normal:** Métodos tipados sem `any` com suporte a blobs binários.
 
 ---
 
