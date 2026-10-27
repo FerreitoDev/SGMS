@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios)  
-> **Status:** 🟡 Em Execução (2 de 7 Tarefas Concluídas — 28%)  
+> **Status:** 🟡 Em Execução (3 de 7 Tarefas Concluídas — 43%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Recharts + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,14 +32,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [========------------------------] 28% Concluído (2 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [============--------------------] 43% Concluído (3 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | 🟢 Concluída | `frontend/src/components/operator/*` |
 | **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | 🟢 Concluída | `frontend/src/services/reports-service.ts`, `frontend/src/types/reports.ts` |
-| **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | ⏳ Pendente | `frontend/src/components/dashboard/*` |
+| **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | 🟢 Concluída | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | ⏳ Pendente | `frontend/src/components/dashboard/pareto-chart.tsx` |
 | **4.5** | Tela do Dashboard Gerencial Integrada (`ManagerDashboardPage`) | ⏳ Pendente | `frontend/src/pages/admin/dashboard-page.tsx` |
 | **4.6** | Tela de Filtros e Extração de Relatórios CSV/PDF (`ReportsPage`) | ⏳ Pendente | `frontend/src/pages/admin/reports-page.tsx` |
@@ -109,18 +109,18 @@ Progresso da Fase 4 (Frontend): [========------------------------] 28% Concluíd
 
 ---
 
-### ⏳ Tarefa 4.3: Cards Corporativos de Indicadores e KPIs (`KpiCards`)
+### ✅ Tarefa 4.3: Cards Corporativos de Indicadores e KPIs (`KpiCards`)
 - **Objetivo:** Construir a seção superior do dashboard com métricas sintetizadas em cards corporativos com ícones Lucide e formatação visual elegante.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/dashboard/kpi-cards.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Card 1: **Volume Produzido** (Total de garrafas, ex: `48.200 un`, ícone de garrafa/fábrica)
-  - [ ] Card 2: **Tempo Parado** (Minutos e horas formatadas, ex: `1h 45min`, ícone de alerta)
-  - [ ] Card 3: **Disponibilidade Geral** (Percentual formatado com 1 casa decimal, ex: `87.5%`, com barra de progresso sutil)
-  - [ ] Card 4: **Ritmo Médio** (Garrafas por hora de operação líquida, ex: `3.200 un/h`, ícone de velocímetro)
+  - [x] Card 1: **Volume Produzido** (Total de garrafas, ex: `48.200 un`, ícone de garrafa/fábrica)
+  - [x] Card 2: **Tempo Parado** (Minutos e horas formatadas, ex: `1h 45min`, ícone de alerta)
+  - [x] Card 3: **Disponibilidade Geral** (Percentual formatado com 1 casa decimal, ex: `87.5%`, com barra de progresso sutil)
+  - [x] Card 4: **Ritmo Médio** (Garrafas por hora de operação líquida, ex: `3.200 un/h`, ícone de velocímetro)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Cards renderizam valores formatados de forma clara e profissional.
-  - [ ] **Zero Fallback:** Valor `0` exibido honestamente como `0 un` ou `0%`, sem omitir ou trocar por `"N/A"`.
+  - [x] **Caminho Normal:** Cards renderizam valores formatados de forma clara e profissional.
+  - [x] **Zero Fallback:** Valor `0` exibido honestamente como `0 un` ou `0%`, sem omitir ou trocar por `"N/A"`.
 
 ---
 
