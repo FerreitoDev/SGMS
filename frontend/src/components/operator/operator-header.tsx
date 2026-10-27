@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, Clock, User, LogOut, ArrowLeftRight, Loader2 } from 'lucide-react';
+import { Cpu, Clock, User, LogOut, ArrowLeftRight, Loader2, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SyncBadge } from '@/components/sync/sync-badge';
 import {
@@ -16,6 +16,7 @@ export interface OperatorHeaderProps {
   allocation: ShiftAllocation;
   userName: string;
   onReleaseMachine: () => Promise<void>;
+  onOpenCloseShift?: () => void;
   onLogout: () => void;
   isReleasing?: boolean;
 }
@@ -24,6 +25,7 @@ export function OperatorHeader({
   allocation,
   userName,
   onReleaseMachine,
+  onOpenCloseShift,
   onLogout,
   isReleasing = false,
 }: OperatorHeaderProps): React.ReactElement {
@@ -70,6 +72,20 @@ export function OperatorHeader({
           </div>
 
           <div className="flex items-center gap-2">
+            {onOpenCloseShift && (
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={onOpenCloseShift}
+                className="min-h-[44px] gap-1.5 text-xs font-bold touch-manipulation shadow-xs"
+                title="Encerrar formalmente o turno nesta máquina"
+              >
+                <ShieldAlert className="h-4 w-4" />
+                <span>Encerrar Turno</span>
+              </Button>
+            )}
+
             <Button
               type="button"
               variant="outline"

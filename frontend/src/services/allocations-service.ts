@@ -19,4 +19,9 @@ export const allocationsService = {
     const response = await apiClient.patch<ShiftAllocation>(`/allocations/${id}/release`);
     return response.data;
   },
+
+  async close(id: string): Promise<ShiftAllocation> {
+    const response = await apiClient.post<ShiftAllocation>(`/allocations/${id}/close`);
+    return response.data;
+  },
 };

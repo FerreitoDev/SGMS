@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 4 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 4 (Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios)  
-> **Status:** 🟡 Planejada / Pronta para Execução Atômica (0 de 7 Tarefas Concluídas)  
+> **Status:** 🟡 Em Execução (1 de 7 Tarefas Concluídas — 14%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Recharts + Axios + Sonner)  
 > **Data de Criação:** 2026-10-19  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -32,12 +32,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 4 (Frontend): [--------------------------------] 0% Concluído (0 de 7 tarefas)
+Progresso da Fase 4 (Frontend): [====----------------------------] 14% Concluído (1 de 7 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | ⏳ Pendente | `frontend/src/components/operator/*` |
+| **4.1** | Componente de Encerramento Seguro de Turno (`CloseShiftSheet`) | 🟢 Concluída | `frontend/src/components/operator/*` |
 | **4.2** | Tipos TypeScript Analíticos e Serviço de Relatórios (`reportsService`) | ⏳ Pendente | `frontend/src/services/reports-service.ts` |
 | **4.3** | Cards Corporativos de Indicadores e KPIs (`KpiCards`) | ⏳ Pendente | `frontend/src/components/dashboard/*` |
 | **4.4** | Gráfico de Pareto de Paradas da Linha (`ParetoChart` com Recharts) | ⏳ Pendente | `frontend/src/components/dashboard/pareto-chart.tsx` |
@@ -51,20 +51,20 @@ Progresso da Fase 4 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⏳ Tarefa 4.1: Componente de Encerramento Seguro de Turno (`CloseShiftSheet`)
+### ✅ Tarefa 4.1: Componente de Encerramento Seguro de Turno (`CloseShiftSheet`)
 - **Objetivo:** Adicionar o botão "Encerrar Turno" no Console do Operador, abrindo painel `Sheet` de confirmação irreversível que finaliza a alocação e libera a máquina para `IDLE`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/operator/close-shift-sheet.tsx`
   - `frontend/src/pages/operator/operator-console-page.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Implementar confirmação usando o primitivo `Sheet` do shadcn (bottom sheet no mobile e side sheet no desktop)
-  - [ ] Apresentar resumo: Total de garrafas sopradas no turno e quantidade de paradas apontadas
-  - [ ] Alerta em destaque: *"Atenção: Ao encerrar o turno, nenhum novo apontamento poderá ser feito nesta máquina."*
-  - [ ] Ao confirmar, disparar `allocationsService.close(allocationId)`
-  - [ ] Em caso de sucesso, exibir `toast.success("Turno encerrado com sucesso!")` e redirecionar para a tela de alocação `/chao-de-fabrica/alocacao`
+  - [x] Implementar confirmação usando o primitivo `Sheet` do shadcn (bottom sheet no mobile e side sheet no desktop)
+  - [x] Apresentar resumo: Total de garrafas sopradas no turno e quantidade de paradas apontadas
+  - [x] Alerta em destaque: *"Atenção: Ao encerrar o turno, nenhum novo apontamento poderá ser feito nesta máquina."*
+  - [x] Ao confirmar, disparar `allocationsService.close(allocationId)`
+  - [x] Em caso de sucesso, exibir `toast.success("Turno encerrado com sucesso!")` e redirecionar para a tela de alocação `/chao-de-fabrica/alocacao`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Fechamento confirmado libera a máquina e redireciona o operador.
-  - [ ] **Cancelamento:** Clicar em "Continuar Operando" fecha o painel Sheet sem alterar o estado da alocação.
+  - [x] **Caminho Normal:** Fechamento confirmado libera a máquina e redireciona o operador.
+  - [x] **Cancelamento:** Clicar em "Continuar Operando" fecha o painel Sheet sem alterar o estado da alocação.
 
 ---
 

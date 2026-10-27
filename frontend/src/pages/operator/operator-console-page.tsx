@@ -10,6 +10,7 @@ import {
   History,
   CheckCircle2,
   Cpu,
+  ShieldAlert,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
@@ -26,6 +27,7 @@ import { OperatorHeader } from '@/components/operator/operator-header';
 import { ProductionSummaryCard } from '@/components/operator/production-summary-card';
 import { ProductionDrawer } from '@/components/production/production-drawer';
 import { DowntimeModal } from '@/components/downtime/downtime-modal';
+import { CloseShiftSheet } from '@/components/operator/close-shift-sheet';
 import type { ProductionEntry, DowntimeRecord } from '@/types/domain';
 import type { ProductionPayload } from '@/types/offline';
 
@@ -50,6 +52,7 @@ export function OperatorConsolePage(): React.ReactElement {
   const [isProductionDrawerOpen, setIsProductionDrawerOpen] = useState<boolean>(false);
   const [isDowntimeModalOpen, setIsDowntimeModalOpen] = useState<boolean>(false);
   const [isDowntimeRetroactive, setIsDowntimeRetroactive] = useState<boolean>(false);
+  const [isCloseShiftSheetOpen, setIsCloseShiftSheetOpen] = useState<boolean>(false);
 
   // Tempo decorrido de parada ativa
   const [stopwatchSeconds, setStopwatchSeconds] = useState<number>(0);
@@ -225,6 +228,7 @@ export function OperatorConsolePage(): React.ReactElement {
         allocation={allocation}
         userName={user?.name ?? ''}
         onReleaseMachine={handleReleaseMachine}
+        onOpenCloseShift={() => setIsCloseShiftSheetOpen(true)}
         onLogout={logout}
         isReleasing={isReleasing}
       />
@@ -397,6 +401,20 @@ export function OperatorConsolePage(): React.ReactElement {
             </div>
           )}
         </div>
+
+        {/* Encerramento Formal do Turno (RN-06) */}
+        <div className="pt-2">
+          <Button
+            type="button"
+            id="btn-close-shift"
+            variant="outline"
+            className="min-h-[50px] w-full text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30 font-bold touch-manipulation flex items-center justify-center gap-2"
+            onClick={() => setIsCloseShiftSheetOpen(true)}
+          >
+            <ShieldAlert className="h-5 w-5" />
+            <span>Encerrar Turno de Produção</span>
+          </Button>
+        </div>
       </main>
 
       {/* Gaveta de Apontamento de Produção (Tarefa 3.5) */}
@@ -417,6 +435,18 @@ export function OperatorConsolePage(): React.ReactElement {
           allocationId={allocation.id}
           initialIsRetroactive={isDowntimeRetroactive}
           onSuccess={loadConsoleData}
+        />
+      )}
+
+      {/* Painel Sheet de Encerramento Seguro de Turno (Tarefa 4.1) */}
+      {allocation && (
+        <CloseShiftSheet
+          open={isCloseShiftSheetOpen}
+          onOpenChange={setIsCloseShiftSheetOpen}
+          allocation={allocation}
+          totalQuantity={totalQuantity}
+          downtimesCount={downtimes.length}
+          onSuccess={() => void refetchAllocation()}
         />
       )}
     </div>

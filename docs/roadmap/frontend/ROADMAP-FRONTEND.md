@@ -13,7 +13,7 @@
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
 | **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟢 Concluída |
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟢 Concluída |
-| **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | ⚪ A Iniciar |
+| **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟡 Em Andamento |
 
 ---
 
@@ -91,7 +91,7 @@
   - `RNF-05`: Renderização instantânea de gráficos na rede local.
 - **Dependências Bloqueantes:** Endpoints da Fase 4 do backend (`/api/allocations/:id/close`, `/api/reports/*`).
 - **Checklist Técnico Sequencial:**
-  - [ ] 4.1: Componente de encerramento de turno no Console do Operador com painel Sheet de confirmação irreversível
+  - [x] 4.1: Componente de encerramento de turno no Console do Operador com painel Sheet de confirmação irreversível
   - [ ] 4.2: Tela de Dashboard Gerencial para desktop (cards de KPIs: Produção Total, Disponibilidade %, Tempo Parado)
   - [ ] 4.3: Gráfico de Pareto de paradas com `Recharts` ou componentes customizados shadcn
   - [ ] 4.4: Tela de Relatórios com seletores de período (`DateRangePicker`), filtro por Máquina e Turno
