@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "DowntimeReason" ADD VALUE 'REFEICAO_INTERVALO';
+

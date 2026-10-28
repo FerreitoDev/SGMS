@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Pausa Planejada `REFEICAO_INTERVALO` & Segregação Estatística OEE)  
-> **Status:** ⚪ A Iniciar (0 de 2 Tarefas Concluídas — 0%)  
+> **Status:** 🟡 Em Andamento (1 de 2 Tarefas Concluídas — 50%)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,12 +29,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Backend): [--------------------------------] 0% Concluído (0 de 2 tarefas)
+Progresso da Fase 5 (Backend): [================----------------] 50% Concluído (1 de 2 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **5.1** | Expansão do Enum `DowntimeReason` no Prisma, Migration & Labels | ⚪ A Iniciar | `backend/prisma/schema.prisma`, `backend/src/modules/reports/constants/downtime-labels.constant.ts` |
+| **5.1** | Expansão do Enum `DowntimeReason` no Prisma, Migration & Labels | 🟢 Concluído | `backend/prisma/schema.prisma`, `backend/src/modules/reports/constants/downtime-labels.constant.ts` |
 | **5.2** | Segregação Estatística OEE no `ReportsService` & Testes (RN-10) | ⚪ A Iniciar | `backend/src/modules/reports/reports.service.ts`, `backend/test/*` |
 
 ---
@@ -43,19 +43,19 @@ Progresso da Fase 5 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⬜ Tarefa 5.1: Expansão do Enum `DowntimeReason` no Prisma, Migration & Labels
+### 🟩 Tarefa 5.1: Expansão do Enum `DowntimeReason` no Prisma, Migration & Labels
 - **Objetivo:** Adicionar o motivo `REFEICAO_INTERVALO` ao schema Prisma, gerar a migration correspondente para o PostgreSQL, regenerar o Prisma Client e atualizar o dicionário de rótulos do módulo de relatórios.
 - **Arquivos a Modificar / Criar:**
   - `backend/prisma/schema.prisma`
-  - `backend/prisma/migrations/<timestamp>_add_refeicao_intervalo_reason/migration.sql`
+  - `backend/prisma/migrations/20261028220106_add_refeicao_intervalo_reason/migration.sql`
   - `backend/src/modules/reports/constants/downtime-labels.constant.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` em `backend/prisma/schema.prisma`
-  - [ ] Criar/aplicar migration com `ALTER TYPE "DowntimeReason" ADD VALUE 'REFEICAO_INTERVALO';` e executar `npx prisma generate`
-  - [ ] Adicionar `[DowntimeReason.REFEICAO_INTERVALO]: 'Refeição / Intervalo'` em `DOWNTIME_REASON_LABELS` (`downtime-labels.constant.ts`)
+  - [x] Adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` em `backend/prisma/schema.prisma`
+  - [x] Criar/aplicar migration com `ALTER TYPE "DowntimeReason" ADD VALUE 'REFEICAO_INTERVALO';` e executar `npx prisma generate`
+  - [x] Adicionar `[DowntimeReason.REFEICAO_INTERVALO]: 'Refeição / Intervalo'` em `DOWNTIME_REASON_LABELS` (`downtime-labels.constant.ts`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npm run build` no backend compila sem erros de tipagem no `Record<DowntimeReason, string>`.
-  - [ ] **Zero Fallback:** Todos os membros do enum possuem rótulo explícito mapeado na constante central.
+  - [x] **Caminho Normal:** `npm run build` no backend compila sem erros de tipagem no `Record<DowntimeReason, string>`.
+  - [x] **Zero Fallback:** Todos os membros do enum possuem rótulo explícito mapeado na constante central.
 
 ---
 

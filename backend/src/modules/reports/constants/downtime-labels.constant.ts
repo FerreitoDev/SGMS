@@ -7,5 +7,6 @@ export const DOWNTIME_REASON_LABELS: Record<DowntimeReason, string> = {
   [DowntimeReason.MOLDE]: 'Molde',
   [DowntimeReason.MECANICA]: 'Mecânica',
   [DowntimeReason.ELETRICA]: 'Elétrica',
+  [DowntimeReason.REFEICAO_INTERVALO]: 'Refeição / Intervalo',
   [DowntimeReason.OUTROS]: 'Outros',
 };

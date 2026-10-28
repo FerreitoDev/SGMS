@@ -45,6 +45,7 @@ enum DowntimeReason {
   MOLDE
   MECANICA
   ELETRICA
+  REFEICAO_INTERVALO
   OUTROS
 }
 
