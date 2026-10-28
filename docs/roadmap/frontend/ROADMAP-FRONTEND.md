@@ -103,14 +103,17 @@
 
 ---
 
-### Fase 5: Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição
+### Fase 5: Unificação do Gatilho de Paradas, Travamento Temporal, Input Puro & Isolamento RBAC
 - **Referência Hierárquica:** Fase 5 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md).
 - **Requisitos Técnicos e de Negócio:**
+  - `RF-01`: Isolamento estrito de rotas por perfil (`requiredRole="OPERADOR"` em `/chao-de-fabrica/*` e `requiredRole="GERENTE"` em `/admin/*`) e limpeza de `location.state.from` no login para evitar que o Gerente caia na tela do Operador após troca de conta.
+  - `RF-06` & `RNF-03`: Remoção dos botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e remoção das setas (`spinners`) no input numérico do `ProductionDrawer`.
   - `RF-07`: Remoção do botão redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` da tela principal e inclusão do motivo `REFEICAO_INTERVALO` (`"Refeição / Intervalo"`).
   - `RF-08` & `RN-09`: Travamento do horário de início na aba **Tempo Real (Agora)** (fixado no instante corrente sem input editável), mantendo inputs de data/hora editáveis apenas na aba **Lançamento Retroativo**.
-  - `RNF-03`: Simplificação ergonômica do Console Operacional e do `DowntimeModal` (`Sheet`).
 - **Dependências Bloqueantes:** Fase 5 do Backend (enum `REFEICAO_INTERVALO` aceito pela API).
 - **Checklist Técnico Sequencial:**
   - [ ] 5.1: Atualização de `DowntimeReason` em `domain.ts` e `downtime-schema.ts` com `REFEICAO_INTERVALO` e rótulo amigável no card de status do console
   - [ ] 5.2: Remoção do botão secundário `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` em `OperatorConsolePage` e travamento de data/hora na aba **Tempo Real (Agora)** em `DowntimeModal` (`RN-09`)
+  - [ ] 5.3: Remoção dos botões de adição rápida (`+50` a `+500`) e das setas incrementais (`spinners`) em `ProductionDrawer`
+  - [ ] 5.4: Correção do isolamento de rotas por perfil (`AppRoutes`, `ProtectedRoute` e `LoginPage`) impedindo que o `GERENTE` seja redirecionado para telas de `OPERADOR`
 - **Plano de Execução Vinculado:** [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md)

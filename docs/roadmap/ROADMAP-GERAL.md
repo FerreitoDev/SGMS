@@ -110,21 +110,24 @@
 
 ---
 
-### Fase 5: Refinamento de UX de Paradas e Pausa Planejada (OEE)
-- **Objetivo Estratégico:** Eliminar redundâncias visuais no Console Operacional (unificando o acionamento de paradas em um único gatilho com `Sheet`), travar a edição de data/hora quando em modo **Tempo Real (Agora)** (RN-09) e introduzir a pausa planejada `REFEICAO_INTERVALO` com segregação estatística OEE (RN-10) para não distorcer o Gráfico de Pareto nem penalizar a Taxa de Disponibilidade Operacional.
+### Fase 5: Refinamento de UX de Paradas, Input Numérico Puro, RBAC de Rotas e Pausa Planejada (OEE)
+- **Objetivo Estratégico:** Eliminar redundâncias visuais e armadilhas de digitação no Console Operacional (unificando o acionamento de paradas em um único gatilho com `Sheet`, removendo botões de adição rápida e setas de incremento no input de produção), corrigir o isolamento de rotas no login entre `OPERADOR` e `GERENTE`, travar a edição de data/hora quando em modo **Tempo Real (Agora)** (RN-09) e introduzir a pausa planejada `REFEICAO_INTERVALO` com segregação estatística OEE (RN-10).
 - **Requisitos Associados:**
+  - `RF-01`: Isolamento estrito de rotas por perfil (`OPERADOR` $\rightarrow$ `/chao-de-fabrica/*`, `GERENTE` $\rightarrow$ `/admin/*`), impedindo que o Gerente caia em telas de Operador ao trocar de conta.
+  - `RF-06` & `RNF-03`: Remoção dos botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e ocultação das setas nativas (`spinners`) no input de quantidade de garrafas, além da remoção do botão redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"`.
   - `RF-07`: Inclusão de `REFEICAO_INTERVALO` no enum `DowntimeReason` (Prisma, Backend e Frontend) e unificação do botão de parada.
   - `RF-08` & `RN-09`: Bloqueio de edição do timestamp de início na aba **Tempo Real (Agora)**, mantendo edição livre de início e término apenas na aba **Lançamento Retroativo**.
   - `RF-10`, `RF-11` & `RN-10`: Exclusão de `REFEICAO_INTERVALO` do ranking/gráfico de Pareto de Gargalos e dedução do tempo de pausa planejada do Tempo Planejado do Turno ($T_{disp\_turno} = T_{planejado\_turno} - T_{pausa\_planejada}$) nos KPIs e relatórios.
-  - `RNF-03`: Substituição de modal centralizado por `Sheet` canônico e remoção do botão redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` da tela principal.
 - **Checklist Macro de Entregas:**
   - [ ] Migration Prisma adicionando `REFEICAO_INTERVALO` ao enum `DowntimeReason` no PostgreSQL
   - [ ] Atualização das queries analíticas de Dashboard e Relatórios no Backend (exclusão de `REFEICAO_INTERVALO` do Pareto e ajuste da fórmula de Disponibilidade OEE)
   - [ ] Remoção do botão secundário redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` no Console Operacional do Frontend
-  - [ ] Conversão do componente de registro de parada para `Sheet` e travamento do horário de início na aba **Tempo Real (Agora)** (RN-09)
-  - [ ] Inclusão da opção `"Refeição / Intervalo"` (`REFEICAO_INTERVALO`) nos seletores de parada e mapeamentos de rótulos do Frontend
+  - [ ] Travamento do horário de início na aba **Tempo Real (Agora)** do `DowntimeModal` (RN-09) e inclusão da opção `"Refeição / Intervalo"` (`REFEICAO_INTERVALO`)
+  - [ ] Remoção dos botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e das setas (`spinners`) do input numérico no `ProductionDrawer`
+  - [ ] Correção do roteamento RBAC (`AppRoutes`, `ProtectedRoute` e `LoginPage`) para impedir que o `GERENTE` seja redirecionado para telas de `OPERADOR` após troca de conta
 - **Critérios de Conclusão da Fase:**
-  - Console Operacional apresenta apenas o botão `"Registrar Parada de Linha"` para acionamento de paradas.
+  - Console Operacional apresenta apenas o botão `"Registrar Parada de Linha"` para acionamento de paradas, e o `ProductionDrawer` exibe apenas o input numérico limpo (sem setas e sem botões `+50`/`+100`).
+  - Ao fazer logout da conta de Operador e entrar na conta de Gerente, o sistema redireciona diretamente para `/admin/dashboard` e bloqueia acesso de Gerente às rotas `/chao-de-fabrica/*`.
   - Na aba **Tempo Real (Agora)**, o operador não consegue editar a data/hora de início; na aba **Lançamento Retroativo**, os campos de Início e Término são editáveis.
   - Paradas lançadas com motivo `REFEICAO_INTERVALO` param a máquina normalmente, mas não aparecem como gargalo no Gráfico de Pareto e não reduzem a disponibilidade operacional ($D$) do turno.
   - Compilação (`npm run build`) e testes unitários/integração passando no Backend e Frontend.
