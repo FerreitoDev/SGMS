@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   Plus,
   Loader2,
-  History,
   CheckCircle2,
   Cpu,
   ShieldAlert,
@@ -52,7 +51,6 @@ export function OperatorConsolePage(): React.ReactElement {
   const [isResolvingDowntime, setIsResolvingDowntime] = useState<boolean>(false);
   const [isProductionDrawerOpen, setIsProductionDrawerOpen] = useState<boolean>(false);
   const [isDowntimeModalOpen, setIsDowntimeModalOpen] = useState<boolean>(false);
-  const [isDowntimeRetroactive, setIsDowntimeRetroactive] = useState<boolean>(false);
   const [isCloseShiftSheetOpen, setIsCloseShiftSheetOpen] = useState<boolean>(false);
 
   // Tempo decorrido de parada ativa
@@ -104,9 +102,7 @@ export function OperatorConsolePage(): React.ReactElement {
     const handleOpenProduction = (): void => {
       setIsProductionDrawerOpen(true);
     };
-    const handleOpenDowntime = (e: Event): void => {
-      const customEvent = e as CustomEvent<{ isRetroactive?: boolean }>;
-      setIsDowntimeRetroactive(Boolean(customEvent.detail?.isRetroactive));
+    const handleOpenDowntime = (): void => {
       setIsDowntimeModalOpen(true);
     };
 
@@ -342,29 +338,12 @@ export function OperatorConsolePage(): React.ReactElement {
               id="btn-open-downtime-modal"
               variant="destructive"
               className="min-h-[58px] text-base font-bold w-full shadow-md touch-manipulation flex items-center justify-center gap-2 active:scale-98"
-              onClick={() => {
-                setIsDowntimeRetroactive(false);
-                setIsDowntimeModalOpen(true);
-              }}
+              onClick={() => setIsDowntimeModalOpen(true)}
             >
               <AlertTriangle className="h-5 w-5" />
               <span>Registrar Parada de Linha</span>
             </Button>
           )}
-
-          {/* Ação secundária: Parada Retroativa */}
-          <Button
-            type="button"
-            variant="outline"
-            className="min-h-[44px] text-xs font-semibold w-full sm:col-span-2 border-dashed text-muted-foreground hover:text-foreground touch-manipulation flex items-center justify-center gap-1.5"
-            onClick={() => {
-              setIsDowntimeRetroactive(true);
-              setIsDowntimeModalOpen(true);
-            }}
-          >
-            <History className="h-4 w-4" />
-            <span>Lançar Parada Ocorrida Anteriormente (Retroativa)</span>
-          </Button>
         </div>
 
         {/* Histórico Recente do Turno */}
@@ -434,7 +413,6 @@ export function OperatorConsolePage(): React.ReactElement {
           open={isDowntimeModalOpen}
           onOpenChange={setIsDowntimeModalOpen}
           allocationId={allocation.id}
-          initialIsRetroactive={isDowntimeRetroactive}
           onSuccess={loadConsoleData}
         />
       )}

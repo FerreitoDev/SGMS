@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Unificação do Gatilho de Paradas, Travamento Temporal, Input Numérico Puro & Isolamento RBAC)  
-> **Status:** 🟡 Em Progresso (1 de 4 Tarefas Concluídas — 25%)  
+> **Status:** 🟡 Em Progresso (2 de 4 Tarefas Concluídas — 50%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zod)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,13 +33,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Frontend): [========------------------------] 25% Concluído (1 de 4 tarefas)
+Progresso da Fase 5 (Frontend): [================----------------] 50% Concluído (2 de 4 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **5.1** | Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels | 🟢 Concluída | `frontend/src/types/domain.ts`, `frontend/src/schemas/downtime-schema.ts`, `frontend/src/pages/operator/operator-console-page.tsx` |
-| **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | ⚪ A Iniciar | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
+| **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 | **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | ⚪ A Iniciar | `frontend/src/components/production/production-drawer.tsx` |
 | **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | ⚪ A Iniciar | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
 
@@ -65,19 +65,19 @@ Progresso da Fase 5 (Frontend): [========------------------------] 25% Concluíd
 
 ---
 
-### ⬜ Tarefa 5.2: Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`)
+### 🟢 Tarefa 5.2: Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`)
 - **Objetivo:** Eliminar o botão secundário `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` da tela principal do operador e bloquear a edição de data/hora quando a aba **Tempo Real (Agora)** estiver selecionada no `DowntimeModal`.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/pages/operator/operator-console-page.tsx`
   - `frontend/src/components/downtime/downtime-modal.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `OperatorConsolePage`: remover o botão `<Button variant="outline">...Lançar Parada Ocorrida Anteriormente (Retroativa)</Button>`, o estado `isDowntimeRetroactive` desnecessário e o ícone `History` órfão, ajustando o grid de ações primárias
-  - [ ] Em `DowntimeModal`:
-    - Quando `!isRetroactive` (aba **Tempo Real (Agora)**): substituir o `<Input type="datetime-local" />` editável por um bloco informativo travado mostrando que o início será registrado no instante exato da confirmação (`Agora`), e no `onSubmit` usar `new Date().toISOString()` diretamente como `startTimeIso` para o modo tempo real
-    - Quando `isRetroactive` (aba **Lançamento Retroativo**): renderizar os dois inputs `<Input type="datetime-local" />` editáveis (**Início da Parada** e **Término da Parada**)
+  - [x] Em `OperatorConsolePage`: remover o botão `<Button variant="outline">...Lançar Parada Ocorrida Anteriormente (Retroativa)</Button>`, o estado `isDowntimeRetroactive` desnecessário e o ícone `History` órfão, ajustando o grid de ações primárias
+  - [x] Em `DowntimeModal`:
+    - [x] Quando `!isRetroactive` (aba **Tempo Real (Agora)**): substituir o `<Input type="datetime-local" />` editável por um bloco informativo travado mostrando que o início será registrado no instante exato da confirmação (`Agora`), e no `onSubmit` usar `new Date().toISOString()` diretamente como `startTimeIso` para o modo tempo real
+    - [x] Quando `isRetroactive` (aba **Lançamento Retroativo**): renderizar os dois inputs `<Input type="datetime-local" />` editáveis (**Início da Parada** e **Término da Parada**)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal (Tempo Real):** Ao clicar em `"Registrar Parada de Linha"`, a aba **Tempo Real (Agora)** está ativa e não permite alterar dia ou hora; basta tocar no motivo e confirmar.
-  - [ ] **Caminho Retroativo:** Ao alternar para a aba **Lançamento Retroativo** dentro do mesmo `Sheet`, os campos de Início e Término aparecem habilitados para edição com validação $T_{fim} \ge T_{ini}$.
+  - [x] **Caminho Normal (Tempo Real):** Ao clicar em `"Registrar Parada de Linha"`, a aba **Tempo Real (Agora)** está ativa e não permite alterar dia ou hora; basta tocar no motivo e confirmar.
+  - [x] **Caminho Retroativo:** Ao alternar para a aba **Lançamento Retroativo** dentro do mesmo `Sheet`, os campos de Início e Término aparecem habilitados para edição com validação $T_{fim} \ge T_{ini}$.
 
 ---
 
