@@ -27,6 +27,10 @@ export function AppRoutes(): React.ReactElement {
       {/* Rota Raiz com Redirecionamento Contextual por Papel */}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<HomeRedirect />} />
+      </Route>
+
+      {/* Rotas de Chão de Fábrica: exige perfil OPERADOR */}
+      <Route element={<ProtectedRoute requiredRole="OPERADOR" />}>
         <Route
           path="/chao-de-fabrica/alocacao"
           element={<AllocationPage />}

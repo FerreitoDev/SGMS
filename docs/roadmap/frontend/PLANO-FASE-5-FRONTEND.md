@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Unificação do Gatilho de Paradas, Travamento Temporal, Input Numérico Puro & Isolamento RBAC)  
-> **Status:** 🟡 Em Progresso (3 de 4 Tarefas Concluídas — 75%)  
+> **Status:** 🟢 Concluído (4 de 4 Tarefas Concluídas — 100%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zod)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Frontend): [========================--------] 75% Concluído (3 de 4 tarefas)
+Progresso da Fase 5 (Frontend): [================================] 100% Concluído (4 de 4 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -41,7 +41,7 @@ Progresso da Fase 5 (Frontend): [========================--------] 75% Concluíd
 | **5.1** | Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels | 🟢 Concluída | `frontend/src/types/domain.ts`, `frontend/src/schemas/downtime-schema.ts`, `frontend/src/pages/operator/operator-console-page.tsx` |
 | **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 | **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | 🟢 Concluída | `frontend/src/components/production/production-drawer.tsx` |
-| **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | ⚪ A Iniciar | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
+| **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | 🟢 Concluída | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
 
 ---
 
@@ -94,24 +94,24 @@ Progresso da Fase 5 (Frontend): [========================--------] 75% Concluíd
 
 ---
 
-### ⬜ Tarefa 5.4: Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas
+### 🟢 Tarefa 5.4: Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas
 - **Objetivo:** Impedir que o usuário `GERENTE` caia em telas de `OPERADOR` (`/chao-de-fabrica/*`) ao trocar de conta ou navegar, garantindo redirecionamento determinístico por perfil.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/routes/app-routes.tsx`
   - `frontend/src/components/auth/protected-route.tsx`
   - `frontend/src/pages/login-page.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `frontend/src/routes/app-routes.tsx`: separar as rotas `/chao-de-fabrica/alocacao` e `/chao-de-fabrica/console` dentro de um `<Route element={<ProtectedRoute requiredRole="OPERADOR" />}>` próprio, deixando apenas `<Route path="/" element={<HomeRedirect />} />` no `<ProtectedRoute />` genérico
-  - [ ] Em `frontend/src/components/auth/protected-route.tsx`: atualizar o `fallbackPath` de `isRoleInsufficient` para `user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao'`
-  - [ ] Em `frontend/src/pages/login-page.tsx`:
-    - Alterar o redirect de usuário já autenticado (linha 49) para `user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao'`
-    - No `onSubmit` (linhas 68-77), validar se `targetFrom` é compatível com o papel do usuário recém-logado (`GERENTE` só aproveita `targetFrom` se começar com `/admin`; `OPERADOR` só aproveita se começar com `/chao-de-fabrica`); caso contrário, redirecionar diretamente para `/admin/dashboard` (se `GERENTE`) ou `/chao-de-fabrica/alocacao` (se `OPERADOR`)
+  - [x] Em `frontend/src/routes/app-routes.tsx`: separar as rotas `/chao-de-fabrica/alocacao` e `/chao-de-fabrica/console` dentro de um `<Route element={<ProtectedRoute requiredRole="OPERADOR" />}>` próprio, deixando apenas `<Route path="/" element={<HomeRedirect />} />` no `<ProtectedRoute />` genérico
+  - [x] Em `frontend/src/components/auth/protected-route.tsx`: atualizar o `fallbackPath` de `isRoleInsufficient` para `user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao'`
+  - [x] Em `frontend/src/pages/login-page.tsx`:
+    - [x] Alterar o redirect de usuário já autenticado (linha 49) para `user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao'`
+    - [x] No `onSubmit` (linhas 68-77), validar se `targetFrom` é compatível com o papel do usuário recém-logado (`GERENTE` só aproveita `targetFrom` se começar com `/admin`; `OPERADOR` só aproveita se começar com `/chao-de-fabrica`); caso contrário, redirecionar diretamente para `/admin/dashboard` (se `GERENTE`) ou `/chao-de-fabrica/alocacao` (se `OPERADOR`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal (Troca de Conta):** Ao clicar em "Sair" na tela do Operador (`/chao-de-fabrica/alocacao` ou `/chao-de-fabrica/console`) e fazer login com a conta de `GERENTE`, o sistema abre diretamente `/admin/dashboard` (nunca a tela de Alocação de Sopradora).
-  - [ ] **Violação de Rota Cruzada:** Se um `GERENTE` tentar acessar manualmente `/chao-de-fabrica/alocacao`, o `ProtectedRoute` bloqueia e redireciona imediatamente para `/admin/dashboard`.
+  - [x] **Caminho Normal (Troca de Conta):** Ao clicar em "Sair" na tela do Operador (`/chao-de-fabrica/alocacao` ou `/chao-de-fabrica/console`) e fazer login com a conta de `GERENTE`, o sistema abre diretamente `/admin/dashboard` (nunca a tela de Alocação de Sopradora).
+  - [x] **Violação de Rota Cruzada:** Se um `GERENTE` tentar acessar manualmente `/chao-de-fabrica/alocacao`, o `ProtectedRoute` bloqueia e redireciona imediatamente para `/admin/dashboard`.
 
 ---
 
 ## 5. Auditoria de Zero Fallback & Homologação da Fase 5 (Frontend)
-- [ ] Nenhum import não utilizado (`History`, `Sparkles`, estados órfãos) deixado nos componentes modificados.
-- [ ] `npm run build` no frontend executando com zero erros de TypeScript e zero warnings de bundle.
+- [x] Nenhum import não utilizado (`History`, `Sparkles`, estados órfãos) deixado nos componentes modificados.
+- [x] `npm run build` no frontend executando com zero erros de TypeScript e zero warnings de bundle.

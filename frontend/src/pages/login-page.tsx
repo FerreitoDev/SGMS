@@ -46,7 +46,8 @@ export function LoginPage(): React.ReactElement {
 
   // Se já autenticado, redireciona para a tela do respectivo perfil
   if (user) {
-    const destination = user.role === 'GERENTE' ? '/admin/users' : '/';
+    const destination =
+      user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao';
     return <Navigate to={destination} replace />;
   }
 
@@ -64,17 +65,24 @@ export function LoginPage(): React.ReactElement {
         description: `Bem-vindo, ${authenticatedUser.name}!`,
       });
 
-      // Redirecionamento condicional preservando rota original ou destino do perfil
+      // Redirecionamento condicional validando compatibilidade de perfil com rota original
       const locationState = location.state as { from?: { pathname: string } } | null;
       const targetFrom = locationState?.from?.pathname;
 
-      if (targetFrom && targetFrom !== '/login') {
-        navigate(targetFrom, { replace: true });
-      } else {
-        const defaultDestination =
-          authenticatedUser.role === 'GERENTE' ? '/admin/users' : '/';
-        navigate(defaultDestination, { replace: true });
-      }
+      const isManager = authenticatedUser.role === 'GERENTE';
+      const defaultDestination =
+        isManager ? '/admin/dashboard' : '/chao-de-fabrica/alocacao';
+
+      const isTargetValid =
+        Boolean(targetFrom) &&
+        targetFrom !== '/login' &&
+        (isManager
+          ? targetFrom?.startsWith('/admin')
+          : targetFrom?.startsWith('/chao-de-fabrica'));
+
+      navigate(isTargetValid && targetFrom ? targetFrom : defaultDestination, {
+        replace: true,
+      });
     } catch (err: unknown) {
       const detail = extractProblemDetail(err);
       toast.error('Falha no Acesso', {

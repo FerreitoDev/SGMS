@@ -48,9 +48,10 @@ export function ProtectedRoute({
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // Papel insuficiente (ex: OPERADOR tentando acessar /admin/*)
+  // Papel insuficiente (ex: OPERADOR tentando acessar /admin/* ou GERENTE tentando acessar /chao-de-fabrica/*)
   if (isRoleInsufficient) {
-    const fallbackPath = user.role === 'OPERADOR' ? '/' : '/admin/users';
+    const fallbackPath =
+      user.role === 'GERENTE' ? '/admin/dashboard' : '/chao-de-fabrica/alocacao';
     return <Navigate to={fallbackPath} replace />;
   }
 
