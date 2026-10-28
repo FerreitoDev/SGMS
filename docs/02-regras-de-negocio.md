@@ -26,13 +26,14 @@ export enum ShiftAllocationStatus {
 }
 
 export enum DowntimeReason {
-  PRE_FORMA = 'PRE_FORMA',                 // Falta ou defeito físico de pré-formas PET
-  COMPRESSOR = 'COMPRESSOR',               // Queda de pressão ou falha no compressor de alta pressão
-  AQUECIMENTO_FORNO = 'AQUECIMENTO_FORNO', // Desvio térmico nas lâmpadas ou túnel de aquecimento
-  MOLDE = 'MOLDE',                         // Troca, ajuste mecânico ou vazamento no molde de sopro
-  MECANICA = 'MECANICA',                   // Falha mecânica em correntes, pinças ou esteiras
-  ELETRICA = 'ELETRICA',                   // Desarme elétrico, sensores, inversor ou CLP
-  OUTROS = 'OUTROS',                       // Qualquer outro motivo (exige justificativa obrigatória)
+  PRE_FORMA = 'PRE_FORMA',                 // Falta ou defeito físico de pré-formas PET (Parada Não Planejada)
+  COMPRESSOR = 'COMPRESSOR',               // Queda de pressão ou falha no compressor de alta pressão (Parada Não Planejada)
+  AQUECIMENTO_FORNO = 'AQUECIMENTO_FORNO', // Desvio térmico nas lâmpadas ou túnel de aquecimento (Parada Não Planejada)
+  MOLDE = 'MOLDE',                         // Troca, ajuste mecânico ou vazamento no molde de sopro (Parada Não Planejada)
+  MECANICA = 'MECANICA',                   // Falha mecânica em correntes, pinças ou esteiras (Parada Não Planejada)
+  ELETRICA = 'ELETRICA',                   // Desarme elétrico, sensores, inversor ou CLP (Parada Não Planejada)
+  REFEICAO_INTERVALO = 'REFEICAO_INTERVALO', // Pausa planejada para almoço/refeição ou intervalo intrajornada (Parada Planejada)
+  OUTROS = 'OUTROS',                       // Qualquer outro motivo não planejado (exige justificativa obrigatória)
 }
 
 export enum DowntimeStatus {
@@ -55,6 +56,8 @@ export enum DowntimeStatus {
 | **RN-06** | **Imutabilidade de Turno Fechado** | Após a transição da alocação de turno para `ShiftAllocationStatus.CLOSED`, nenhum novo apontamento de produção ou parada pode ser registrado por operadores. Modificações ou inclusões tardias exigem privilégio de `GERENTE`. | HTTP 403 Forbidden: `"Este turno já foi encerrado e não aceita novos apontamentos."` |
 | **RN-07** | **Idempotência de Sincronização Offline** | Todo apontamento de produção ou parada gerado offline deve conter um `clientUuid` (UUID v4). O backend valida unicidade na tabela correspondente. Se o `clientUuid` já existir, o backend descarta a duplicação e retorna o registro já persistido sem alterar saldos. | HTTP 200 OK (com flag de registro pré-existente) ou descarte idempotente sem duplicar contagens. |
 | **RN-08** | **Restrição de Apontamento a Máquina Alocada** | Nenhum operador pode registrar produção ou paradas em uma máquina sem possuir uma alocação com status `ACTIVE` associada ao seu usuário. | HTTP 403 Forbidden: `"Operador não possui alocação ativa nesta máquina."` |
+| **RN-09** | **Imutabilidade de Timestamp no Modo Tempo Real** | Ao registrar uma parada em modo **Tempo Real (Agora)** (`status = IN_PROGRESS`), o timestamp de início ($T_{ini}$) é fixado no instante corrente da ação, sendo bloqueada a edição manual de data/hora pelo operador na interface. A edição manual de início e término ($T_{ini}, T_{fim}$) é exclusiva da aba **Lançamento Retroativo** (`status = RESOLVED`). | Bloqueio de input no frontend (`readOnly`/oculto no modo Tempo Real) e validação de $T_{ini} \le T_{servidor}$ na fronteira HTTP. |
+| **RN-10** | **Segregação Estatística de Pausa Planejada (OEE)** | Paradas com motivo `DowntimeReason.REFEICAO_INTERVALO` alteram o status da máquina para `STOPPED` durante sua vigência em tempo real, mas são classificadas como **Paradas Planejadas**. Elas são estritamente excluídas do ranking/gráfico de Pareto de Gargalos (que contabiliza apenas falhas não planejadas) e seu tempo acumulado ($T_{planejada}$) é deduzido do Tempo Planejado do Turno antes do cálculo de Disponibilidade. | Filtragem explícita `reason != 'REFEICAO_INTERVALO'` nas agregações de Pareto e dedução no denominador da Disponibilidade Operacional. |
 
 ---
 
@@ -102,15 +105,17 @@ stateDiagram-v2
 1. **Volume Total de Garrafas Produzidas no Turno ($V_{prod}$):**
    $$V_{prod} = \sum_{i=1}^{n} Q_i \quad \text{onde } Q_i \text{ é a quantidade de cada apontamento de produção da alocação}.$$
 
-2. **Tempo Total de Paradas no Turno ($T_{parada}$ em minutos):**
-   $$T_{parada} = \sum_{j=1}^{m} \Delta t_j \quad \text{onde } \Delta t_j = \lfloor (T_{fim, j} - T_{ini, j}) / 60000 \rfloor.$$
+2. **Segregação de Tempos de Parada no Turno (em minutos):**
+   - **Tempo de Pausas Planejadas ($T_{pausa\_planejada}$):** Soma das durações ($\Delta t_j = \lfloor (T_{fim, j} - T_{ini, j}) / 60000 \rfloor$) onde `reason == 'REFEICAO_INTERVALO'`.
+   - **Tempo de Paradas Não Planejadas / Falhas ($T_{parada\_falha}$):** Soma das durações onde `reason != 'REFEICAO_INTERVALO'`. É exclusivamente sobre $T_{parada\_falha}$ que o **Gráfico de Pareto de Gargalos** é calculado.
 
-3. **Tempo Operacional Líquido ($T_{liquido}$):**
-   $$T_{liquido} = T_{planejado\_turno} - T_{parada}.$$
+3. **Tempo Planejado Produtivo ($T_{disp\_turno}$) e Tempo Operacional Líquido ($T_{liquido}$):**
+   $$T_{disp\_turno} = \max(0, T_{planejado\_turno} - T_{pausa\_planejada})$$
+   $$T_{liquido} = \max(0, T_{disp\_turno} - T_{parada\_falha})$$
 
-4. **Taxa de Disponibilidade Operacional ($D$):**
-   $$D = \left( \frac{T_{liquido}}{T_{planejado\_turno}} \right) \times 100\%.$$
-   *Observação:* Se $T_{parada} > T_{planejado\_turno}$, $D$ assume estritamente $0\%$. Proibido valor negativo.
+4. **Taxa de Disponibilidade Operacional ($D$ — Padrão OEE):**
+   $$D = \begin{cases} \left( \frac{T_{liquido}}{T_{disp\_turno}} \right) \times 100\%, & \text{se } T_{disp\_turno} > 0 \\ 0\%, & \text{se } T_{disp\_turno} = 0 \end{cases}$$
+   *Observação:* Pausas de almoço/intervalo (`REFEICAO_INTERVALO`) reduzem a janela planejada ($T_{disp\_turno}$) sem penalizar a taxa de disponibilidade operacional ($D$) da sopradora. Se $T_{parada\_falha} \ge T_{disp\_turno}$, $D$ assume estritamente $0\%$.
 
 5. **Ritmo Médio de Produção ($R$ em garrafas/hora):**
    $$R = \begin{cases} 

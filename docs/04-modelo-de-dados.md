@@ -69,7 +69,7 @@ erDiagram
         uuid id PK
         uuid clientUuid UK "Idempotência offline"
         uuid allocationId FK
-        enum reason "PRE_FORMA | COMPRESSOR | AQUECIMENTO_FORNO | MOLDE | MECANICA | ELETRICA | OUTROS"
+        enum reason "PRE_FORMA | COMPRESSOR | AQUECIMENTO_FORNO | MOLDE | MECANICA | ELETRICA | REFEICAO_INTERVALO | OUTROS"
         string justification "Obrigatório se reason=OUTROS, senão null"
         enum status "IN_PROGRESS | RESOLVED"
         datetime startTime
@@ -214,6 +214,7 @@ enum DowntimeReason {
   MOLDE
   MECANICA
   ELETRICA
+  REFEICAO_INTERVALO
   OUTROS
 }
 

@@ -13,7 +13,8 @@
 | **Fase 1** | Setup Vite, Design System shadcn/ui, Autenticação & Gestão de Contas | [PLANO-FASE-1-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-1-FRONTEND.md) | 🟢 Concluída |
 | **Fase 2** | Gestão de Máquinas, Turnos & Interface de Alocação Touch | [PLANO-FASE-2-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-2-FRONTEND.md) | 🟢 Concluída |
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟢 Concluída |
-| **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟡 Em Andamento |
+| **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟢 Concluída |
+| **Fase 5** | Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição | [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md) | ⚪ A Iniciar |
 
 ---
 
@@ -99,3 +100,17 @@
   - [x] 4.6: Tratamento de loading states e feedback de progresso durante a geração dos relatórios
   - [x] 4.7: Homologação visual integrada de toda a jornada nos navegadores alvo (Chrome e Safari)
 - **Plano de Execução Vinculado:** [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md)
+
+---
+
+### Fase 5: Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição
+- **Referência Hierárquica:** Fase 5 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md).
+- **Requisitos Técnicos e de Negócio:**
+  - `RF-07`: Remoção do botão redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` da tela principal e inclusão do motivo `REFEICAO_INTERVALO` (`"Refeição / Intervalo"`).
+  - `RF-08` & `RN-09`: Travamento do horário de início na aba **Tempo Real (Agora)** (fixado no instante corrente sem input editável), mantendo inputs de data/hora editáveis apenas na aba **Lançamento Retroativo**.
+  - `RNF-03`: Simplificação ergonômica do Console Operacional e do `DowntimeModal` (`Sheet`).
+- **Dependências Bloqueantes:** Fase 5 do Backend (enum `REFEICAO_INTERVALO` aceito pela API).
+- **Checklist Técnico Sequencial:**
+  - [ ] 5.1: Atualização de `DowntimeReason` em `domain.ts` e `downtime-schema.ts` com `REFEICAO_INTERVALO` e rótulo amigável no card de status do console
+  - [ ] 5.2: Remoção do botão secundário `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` em `OperatorConsolePage` e travamento de data/hora na aba **Tempo Real (Agora)** em `DowntimeModal` (`RN-09`)
+- **Plano de Execução Vinculado:** [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md)

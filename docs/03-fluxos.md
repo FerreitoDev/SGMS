@@ -72,26 +72,29 @@ sequenceDiagram
 
 ---
 
-### 3. Fluxo de Apontamento de Paradas de Máquina
+### 3. Fluxo de Apontamento de Paradas de Máquina (Gatilho Único no Console)
 
-#### 3.1 Parada em Tempo Real (Início imediato e fechamento posterior)
+O Console Operacional possui um **único botão de ação para paradas** (`"Registrar Parada de Linha"`), eliminando botões secundários redundantes na tela principal. Ao tocar nele, abre-se o painel `Sheet` com duas abas: **Tempo Real (Agora)** e **Lançamento Retroativo**.
+
+#### 3.1 Aba "Tempo Real (Agora)" (Horário Travado e Fechamento Posterior)
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Operador as Operador
-    participant UI as Interface PWA
+    participant UI as Interface PWA (Sheet)
     participant API as Backend NestJS
     participant DB as Banco PostgreSQL
 
-    Operador->>UI: Toca no botão de parada de emergência "Parar Máquina"
-    UI->>UI: Seleciona motivo (ex: AQUECIMENTO_FORNO) e pré-carrega timestamp atual
-    UI->>API: POST /api/downtimes/start { allocationId, reason, startTime }
+    Operador->>UI: Toca no botão único "Registrar Parada de Linha" (Aba padrão: Tempo Real)
+    UI->>UI: Exibe motivos (incluindo REFEICAO_INTERVALO) com horário de início TRAVADO no Agora (RN-09)
+    Operador->>UI: Seleciona motivo (ex: AQUECIMENTO_FORNO ou REFEICAO_INTERVALO) e confirma
+    UI->>API: POST /api/downtimes/start { allocationId, reason, startTime: now() }
     API->>DB: Cria DowntimeRecord (status: IN_PROGRESS) e altera Machine para STOPPED
     DB-->>API: Parada aberta confirmada
     API-->>UI: Interface entra em modo "Máquina Paralisada" (Cronômetro ativo)
     
-    Note over Operador, UI: Máquina é reparada pela manutenção/operador
+    Note over Operador, UI: Máquina é reparada ou intervalo de refeição termina
     
     Operador->>UI: Toca em "Retomar Produção"
     UI->>API: PATCH /api/downtimes/:id/resolve { endTime }
@@ -101,15 +104,15 @@ sequenceDiagram
     UI-->>Operador: Máquina volta ao status normal RUNNING
 ```
 
-#### 3.2 Parada Retroativa (Lançamento de evento passado)
+#### 3.2 Aba "Lançamento Retroativo" (Lançamento de Evento Passado com Início e Fim Editáveis)
 
 ```mermaid
 flowchart TD
-    A["Operador clica em 'Registrar Parada Retroativa'"] --> B["Formulário abre com data/hora corrente pré-carregada"]
-    B --> C["Operador altera horário de Início e Término no passado"]
+    A["Operador toca em 'Registrar Parada de Linha' e alterna para a aba 'Lançamento Retroativo'"] --> B["Habilita campos editáveis de Data/Hora de Início e Término"]
+    B --> C["Operador informa horário de Início e Término ocorridos no passado"]
     C --> D{"T_fim >= T_ini e T_evento <= Agora?"}
     D -- Não --> E["Validação bloqueia envio e exibe alerta de inconsistência cronológica"]
-    D -- Sim --> F["Operador seleciona o Motivo da Parada"]
+    D -- Sim --> F["Operador seleciona o Motivo da Parada (incluindo REFEICAO_INTERVALO)"]
     F --> G{"Motivo selecionado é 'OUTROS'?"}
     G -- Sim --> H["Campo de texto obrigatório é habilitado (mínimo 5 caracteres)"]
     H --> I["Operador preenche justificativa factual"]

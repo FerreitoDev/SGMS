@@ -1,8 +1,8 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟢 MVP Concluído (Fases 1, 2, 3 e 4 Homologadas)  
+> **Status Geral do Projeto:** 🟡 Fase 5 em Planejamento (Fases 1 a 4 Concluídas)  
 > **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md)  
-> **Última Atualização:** 2026-10-27  
+> **Última Atualização:** 2026-10-28  
 
 ---
 
@@ -14,6 +14,7 @@
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟢 Concluída | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟢 Concluída | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
+| **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟡 Planejada | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
 
 ---
 
@@ -106,3 +107,24 @@
   - Gerente consegue visualizar em tela o gráfico de Pareto dos principais gargalos da semana.
   - Exportação de relatório em PDF de até 500 registros gerada e baixada no navegador em menos de 3 segundos.
   - Alocação com status `CLOSED` bloqueia novos apontamentos de operadores com HTTP 403.
+
+---
+
+### Fase 5: Refinamento de UX de Paradas e Pausa Planejada (OEE)
+- **Objetivo Estratégico:** Eliminar redundâncias visuais no Console Operacional (unificando o acionamento de paradas em um único gatilho com `Sheet`), travar a edição de data/hora quando em modo **Tempo Real (Agora)** (RN-09) e introduzir a pausa planejada `REFEICAO_INTERVALO` com segregação estatística OEE (RN-10) para não distorcer o Gráfico de Pareto nem penalizar a Taxa de Disponibilidade Operacional.
+- **Requisitos Associados:**
+  - `RF-07`: Inclusão de `REFEICAO_INTERVALO` no enum `DowntimeReason` (Prisma, Backend e Frontend) e unificação do botão de parada.
+  - `RF-08` & `RN-09`: Bloqueio de edição do timestamp de início na aba **Tempo Real (Agora)**, mantendo edição livre de início e término apenas na aba **Lançamento Retroativo**.
+  - `RF-10`, `RF-11` & `RN-10`: Exclusão de `REFEICAO_INTERVALO` do ranking/gráfico de Pareto de Gargalos e dedução do tempo de pausa planejada do Tempo Planejado do Turno ($T_{disp\_turno} = T_{planejado\_turno} - T_{pausa\_planejada}$) nos KPIs e relatórios.
+  - `RNF-03`: Substituição de modal centralizado por `Sheet` canônico e remoção do botão redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` da tela principal.
+- **Checklist Macro de Entregas:**
+  - [ ] Migration Prisma adicionando `REFEICAO_INTERVALO` ao enum `DowntimeReason` no PostgreSQL
+  - [ ] Atualização das queries analíticas de Dashboard e Relatórios no Backend (exclusão de `REFEICAO_INTERVALO` do Pareto e ajuste da fórmula de Disponibilidade OEE)
+  - [ ] Remoção do botão secundário redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` no Console Operacional do Frontend
+  - [ ] Conversão do componente de registro de parada para `Sheet` e travamento do horário de início na aba **Tempo Real (Agora)** (RN-09)
+  - [ ] Inclusão da opção `"Refeição / Intervalo"` (`REFEICAO_INTERVALO`) nos seletores de parada e mapeamentos de rótulos do Frontend
+- **Critérios de Conclusão da Fase:**
+  - Console Operacional apresenta apenas o botão `"Registrar Parada de Linha"` para acionamento de paradas.
+  - Na aba **Tempo Real (Agora)**, o operador não consegue editar a data/hora de início; na aba **Lançamento Retroativo**, os campos de Início e Término são editáveis.
+  - Paradas lançadas com motivo `REFEICAO_INTERVALO` param a máquina normalmente, mas não aparecem como gargalo no Gráfico de Pareto e não reduzem a disponibilidade operacional ($D$) do turno.
+  - Compilação (`npm run build`) e testes unitários/integração passando no Backend e Frontend.

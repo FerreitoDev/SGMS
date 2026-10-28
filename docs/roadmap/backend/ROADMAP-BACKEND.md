@@ -11,9 +11,10 @@
 | Fase Setorial | Título da Entrega Técnica | Plano de Execução Vinculado | Status |
 | :---: | :--- | :--- | :---: |
 | **Fase 1** | Fundação, Prisma, Autenticação JWT & Gestão de Usuários | [PLANO-FASE-1-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-1-BACKEND.md) | 🟢 Concluída |
-| **Fase 2** | Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID | [PLANO-FASE-2-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-2-BACKEND.md) | ⚪ A Iniciar |
-| **Fase 3** | Apontamento de Produção, Paradas & Sincronização Idempotente | [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md) | ⚪ A Iniciar |
-| **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | ⚪ A Iniciar |
+| **Fase 2** | Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID | [PLANO-FASE-2-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-2-BACKEND.md) | 🟢 Concluída |
+| **Fase 3** | Apontamento de Produção, Paradas & Sincronização Idempotente | [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md) | 🟢 Concluída |
+| **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | 🟢 Concluída |
+| **Fase 5** | Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE | [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md) | ⚪ A Iniciar |
 
 ---
 
@@ -100,3 +101,16 @@
   - [x] 4.6: Endpoints de download binário (`GET /api/reports/csv` e `GET /api/reports/pdf`) com headers de streaming
   - [x] 4.7: Testes de performance garantindo geração do PDF em tempo $< 3\text{s}$ para 500 registros
 - **Plano de Execução Vinculado:** [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md)
+
+---
+
+### Fase 5: Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE
+- **Referência Hierárquica:** Fase 5 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md).
+- **Requisitos Técnicos e de Negócio:**
+  - `RF-07`: Expansão do enum `DowntimeReason` com `REFEICAO_INTERVALO` no PostgreSQL/Prisma e dicionários de rótulos.
+  - `RF-10`, `RF-11` & `RN-10`: Exclusão de `REFEICAO_INTERVALO` do Gráfico de Pareto de Gargalos e dedução do tempo de pausa planejada do Tempo Planejado do Turno ($T_{disp\_turno} = \max(0, T_{planejado\_turno} - T_{pausa\_planejada})$) nos KPIs de disponibilidade e linhas de relatório.
+- **Dependências Bloqueantes:** Fase 4 concluída (`ReportsModule` e schema Prisma consolidados).
+- **Checklist Técnico Sequencial:**
+  - [ ] 5.1: Atualização do `prisma/schema.prisma`, migration SQL para adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` e atualização de `DOWNTIME_REASON_LABELS`
+  - [ ] 5.2: Refatoração de `ReportsService` (`getDashboardMetrics` e `getDetailedAllocationRows`) aplicando a segregação OEE (`RN-10`) e testes unitários/E2E
+- **Plano de Execução Vinculado:** [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md)
