@@ -111,6 +111,6 @@
   - `RF-10`, `RF-11` & `RN-10`: Exclusão de `REFEICAO_INTERVALO` do Gráfico de Pareto de Gargalos e dedução do tempo de pausa planejada do Tempo Planejado do Turno ($T_{disp\_turno} = \max(0, T_{planejado\_turno} - T_{pausa\_planejada})$) nos KPIs de disponibilidade e linhas de relatório.
 - **Dependências Bloqueantes:** Fase 4 concluída (`ReportsModule` e schema Prisma consolidados).
 - **Checklist Técnico Sequencial:**
-  - [ ] 5.1: Atualização do `prisma/schema.prisma`, migration SQL para adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` e atualização de `DOWNTIME_REASON_LABELS`
-  - [ ] 5.2: Refatoração de `ReportsService` (`getDashboardMetrics` e `getDetailedAllocationRows`) aplicando a segregação OEE (`RN-10`) e testes unitários/E2E
+  - [x] 5.1: Atualização do `prisma/schema.prisma`, migration SQL para adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` e atualização de `DOWNTIME_REASON_LABELS`
+  - [x] 5.2: Refatoração de `ReportsService` (`getDashboardMetrics` e `getDetailedAllocationRows`) aplicando a segregação OEE (`RN-10`) e testes unitários/E2E
 - **Plano de Execução Vinculado:** [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md)

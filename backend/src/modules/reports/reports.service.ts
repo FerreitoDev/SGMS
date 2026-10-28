@@ -89,8 +89,9 @@ export class ReportsService {
       }
     }
 
-    // 2. Tempo Total Parado (T_parada = sum(durationMinutes_j))
-    let totalDowntimeMinutes = 0;
+    // 2. Tempo Total Parado (T_parada) e Pausas Planejadas (RN-10)
+    let unplannedDowntimeMinutes = 0;
+    let plannedBreakMinutes = 0;
     const reasonAggregation = new Map<
       DowntimeReason,
       { occurrences: number; totalMinutes: number }
@@ -99,36 +100,43 @@ export class ReportsService {
     for (const alloc of allocations) {
       for (const dt of alloc.downtimes) {
         const duration = dt.durationMinutes ?? 0;
-        totalDowntimeMinutes += duration;
+        if (dt.reason === DowntimeReason.REFEICAO_INTERVALO) {
+          plannedBreakMinutes += duration;
+        } else {
+          unplannedDowntimeMinutes += duration;
 
-        const current = reasonAggregation.get(dt.reason) ?? {
-          occurrences: 0,
-          totalMinutes: 0,
-        };
-        current.occurrences += 1;
-        current.totalMinutes += duration;
-        reasonAggregation.set(dt.reason, current);
+          const current = reasonAggregation.get(dt.reason) ?? {
+            occurrences: 0,
+            totalMinutes: 0,
+          };
+          current.occurrences += 1;
+          current.totalMinutes += duration;
+          reasonAggregation.set(dt.reason, current);
+        }
       }
     }
 
-    // 3. Tempo Planejado do Turno no Período (T_planejado)
+    // 3. Tempo Planejado do Turno no Período (T_planejado) e Dedução de Pausas Planejadas (RN-10)
     // Agrupa por máquina + turno + data para não inflar tempo em caso de múltiplas alocações no mesmo slot
     const plannedSlots = new Set<string>();
-    let totalPlannedMinutes = 0;
+    let rawPlannedMinutes = 0;
 
     for (const alloc of allocations) {
       const slotKey = `${alloc.machineId}_${alloc.shiftId}_${alloc.shiftDate.toISOString().slice(0, 10)}`;
       if (!plannedSlots.has(slotKey)) {
         plannedSlots.add(slotKey);
-        totalPlannedMinutes += calculateShiftDurationMinutes(
+        rawPlannedMinutes += calculateShiftDurationMinutes(
           alloc.shift.startTime,
           alloc.shift.endTime,
         );
       }
     }
 
-    // 4. Tempo Operacional Líquido e Taxa de Disponibilidade (RN-02)
-    // T_liquido = max(0, T_planejado - T_parada)
+    const totalPlannedMinutes = Math.max(0, rawPlannedMinutes - plannedBreakMinutes);
+    const totalDowntimeMinutes = unplannedDowntimeMinutes;
+
+    // 4. Tempo Operacional Líquido e Taxa de Disponibilidade (RN-02 e RN-10)
+    // T_liquido = max(0, T_planejado_disponivel - T_parada_falha)
     const netOperatingMinutes = Math.max(0, totalPlannedMinutes - totalDowntimeMinutes);
 
     // Se T_parada > T_planejado, D assume estritamente 0% (proibido negativo)
@@ -146,7 +154,7 @@ export class ReportsService {
         : 0;
     const averagePaceBottlesPerHour = Math.round(rawPace * 10) / 10;
 
-    // 6. Ranking de Pareto (ordenado decrescentemente por totalMinutes)
+    // 6. Ranking de Pareto (estritamente paradas não planejadas, ordenado decrescentemente por totalMinutes)
     const sortedReasons = Array.from(reasonAggregation.entries()).sort(
       (a, b) => b[1].totalMinutes - a[1].totalMinutes,
     );
@@ -168,7 +176,7 @@ export class ReportsService {
 
       return {
         reason,
-        reasonLabel: DOWNTIME_REASON_LABELS[reason] ?? reason,
+        reasonLabel: DOWNTIME_REASON_LABELS[reason],
         occurrences: data.occurrences,
         totalMinutes: data.totalMinutes,
         percentage: roundedPercentage,
@@ -231,18 +239,24 @@ export class ReportsService {
       const goodBottles = alloc.productions.reduce((acc, p) => acc + p.quantity, 0);
 
       let downtimeMinutes = 0;
+      let plannedBreakMinutes = 0;
       const reasonCountMap = new Map<DowntimeReason, number>();
 
       for (const dt of alloc.downtimes) {
         const dur = dt.durationMinutes ?? 0;
-        downtimeMinutes += dur;
-        reasonCountMap.set(dt.reason, (reasonCountMap.get(dt.reason) ?? 0) + dur);
+        if (dt.reason === DowntimeReason.REFEICAO_INTERVALO) {
+          plannedBreakMinutes += dur;
+        } else {
+          downtimeMinutes += dur;
+          reasonCountMap.set(dt.reason, (reasonCountMap.get(dt.reason) ?? 0) + dur);
+        }
       }
 
-      const plannedMinutes = calculateShiftDurationMinutes(
+      const rawPlannedMinutes = calculateShiftDurationMinutes(
         alloc.shift.startTime,
         alloc.shift.endTime,
       );
+      const plannedMinutes = Math.max(0, rawPlannedMinutes - plannedBreakMinutes);
 
       const netMinutes = Math.max(0, plannedMinutes - downtimeMinutes);
       const rawAvail = plannedMinutes > 0 ? (netMinutes / plannedMinutes) * 100 : 0;
@@ -251,14 +265,14 @@ export class ReportsService {
       const rawPace = netMinutes > 0 ? goodBottles / (netMinutes / 60) : 0;
       const paceBottlesPerHour = Math.round(rawPace * 10) / 10;
 
-      // Principal gargalo da alocação (motivo com maior tempo parado)
+      // Principal gargalo da alocação (motivo de falha com maior tempo parado, excluindo REFEICAO_INTERVALO)
       let mainBottleneck: string | null = null;
       let maxDuration = 0;
 
       for (const [reason, dur] of reasonCountMap.entries()) {
         if (dur > maxDuration) {
           maxDuration = dur;
-          mainBottleneck = DOWNTIME_REASON_LABELS[reason] ?? reason;
+          mainBottleneck = DOWNTIME_REASON_LABELS[reason];
         }
       }
 

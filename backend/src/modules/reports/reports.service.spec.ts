@@ -207,6 +207,80 @@ describe('ReportsService', () => {
       expect(result.availabilityPercentage).toBe(0); // Não negativo!
       expect(result.averagePaceBottlesPerHour).toBe(0);
     });
+
+    it('deve segregar REFEICAO_INTERVALO abatendo do tempo planejado sem afetar Pareto nem disponibilidade em turno sem falhas (RN-10)', async () => {
+      const mockAllocations = [
+        {
+          id: 'alloc-1',
+          machineId: 'mach-1',
+          shiftId: 'shift-1',
+          shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+          shift: {
+            id: 'shift-1',
+            startTime: '06:00',
+            endTime: '14:00', // 480 min
+          },
+          productions: [{ quantity: 10000 }],
+          downtimes: [
+            { reason: DowntimeReason.REFEICAO_INTERVALO, durationMinutes: 60 },
+          ],
+        },
+      ];
+
+      prisma.shiftAllocation.findMany.mockResolvedValue(mockAllocations);
+
+      const result = await service.getDashboardMetrics({
+        startDate: '2026-10-21',
+        endDate: '2026-10-21',
+      });
+
+      expect(result.totalPlannedMinutes).toBe(420); // 480 - 60
+      expect(result.totalDowntimeMinutes).toBe(0); // Falhas não planejadas = 0
+      expect(result.availabilityPercentage).toBe(100);
+      expect(result.averagePaceBottlesPerHour).toBe(1428.6); // 10000 / (420 / 60)
+      expect(result.pareto).toEqual([]);
+    });
+
+    it('deve calcular disponibilidade mista e segregar REFEICAO_INTERVALO do ranking de Pareto (RN-10)', async () => {
+      const mockAllocations = [
+        {
+          id: 'alloc-1',
+          machineId: 'mach-1',
+          shiftId: 'shift-1',
+          shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+          shift: {
+            id: 'shift-1',
+            startTime: '06:00',
+            endTime: '14:00', // 480 min
+          },
+          productions: [{ quantity: 5000 }],
+          downtimes: [
+            { reason: DowntimeReason.REFEICAO_INTERVALO, durationMinutes: 60 },
+            { reason: DowntimeReason.COMPRESSOR, durationMinutes: 42 },
+          ],
+        },
+      ];
+
+      prisma.shiftAllocation.findMany.mockResolvedValue(mockAllocations);
+
+      const result = await service.getDashboardMetrics({
+        startDate: '2026-10-21',
+        endDate: '2026-10-21',
+      });
+
+      expect(result.totalPlannedMinutes).toBe(420); // 480 - 60
+      expect(result.totalDowntimeMinutes).toBe(42); // Apenas falha do compressor
+      expect(result.availabilityPercentage).toBe(90); // (420 - 42) / 420 * 100 = 90%
+      expect(result.pareto).toHaveLength(1);
+      expect(result.pareto[0]).toEqual({
+        reason: DowntimeReason.COMPRESSOR,
+        reasonLabel: 'Compressor',
+        occurrences: 1,
+        totalMinutes: 42,
+        percentage: 100,
+        cumulativePercentage: 100,
+      });
+    });
   });
 
   describe('getDetailedAllocationRows', () => {
@@ -279,6 +353,81 @@ describe('ReportsService', () => {
         plannedMinutes: 480,
         availabilityPercentage: 100,
         paceBottlesPerHour: 1250,
+        mainBottleneck: null,
+      });
+    });
+
+    it('deve abater REFEICAO_INTERVALO do tempo planejado da alocação e ignorá-lo na eleição do gargalo (RN-10)', async () => {
+      const mockAllocations = [
+        {
+          id: 'alloc-1',
+          machineId: 'm-1',
+          shiftId: 's-1',
+          operatorId: 'op-1',
+          shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+          machine: { code: 'SOP-01', name: 'Sopradora 01' },
+          shift: { name: 'Manhã', startTime: '06:00', endTime: '14:00' }, // 480 min
+          operator: { name: 'Operador 1' },
+          productions: [{ quantity: 7000 }],
+          downtimes: [
+            { reason: DowntimeReason.REFEICAO_INTERVALO, durationMinutes: 60 },
+            { reason: DowntimeReason.MOLDE, durationMinutes: 30 },
+          ],
+        },
+        {
+          id: 'alloc-2',
+          machineId: 'm-2',
+          shiftId: 's-1',
+          operatorId: 'op-2',
+          shiftDate: new Date('2026-10-21T00:00:00.000Z'),
+          machine: { code: 'SOP-02', name: 'Sopradora 02' },
+          shift: { name: 'Manhã', startTime: '06:00', endTime: '14:00' }, // 480 min
+          operator: { name: 'Operador 2' },
+          productions: [{ quantity: 8000 }],
+          downtimes: [
+            { reason: DowntimeReason.REFEICAO_INTERVALO, durationMinutes: 60 },
+          ],
+        },
+      ];
+
+      prisma.shiftAllocation.findMany.mockResolvedValue(mockAllocations);
+
+      const rows = await service.getDetailedAllocationRows({
+        startDate: '2026-10-21',
+        endDate: '2026-10-21',
+      });
+
+      expect(rows).toHaveLength(2);
+
+      // Linha 1: 480 - 60 = 420 planejados, 30 falha, D = (390 / 420) * 100 = 92.9%, gargalo = 'Molde'
+      expect(rows[0]).toEqual({
+        allocationId: 'alloc-1',
+        date: '2026-10-21',
+        shiftName: 'Manhã',
+        machineCode: 'SOP-01',
+        machineName: 'Sopradora 01',
+        operatorName: 'Operador 1',
+        goodBottles: 7000,
+        downtimeMinutes: 30,
+        plannedMinutes: 420,
+        availabilityPercentage: 92.9,
+        paceBottlesPerHour: 1076.9, // 7000 / (390 / 60) = 1076.92
+        mainBottleneck: 'Molde',
+      });
+
+      // Linha 2: 480 - 60 = 420 planejados, 0 falha, D = 100%, gargalo = null (REFEICAO_INTERVALO não é gargalo)
+      expect(rows[1]).toEqual({
+        allocationId: 'alloc-2',
+        date: '2026-10-21',
+        shiftName: 'Manhã',
+        machineCode: 'SOP-02',
+        machineName: 'Sopradora 02',
+        operatorName: 'Operador 2',
+        goodBottles: 8000,
+        downtimeMinutes: 0,
+        plannedMinutes: 420,
+        availabilityPercentage: 100,
+        paceBottlesPerHour: 1142.9, // 8000 / (420 / 60) = 1142.85 -> 1142.9
         mainBottleneck: null,
       });
     });

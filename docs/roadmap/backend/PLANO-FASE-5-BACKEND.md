@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Pausa Planejada `REFEICAO_INTERVALO` & Segregação Estatística OEE)  
-> **Status:** 🟡 Em Andamento (1 de 2 Tarefas Concluídas — 50%)  
+> **Status:** 🟢 Concluído (2 de 2 Tarefas Concluídas — 100%)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [04-modelo-de-dados.md](file:///home/ferreito/SGMS/docs/04-modelo-de-dados.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,13 +29,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Backend): [================----------------] 50% Concluído (1 de 2 tarefas)
+Progresso da Fase 5 (Backend): [================================] 100% Concluído (2 de 2 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **5.1** | Expansão do Enum `DowntimeReason` no Prisma, Migration & Labels | 🟢 Concluído | `backend/prisma/schema.prisma`, `backend/src/modules/reports/constants/downtime-labels.constant.ts` |
-| **5.2** | Segregação Estatística OEE no `ReportsService` & Testes (RN-10) | ⚪ A Iniciar | `backend/src/modules/reports/reports.service.ts`, `backend/test/*` |
+| **5.2** | Segregação Estatística OEE no `ReportsService` & Testes (RN-10) | 🟢 Concluído | `backend/src/modules/reports/reports.service.ts`, `backend/test/*` |
 
 ---
 
@@ -59,7 +59,7 @@ Progresso da Fase 5 (Backend): [================----------------] 50% Concluído
 
 ---
 
-### ⬜ Tarefa 5.2: Segregação Estatística OEE no `ReportsService` & Testes (RN-10)
+### 🟩 Tarefa 5.2: Segregação Estatística OEE no `ReportsService` & Testes (RN-10)
 - **Objetivo:** Atualizar os cálculos de disponibilidade operacional, tempo parado de falha e ranking de Pareto em `ReportsService` para segregar `DowntimeReason.REFEICAO_INTERVALO` conforme a regra `RN-10`.
 - **Arquivos a Modificar / Criar:**
   - `backend/src/modules/reports/reports.service.ts`
@@ -72,16 +72,16 @@ Progresso da Fase 5 (Backend): [================----------------] 50% Concluído
   - $D = T_{disp\_turno} > 0 ? (T_{liquido} / T_{disp\_turno}) \times 100 : 0$
   - Ranking `pareto` e `mainBottleneck`: populados estritamente com registros onde `reason !== DowntimeReason.REFEICAO_INTERVALO`.
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `getDashboardMetrics`: separar a soma de `plannedBreakMinutes` (`REFEICAO_INTERVALO`) de `unplannedDowntimeMinutes` (demais motivos); não inserir `REFEICAO_INTERVALO` no `reasonAggregation` do Pareto; calcular `totalPlannedMinutes = Math.max(0, rawPlannedMinutes - plannedBreakMinutes)` e `totalDowntimeMinutes = unplannedDowntimeMinutes`
-  - [ ] Em `getDetailedAllocationRows`: separar `plannedBreakMinutes` de `downtimeMinutes` (falhas); descontar `plannedBreakMinutes` de `plannedMinutes`; ignorar `REFEICAO_INTERVALO` na eleição do `mainBottleneck`
-  - [ ] Adicionar/atualizar teste automatizado comprovando que uma parada de 60 min de `REFEICAO_INTERVALO` não reduz a `availabilityPercentage` em um turno sem falhas (100% de disponibilidade) e não aparece na lista `pareto`
+  - [x] Em `getDashboardMetrics`: separar a soma de `plannedBreakMinutes` (`REFEICAO_INTERVALO`) de `unplannedDowntimeMinutes` (demais motivos); não inserir `REFEICAO_INTERVALO` no `reasonAggregation` do Pareto; calcular `totalPlannedMinutes = Math.max(0, rawPlannedMinutes - plannedBreakMinutes)` e `totalDowntimeMinutes = unplannedDowntimeMinutes`
+  - [x] Em `getDetailedAllocationRows`: separar `plannedBreakMinutes` de `downtimeMinutes` (falhas); descontar `plannedBreakMinutes` de `plannedMinutes`; ignorar `REFEICAO_INTERVALO` na eleição do `mainBottleneck`
+  - [x] Adicionar/atualizar teste automatizado comprovando que uma parada de 60 min de `REFEICAO_INTERVALO` não reduz a `availabilityPercentage` em um turno sem falhas (100% de disponibilidade) e não aparece na lista `pareto`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Turno de 480 min com 60 min de `REFEICAO_INTERVALO` e 0 min de falhas resulta em `totalPlannedMinutes = 420`, `totalDowntimeMinutes = 0`, `availabilityPercentage = 100` e `pareto = []`.
-  - [ ] **Violação / Caso Misto:** Turno de 480 min com 60 min de `REFEICAO_INTERVALO` e 42 min de `COMPRESSOR` resulta em `totalPlannedMinutes = 420`, `totalDowntimeMinutes = 42`, `availabilityPercentage = 90%` e `pareto` contendo apenas `COMPRESSOR` (100%).
+  - [x] **Caminho Normal:** Turno de 480 min com 60 min de `REFEICAO_INTERVALO` e 0 min de falhas resulta em `totalPlannedMinutes = 420`, `totalDowntimeMinutes = 0`, `availabilityPercentage = 100` e `pareto = []`.
+  - [x] **Violação / Caso Misto:** Turno de 480 min com 60 min de `REFEICAO_INTERVALO` e 42 min de `COMPRESSOR` resulta em `totalPlannedMinutes = 420`, `totalDowntimeMinutes = 42`, `availabilityPercentage = 90%` e `pareto` contendo apenas `COMPRESSOR` (100%).
 
 ---
 
 ## 5. Auditoria de Zero Fallback & Homologação da Fase 5 (Backend)
-- [ ] Nenhum valor de enum tratado com string mágica fora de `DowntimeReason`.
-- [ ] `npm run build` e testes passando 100% verdes.
+- [x] Nenhum valor de enum tratado com string mágica fora de `DowntimeReason`.
+- [x] `npm run build` e testes passando 100% verdes.
 
