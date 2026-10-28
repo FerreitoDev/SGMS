@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import { OfflineStorage } from '@/lib/offline-storage';
 import { syncService, type SyncEventItemPayload } from '@/services/sync-service';
+import { ProblemDetailsError } from '@/lib/api-client';
 
 export interface UseOfflineSyncReturn {
   isOnline: boolean;
@@ -65,25 +66,46 @@ export function useOfflineSync(): UseOfflineSyncReturn {
         payload: event.payload,
       }));
 
-      const result = await syncService.processBatch(payloadEvents);
+      try {
+        const result = await syncService.processBatch(payloadEvents);
 
-      // Marca tanto os processados quanto os ignorados (já existiam no backend) como sincronizados
-      const syncedUuids = [...result.processedClientUuids, ...result.ignoredClientUuids];
-      if (syncedUuids.length > 0) {
-        await OfflineStorage.markAsSynced(syncedUuids);
+        // Marca tanto os processados quanto os ignorados (já existiam no backend) como sincronizados
+        const syncedUuids = [...result.processedClientUuids, ...result.ignoredClientUuids];
+        if (syncedUuids.length > 0) {
+          await OfflineStorage.markAsSynced(syncedUuids);
+        }
+
+        if (result.processedCount > 0) {
+          toast.success(
+            result.processedCount === 1
+              ? '1 apontamento sincronizado com sucesso.'
+              : `${result.processedCount} apontamentos sincronizados com sucesso.`,
+          );
+        }
+      } catch (batchErr: unknown) {
+        // Se o lote falhou por erro de validação/domínio (HTTP 4xx), processa individualmente e expurga registros rejeitados
+        if (batchErr instanceof ProblemDetailsError && batchErr.status >= 400 && batchErr.status < 500) {
+          for (const item of payloadEvents) {
+            try {
+              const singleRes = await syncService.processBatch([item]);
+              const synced = [...singleRes.processedClientUuids, ...singleRes.ignoredClientUuids];
+              if (synced.length > 0) {
+                await OfflineStorage.markAsSynced(synced);
+              }
+            } catch (singleErr: unknown) {
+              if (singleErr instanceof ProblemDetailsError && singleErr.status >= 400 && singleErr.status < 500) {
+                await OfflineStorage.deleteEvent(item.clientUuid);
+              }
+            }
+          }
+        } else {
+          throw batchErr;
+        }
       }
 
       const updatedCount = await OfflineStorage.countPending();
       setPendingCount(updatedCount);
       setLastSyncAt(new Date());
-
-      if (result.processedCount > 0) {
-        toast.success(
-          result.processedCount === 1
-            ? '1 apontamento sincronizado com sucesso.'
-            : `${result.processedCount} apontamentos sincronizados com sucesso.`,
-        );
-      }
 
       notifyStorageUpdated();
     } catch (err) {

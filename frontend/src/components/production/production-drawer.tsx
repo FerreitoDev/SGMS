@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState, useEffect } from 'react';
 import { Package, Plus, Clock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -17,13 +15,13 @@ import { OfflineStorage } from '@/lib/offline-storage';
 import { notifyStorageUpdated } from '@/hooks/use-offline-sync';
 import { productionsService } from '@/services/productions-service';
 import { ProblemDetailsError, extractProblemDetail } from '@/lib/api-client';
-import { productionSchema, type ProductionFormData } from '@/schemas/production-schema';
+import { productionSchema } from '@/schemas/production-schema';
 
 export interface ProductionDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   allocationId: string;
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
 }
 
 export function ProductionDrawer({
@@ -32,78 +30,104 @@ export function ProductionDrawer({
   allocationId,
   onSuccess,
 }: ProductionDrawerProps): React.ReactElement {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ProductionFormData>({
-    resolver: zodResolver(productionSchema),
-    defaultValues: {
-      quantity: undefined as unknown as number,
-    },
-  });
+  const [rawQuantity, setRawQuantity] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (open) {
-      reset({
-        quantity: undefined as unknown as number,
-      });
+      setRawQuantity('');
+      setErrorMessage(null);
+      setIsSubmitting(false);
     }
-  }, [open, reset]);
+  }, [open]);
 
-  const onSubmit = async (data: ProductionFormData): Promise<void> => {
+  const handleConfirm = async (e?: React.FormEvent): Promise<void> => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const parsed = productionSchema.safeParse({ quantity: rawQuantity });
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
+      const msg = firstIssue ? firstIssue.message : 'Informe uma quantidade maior que zero.';
+      setErrorMessage(msg);
+      return;
+    }
+
+    const quantity = parsed.data.quantity;
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
     const clientUuid = OfflineStorage.generateUuid();
     const nowIso = new Date().toISOString();
 
-    // 1. Grava no buffer local do IndexedDB antes de qualquer tentativa de rede
-    await OfflineStorage.saveEvent({
-      clientUuid,
-      type: 'PRODUCTION',
-      endpoint: '/productions',
-      payload: {
-        allocationId,
-        quantity: data.quantity,
-        timestamp: nowIso,
-      },
-      createdAt: nowIso,
-      status: 'PENDING',
-    });
-
-    // 2. Tenta envio HTTP imediato via API
     try {
-      await productionsService.create({
-        clientUuid,
-        allocationId,
-        quantity: data.quantity,
-        timestamp: nowIso,
-      });
-
-      // Sucesso na API: marca como sincronizado no IndexedDB
-      await OfflineStorage.markAsSynced([clientUuid]);
-      notifyStorageUpdated();
-      await onSuccess?.();
-      onOpenChange(false);
-      toast.success(`${data.quantity.toLocaleString('pt-BR')} garrafas registradas com sucesso.`);
-    } catch (err: unknown) {
-      // Se o servidor respondeu com erro de negócio (HTTP 4xx/5xx), remove do buffer local e exibe a falha real
-      if (err instanceof ProblemDetailsError && err.status > 0) {
-        await OfflineStorage.deleteEvent(clientUuid);
-        notifyStorageUpdated();
-        toast.error('Não foi possível registrar o apontamento', {
-          description: extractProblemDetail(err),
+      // 1. Tenta salvar no buffer local do IndexedDB (resiliente se o IndexedDB estiver bloqueado)
+      try {
+        await OfflineStorage.saveEvent({
+          clientUuid,
+          type: 'PRODUCTION',
+          endpoint: '/productions',
+          payload: {
+            allocationId,
+            quantity,
+            timestamp: nowIso,
+          },
+          createdAt: nowIso,
+          status: 'PENDING',
         });
-        return;
+      } catch (storageErr) {
+        console.warn('[ProductionDrawer] Aviso ao gravar no IndexedDB:', storageErr);
       }
 
-      // Falha real de rede (status === 0): mantém no IndexedDB e fecha a gaveta
-      notifyStorageUpdated();
-      await onSuccess?.();
-      onOpenChange(false);
-      toast.info(
-        `${data.quantity.toLocaleString('pt-BR')} garrafas salvas localmente no dispositivo. Serão enviadas ao restabelecer a rede.`,
-        { duration: 4000 },
-      );
+      // 2. Envia imediatamente via API
+      try {
+        await productionsService.create({
+          clientUuid,
+          allocationId,
+          quantity,
+          timestamp: nowIso,
+        });
+
+        try {
+          await OfflineStorage.markAsSynced([clientUuid]);
+        } catch {
+          // Ignora falha secundária de marcação no IndexedDB
+        }
+
+        notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
+        toast.success(`${quantity.toLocaleString('pt-BR')} garrafas registradas com sucesso.`);
+      } catch (err: unknown) {
+        // Se o servidor respondeu com erro de negócio (HTTP 4xx/5xx), remove do buffer local e exibe a falha real
+        if (err instanceof ProblemDetailsError && err.status > 0) {
+          try {
+            await OfflineStorage.deleteEvent(clientUuid);
+          } catch {
+            // Ignora
+          }
+          notifyStorageUpdated();
+          const detail = extractProblemDetail(err);
+          setErrorMessage(detail);
+          toast.error('Não foi possível registrar o apontamento', {
+            description: detail,
+          });
+          return;
+        }
+
+        // Falha real de conectividade de rede (status === 0): mantém no IndexedDB e fecha a gaveta
+        notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
+        toast.info(
+          `${quantity.toLocaleString('pt-BR')} garrafas salvas localmente no dispositivo. Serão enviadas ao restabelecer a rede.`,
+          { duration: 4000 },
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -125,8 +149,8 @@ export function ProductionDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-5 space-y-5">
-          {/* Input Principal de Quantidade de Grande Dimensão */}
+        <form onSubmit={(e) => void handleConfirm(e)} noValidate className="mt-5 space-y-5">
+          {/* Input Principal de Quantidade de Grande Dimensão (Sem Spinners e Sem Atalhos) */}
           <div className="space-y-2">
             <label
               htmlFor="production-quantity-input"
@@ -137,19 +161,27 @@ export function ProductionDrawer({
             <div className="relative">
               <Input
                 id="production-quantity-input"
-                type="number"
+                type="text"
                 inputMode="numeric"
-                min={1}
                 placeholder="0"
                 autoFocus
-                {...register('quantity')}
+                autoComplete="off"
+                value={rawQuantity}
+                onChange={(e) => {
+                  const onlyDigits = e.target.value.replace(/\D/g, '');
+                  setRawQuantity(onlyDigits);
+                  if (errorMessage) {
+                    setErrorMessage(null);
+                  }
+                }}
                 onWheel={(e) => e.currentTarget.blur()}
+                disabled={isSubmitting}
                 className="h-20 text-center font-mono text-4xl sm:text-5xl font-black tracking-wider text-foreground placeholder:text-muted-foreground/30 focus-visible:ring-primary shadow-inner [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </div>
-            {errors.quantity && (
+            {errorMessage && (
               <p className="text-center text-xs font-semibold text-destructive">
-                {errors.quantity.message}
+                {errorMessage}
               </p>
             )}
           </div>

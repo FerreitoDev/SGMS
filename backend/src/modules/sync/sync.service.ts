@@ -93,7 +93,12 @@ export class SyncService {
           }
 
           // 4.1. RN-05: Validar consistência com a data do turno da alocação
-          assertShiftDateWindow(eventTime, allocation.shiftDate, 'O apontamento de produção');
+          assertShiftDateWindow(
+            eventTime,
+            allocation.shiftDate,
+            'O apontamento de produção',
+            allocation.status === ShiftAllocationStatus.ACTIVE,
+          );
 
           // 5. RN-06: Imutabilidade de turno fechado para operadores
           if (
@@ -208,7 +213,12 @@ export class SyncService {
           }
 
           // 4.1. RN-05: Validar consistência com a data do turno da alocação
-          assertShiftDateWindow(start, allocation.shiftDate, 'A parada');
+          assertShiftDateWindow(
+            start,
+            allocation.shiftDate,
+            'A parada',
+            allocation.status === ShiftAllocationStatus.ACTIVE,
+          );
 
           // 5. RN-06: Imutabilidade de turno fechado para operadores
           if (

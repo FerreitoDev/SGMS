@@ -69,7 +69,7 @@ export function OperatorConsolePage(): React.ReactElement {
       const [remoteProductions, remoteDowntimes, offlineEvents] = await Promise.all([
         productionsService.listByAllocation(allocation.id),
         downtimesService.listByAllocation(allocation.id),
-        OfflineStorage.getPendingEvents(),
+        OfflineStorage.getPendingEvents().catch(() => []),
       ]);
 
       setProductions(remoteProductions.entries);

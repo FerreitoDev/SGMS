@@ -111,21 +111,25 @@ export function DowntimeModal({
 
     if (data.isRetroactive && endTimeIso) {
       // 1. Grava parada retroativa no IndexedDB
-      await OfflineStorage.saveEvent({
-        clientUuid,
-        type: 'DOWNTIME',
-        endpoint: '/downtimes/retroactive',
-        payload: {
-          allocationId,
-          reason: data.reason,
-          justification,
-          startTime: startTimeIso,
-          endTime: endTimeIso,
-          status: 'RESOLVED',
-        },
-        createdAt: nowIso,
-        status: 'PENDING',
-      });
+      try {
+        await OfflineStorage.saveEvent({
+          clientUuid,
+          type: 'DOWNTIME',
+          endpoint: '/downtimes/retroactive',
+          payload: {
+            allocationId,
+            reason: data.reason,
+            justification,
+            startTime: startTimeIso,
+            endTime: endTimeIso,
+            status: 'RESOLVED',
+          },
+          createdAt: nowIso,
+          status: 'PENDING',
+        });
+      } catch (storageErr) {
+        console.warn('[DowntimeModal] Aviso ao gravar no IndexedDB:', storageErr);
+      }
 
       // 2. Tenta envio HTTP imediato
       try {
@@ -138,14 +142,22 @@ export function DowntimeModal({
           endTime: endTimeIso,
         });
 
-        await OfflineStorage.markAsSynced([clientUuid]);
+        try {
+          await OfflineStorage.markAsSynced([clientUuid]);
+        } catch {
+          // Ignora
+        }
         notifyStorageUpdated();
         await onSuccess?.();
         onOpenChange(false);
         toast.success('Parada retroativa registrada com sucesso.');
       } catch (err: unknown) {
         if (err instanceof ProblemDetailsError && err.status > 0) {
-          await OfflineStorage.deleteEvent(clientUuid);
+          try {
+            await OfflineStorage.deleteEvent(clientUuid);
+          } catch {
+            // Ignora
+          }
           notifyStorageUpdated();
           toast.error('Não foi possível registrar a parada retroativa', {
             description: extractProblemDetail(err),
@@ -159,20 +171,24 @@ export function DowntimeModal({
       }
     } else {
       // 1. Grava início de parada em tempo real no IndexedDB
-      await OfflineStorage.saveEvent({
-        clientUuid,
-        type: 'DOWNTIME',
-        endpoint: '/downtimes/start',
-        payload: {
-          allocationId,
-          reason: data.reason,
-          justification,
-          startTime: startTimeIso,
-          status: 'IN_PROGRESS',
-        },
-        createdAt: nowIso,
-        status: 'PENDING',
-      });
+      try {
+        await OfflineStorage.saveEvent({
+          clientUuid,
+          type: 'DOWNTIME',
+          endpoint: '/downtimes/start',
+          payload: {
+            allocationId,
+            reason: data.reason,
+            justification,
+            startTime: startTimeIso,
+            status: 'IN_PROGRESS',
+          },
+          createdAt: nowIso,
+          status: 'PENDING',
+        });
+      } catch (storageErr) {
+        console.warn('[DowntimeModal] Aviso ao gravar no IndexedDB:', storageErr);
+      }
 
       // 2. Tenta envio HTTP imediato
       try {
@@ -184,14 +200,22 @@ export function DowntimeModal({
           startTime: startTimeIso,
         });
 
-        await OfflineStorage.markAsSynced([clientUuid]);
+        try {
+          await OfflineStorage.markAsSynced([clientUuid]);
+        } catch {
+          // Ignora
+        }
         notifyStorageUpdated();
         await onSuccess?.();
         onOpenChange(false);
         toast.error(`Máquina paralisada: ${DOWNTIME_LABELS[data.reason]}.`);
       } catch (err: unknown) {
         if (err instanceof ProblemDetailsError && err.status > 0) {
-          await OfflineStorage.deleteEvent(clientUuid);
+          try {
+            await OfflineStorage.deleteEvent(clientUuid);
+          } catch {
+            // Ignora
+          }
           notifyStorageUpdated();
           toast.error('Não foi possível registrar a parada', {
             description: extractProblemDetail(err),

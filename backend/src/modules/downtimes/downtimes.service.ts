@@ -74,7 +74,12 @@ export class DowntimesService {
     }
 
     // 4.1. RN-05: Validar consistência com a data do turno da alocação
-    assertShiftDateWindow(startTime, allocation.shiftDate, 'A parada');
+    assertShiftDateWindow(
+      startTime,
+      allocation.shiftDate,
+      'A parada',
+      allocation.status === ShiftAllocationStatus.ACTIVE,
+    );
 
     // 5. RN-06: Imutabilidade de turno fechado para operadores
     if (
@@ -269,7 +274,12 @@ export class DowntimesService {
     }
 
     // 4.1. RN-05: Validar consistência com a data do turno da alocação
-    assertShiftDateWindow(startTime, allocation.shiftDate, 'A parada retroativa');
+    assertShiftDateWindow(
+      startTime,
+      allocation.shiftDate,
+      'A parada retroativa',
+      allocation.status === ShiftAllocationStatus.ACTIVE,
+    );
 
     // 5. RN-06: Imutabilidade de turno fechado para operadores
     if (allocation.status === ShiftAllocationStatus.CLOSED && user.role !== UserRole.GERENTE) {

@@ -86,13 +86,21 @@ export function assertShiftDateWindow(
   eventDate: Date,
   shiftDate: Date,
   fieldLabel: string = 'O evento',
+  isAllocationActive: boolean = true,
 ): void {
   const shiftDay = new Date(shiftDate);
   shiftDay.setUTCHours(0, 0, 0, 0);
 
-  // Janela: desde 2 horas antes da data base do turno até 36 horas após (cobrindo turnos noturnos de até 12h + tolerância)
+  // Janela: desde 2 horas antes da data base do turno até 36 horas após (cobrindo turnos noturnos de até 12h + tolerância).
+  // Enquanto a alocação estiver com status ACTIVE, o limite superior acompanha o relógio atual para não rejeitar
+  // apontamentos em tempo real em turnos abertos em dias anteriores (ex: dados de seed ou turnos prolongados).
   const windowStart = new Date(shiftDay.getTime() - 2 * 60 * 60 * 1000);
-  const windowEnd = new Date(shiftDay.getTime() + 36 * 60 * 60 * 1000);
+  const baseWindowEndMs = shiftDay.getTime() + 36 * 60 * 60 * 1000;
+  const windowEnd = new Date(
+    isAllocationActive
+      ? Math.max(baseWindowEndMs, Date.now() + MAX_CLOCK_DRIFT_TOLERANCE_MS)
+      : baseWindowEndMs,
+  );
 
   if (eventDate.getTime() < windowStart.getTime() || eventDate.getTime() > windowEnd.getTime()) {
     throw new UnprocessableEntityException({
