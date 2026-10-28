@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Package, Plus, Clock, Loader2, Sparkles } from 'lucide-react';
+import { Package, Plus, Clock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   Sheet,
@@ -44,8 +44,6 @@ export function ProductionDrawer({
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<ProductionFormData>({
@@ -56,8 +54,6 @@ export function ProductionDrawer({
     },
   });
 
-  const currentQuantity = watch('quantity');
-
   useEffect(() => {
     if (open) {
       reset({
@@ -66,12 +62,6 @@ export function ProductionDrawer({
       });
     }
   }, [open, reset]);
-
-  const handleIncrement = (amount: number): void => {
-    const current = Number(currentQuantity);
-    const next = Number.isFinite(current) ? current + amount : amount;
-    setValue('quantity', next, { shouldValidate: true });
-  };
 
   const onSubmit = async (data: ProductionFormData): Promise<void> => {
     const clientUuid = OfflineStorage.generateUuid();
@@ -155,7 +145,8 @@ export function ProductionDrawer({
                 placeholder="0"
                 autoFocus
                 {...register('quantity', { valueAsNumber: true })}
-                className="h-20 text-center font-mono text-4xl sm:text-5xl font-black tracking-wider text-foreground placeholder:text-muted-foreground/30 focus-visible:ring-primary shadow-inner"
+                onWheel={(e) => e.currentTarget.blur()}
+                className="h-20 text-center font-mono text-4xl sm:text-5xl font-black tracking-wider text-foreground placeholder:text-muted-foreground/30 focus-visible:ring-primary shadow-inner [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </div>
             {errors.quantity && (
@@ -163,27 +154,6 @@ export function ProductionDrawer({
                 {errors.quantity.message}
               </p>
             )}
-          </div>
-
-          {/* Atalhos de Incremento Rápido para Chão de Fábrica */}
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>Adição rápida:</span>
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {[50, 100, 250, 500].map((step) => (
-                <Button
-                  key={step}
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleIncrement(step)}
-                  className="min-h-[44px] font-mono text-xs font-bold hover:bg-primary/10 hover:text-primary active:scale-95 touch-manipulation"
-                >
-                  +{step}
-                </Button>
-              ))}
-            </div>
           </div>
 
           {/* Horário do Apontamento */}

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Unificação do Gatilho de Paradas, Travamento Temporal, Input Numérico Puro & Isolamento RBAC)  
-> **Status:** 🟡 Em Progresso (2 de 4 Tarefas Concluídas — 50%)  
+> **Status:** 🟡 Em Progresso (3 de 4 Tarefas Concluídas — 75%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zod)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,14 +33,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Frontend): [================----------------] 50% Concluído (2 de 4 tarefas)
+Progresso da Fase 5 (Frontend): [========================--------] 75% Concluído (3 de 4 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **5.1** | Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels | 🟢 Concluída | `frontend/src/types/domain.ts`, `frontend/src/schemas/downtime-schema.ts`, `frontend/src/pages/operator/operator-console-page.tsx` |
 | **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
-| **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | ⚪ A Iniciar | `frontend/src/components/production/production-drawer.tsx` |
+| **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | 🟢 Concluída | `frontend/src/components/production/production-drawer.tsx` |
 | **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | ⚪ A Iniciar | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
 
 ---
@@ -81,16 +81,16 @@ Progresso da Fase 5 (Frontend): [================----------------] 50% Concluíd
 
 ---
 
-### ⬜ Tarefa 5.3: Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer`
+### 🟢 Tarefa 5.3: Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer`
 - **Objetivo:** Remover completamente os botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e ocultar as setas de incremento/decremento (`spinners`) do input numérico de produção.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/components/production/production-drawer.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Remover a função `handleIncrement`, a variável `currentQuantity = watch('quantity')`, o bloco JSX de `"Adição rápida"` (`[50, 100, 250, 500].map(...)`) e o import não utilizado `Sparkles` (e `setValue`, `watch` caso não usados em outro lugar)
-  - [ ] No `<Input id="production-quantity-input" type="number" ... />`, adicionar as classes Tailwind `[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none` e `onWheel={(e) => e.currentTarget.blur()}` para remover as setinhas visuais e impedir alteração acidental por scroll
+  - [x] Remover a função `handleIncrement`, a variável `currentQuantity = watch('quantity')`, o bloco JSX de `"Adição rápida"` (`[50, 100, 250, 500].map(...)`) e o import não utilizado `Sparkles` (e `setValue`, `watch` caso não usados em outro lugar)
+  - [x] No `<Input id="production-quantity-input" type="number" ... />`, adicionar as classes Tailwind `[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none` e `onWheel={(e) => e.currentTarget.blur()}` para remover as setinhas visuais e impedir alteração acidental por scroll
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Gaveta de produção exibe apenas o campo numérico limpo (sem setas laterais e sem botões `+50`/`+100`) e o campo de horário.
-  - [ ] **Prevenção de Erro:** Rolagem do mouse sobre o input ou cliques na borda direita do input não alteram o valor digitado.
+  - [x] **Caminho Normal:** Gaveta de produção exibe apenas o campo numérico limpo (sem setas laterais e sem botões `+50`/`+100`) e o campo de horário.
+  - [x] **Prevenção de Erro:** Rolagem do mouse sobre o input ou cliques na borda direita do input não alteram o valor digitado.
 
 ---
 
