@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Unificação do Gatilho de Paradas, Travamento Temporal, Input Numérico Puro & Isolamento RBAC)  
-> **Status:** 🟡 Em Andamento (4 de 5 Tarefas Concluídas — 80%)  
+> **Status:** 🟢 Concluído (5 de 5 Tarefas Concluídas — 100%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zod)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,7 +33,7 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Frontend): [========================--------] 80% Concluído (4 de 5 tarefas)
+Progresso da Fase 5 (Frontend): [================================] 100% Concluído (5 de 5 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
@@ -42,7 +42,7 @@ Progresso da Fase 5 (Frontend): [========================--------] 80% Concluíd
 | **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 | **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | 🟢 Concluída | `frontend/src/components/production/production-drawer.tsx` |
 | **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | 🟢 Concluída | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
-| **5.5** | Travamento de Horário no Apontamento de Produção & Correção de Submissão (`RN-09`) | ⚪ A Iniciar | `frontend/src/schemas/production-schema.ts`, `frontend/src/components/production/production-drawer.tsx` |
+| **5.5** | Travamento de Horário no Apontamento de Produção & Correção de Submissão (`RN-09`) | 🟢 Concluída | `frontend/src/schemas/production-schema.ts`, `frontend/src/components/production/production-drawer.tsx` |
 
 ---
 
@@ -113,24 +113,24 @@ Progresso da Fase 5 (Frontend): [========================--------] 80% Concluíd
 
 ---
 
-### ⬜ Tarefa 5.5: Travamento de Horário no Apontamento de Produção & Correção de Submissão (`RN-09`)
+### 🟢 Tarefa 5.5: Travamento de Horário no Apontamento de Produção & Correção de Submissão (`RN-09`)
 - **Objetivo:** Travar o horário do apontamento de produção no instante atual (`Agora` / `RN-09`), corrigir o bloqueio silencioso de submissão no `ProductionDrawer` (`noValidate`, remoção do atributo inválido `pattern="[0-9]*"` em `type="number"` e validação segura de inteiro positivo no `productionSchema`) e distinguir erros de negócio HTTP 4xx de quedas reais de rede.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/schemas/production-schema.ts`
   - `frontend/src/components/production/production-drawer.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `frontend/src/schemas/production-schema.ts`:
-    - Simplificar `productionSchema` para validar `quantity` com `z.preprocess` / `z.coerce.number()` garantindo mensagem clara caso vazio ou $\le 0$, removendo a dependência de `recordedAt` editável
-  - [ ] Em `frontend/src/components/production/production-drawer.tsx`:
+  - [x] Em `frontend/src/schemas/production-schema.ts`:
+    - Simplificar `productionSchema` para validar `quantity` com `z.preprocess` garantindo mensagem clara caso vazio ou $\le 0$, removendo a dependência de `recordedAt` editável
+  - [x] Em `frontend/src/components/production/production-drawer.tsx`:
     - Adicionar `noValidate` na tag `<form>` e remover `pattern="[0-9]*"` do `<Input type="number">` para eliminar bloqueios nativos silenciosos do navegador
-    - Substituir o `<Input type="datetime-local" />` editável por um card informativo travado (`"Horário do Lançamento: Imediato (Agora)"`), gerando `const recordedAtIso = new Date().toISOString()` no momento do `onSubmit`
-    - No bloco `try / catch` do `productionsService.create`, verificar se o erro possui resposta HTTP do servidor (`axios.isAxiosError(err) && err.response`): se for erro de validação/domínio do backend (400/403/404/422), remover o evento inválido do `OfflineStorage` (`OfflineStorage.deleteEvent(clientUuid)`), exibir `toast.error(extractProblemDetail(err))` e manter a gaveta aberta ou atualizar o console; somente tratar como "salvo localmente (Modo Offline)" quando for falha real de conectividade
+    - Substituir o `<Input type="datetime-local" />` editável por um card informativo travado (`"Horário do Lançamento: Imediato (Agora)"`), gerando `const nowIso = new Date().toISOString()` no momento do `onSubmit`
+    - No bloco `try / catch` do `productionsService.create`, verificar se o erro possui resposta HTTP do servidor (`err instanceof ProblemDetailsError && err.status > 0`): se for erro de validação/domínio do backend (400/403/404/422), remover o evento inválido do `OfflineStorage` (`OfflineStorage.deleteEvent(clientUuid)`), exibir `toast.error(extractProblemDetail(err))` e manter a gaveta aberta; somente tratar como "salvo localmente (Modo Offline)" quando for falha real de conectividade
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Ao digitar uma quantidade (ex: `500`) e clicar em `"+ Confirmar Apontamento"`, o apontamento é imediatamente confirmado, o horário é cravado no `Agora`, o toast de sucesso aparece e o contador de garrafas do turno é atualizado na hora.
-  - [ ] **Violação de Contrato (Campo Vazio ou $\le 0$):** Se clicar em confirmar sem digitar valor ou digitando `0`, exibe imediatamente a mensagem vermelha `"Informe uma quantidade maior que zero."` abaixo do input.
+  - [x] **Caminho Normal:** Ao digitar uma quantidade (ex: `500`) e clicar em `"+ Confirmar Apontamento"`, o apontamento é imediatamente confirmado, o horário é cravado no `Agora`, o toast de sucesso aparece e o contador de garrafas do turno é atualizado na hora.
+  - [x] **Violação de Contrato (Campo Vazio ou $\le 0$):** Se clicar em confirmar sem digitar valor ou digitando `0`, exibe imediatamente a mensagem vermelha abaixo do input.
 
 ---
 
 ## 5. Auditoria de Zero Fallback & Homologação da Fase 5 (Frontend)
-- [ ] Nenhum import não utilizado (`History`, `Sparkles`, estados órfãos) deixado nos componentes modificados.
-- [ ] `npm run build` no frontend executando com zero erros de TypeScript e zero warnings de bundle.
+- [x] Nenhum import não utilizado (`History`, `Sparkles`, estados órfãos) deixado nos componentes modificados.
+- [x] `npm run build` no frontend executando com zero erros de TypeScript e zero warnings de bundle.

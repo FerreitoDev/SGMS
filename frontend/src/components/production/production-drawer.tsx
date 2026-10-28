@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { OfflineStorage } from '@/lib/offline-storage';
 import { notifyStorageUpdated } from '@/hooks/use-offline-sync';
 import { productionsService } from '@/services/productions-service';
+import { ProblemDetailsError, extractProblemDetail } from '@/lib/api-client';
 import { productionSchema, type ProductionFormData } from '@/schemas/production-schema';
 
 export interface ProductionDrawerProps {
@@ -23,16 +24,6 @@ export interface ProductionDrawerProps {
   onOpenChange: (open: boolean) => void;
   allocationId: string;
   onSuccess?: () => void;
-}
-
-function getCurrentLocalDateTime(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = (now.getMonth() + 1).toString().padStart(2, '0');
-  const day = now.getDate().toString().padStart(2, '0');
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
 export function ProductionDrawer({
@@ -50,7 +41,6 @@ export function ProductionDrawer({
     resolver: zodResolver(productionSchema),
     defaultValues: {
       quantity: undefined as unknown as number,
-      recordedAt: getCurrentLocalDateTime(),
     },
   });
 
@@ -58,14 +48,12 @@ export function ProductionDrawer({
     if (open) {
       reset({
         quantity: undefined as unknown as number,
-        recordedAt: getCurrentLocalDateTime(),
       });
     }
   }, [open, reset]);
 
   const onSubmit = async (data: ProductionFormData): Promise<void> => {
     const clientUuid = OfflineStorage.generateUuid();
-    const recordedAtIso = new Date(data.recordedAt).toISOString();
     const nowIso = new Date().toISOString();
 
     // 1. Grava no buffer local do IndexedDB antes de qualquer tentativa de rede
@@ -76,15 +64,11 @@ export function ProductionDrawer({
       payload: {
         allocationId,
         quantity: data.quantity,
-        timestamp: recordedAtIso,
+        timestamp: nowIso,
       },
       createdAt: nowIso,
       status: 'PENDING',
     });
-
-    notifyStorageUpdated();
-    onSuccess?.();
-    onOpenChange(false);
 
     // 2. Tenta envio HTTP imediato via API
     try {
@@ -92,15 +76,30 @@ export function ProductionDrawer({
         clientUuid,
         allocationId,
         quantity: data.quantity,
-        timestamp: recordedAtIso,
+        timestamp: nowIso,
       });
 
       // Sucesso na API: marca como sincronizado no IndexedDB
       await OfflineStorage.markAsSynced([clientUuid]);
       notifyStorageUpdated();
+      await onSuccess?.();
+      onOpenChange(false);
       toast.success(`${data.quantity.toLocaleString('pt-BR')} garrafas registradas com sucesso.`);
-    } catch {
-      // Falha de rede: notifica que o dado está seguro no dispositivo
+    } catch (err: unknown) {
+      // Se o servidor respondeu com erro de negócio (HTTP 4xx/5xx), remove do buffer local e exibe a falha real
+      if (err instanceof ProblemDetailsError && err.status > 0) {
+        await OfflineStorage.deleteEvent(clientUuid);
+        notifyStorageUpdated();
+        toast.error('Não foi possível registrar o apontamento', {
+          description: extractProblemDetail(err),
+        });
+        return;
+      }
+
+      // Falha real de rede (status === 0): mantém no IndexedDB e fecha a gaveta
+      notifyStorageUpdated();
+      await onSuccess?.();
+      onOpenChange(false);
       toast.info(
         `${data.quantity.toLocaleString('pt-BR')} garrafas salvas localmente no dispositivo. Serão enviadas ao restabelecer a rede.`,
         { duration: 4000 },
@@ -126,7 +125,7 @@ export function ProductionDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-5 space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-5 space-y-5">
           {/* Input Principal de Quantidade de Grande Dimensão */}
           <div className="space-y-2">
             <label
@@ -140,11 +139,10 @@ export function ProductionDrawer({
                 id="production-quantity-input"
                 type="number"
                 inputMode="numeric"
-                pattern="[0-9]*"
                 min={1}
                 placeholder="0"
                 autoFocus
-                {...register('quantity', { valueAsNumber: true })}
+                {...register('quantity')}
                 onWheel={(e) => e.currentTarget.blur()}
                 className="h-20 text-center font-mono text-4xl sm:text-5xl font-black tracking-wider text-foreground placeholder:text-muted-foreground/30 focus-visible:ring-primary shadow-inner [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
@@ -156,24 +154,19 @@ export function ProductionDrawer({
             )}
           </div>
 
-          {/* Horário do Apontamento */}
-          <div className="space-y-1.5 pt-1 border-t border-border/50">
-            <label
-              htmlFor="production-recorded-at"
-              className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground"
-            >
-              <Clock className="h-3.5 w-3.5 text-primary" />
-              <span>Horário do Lançamento</span>
-            </label>
-            <Input
-              id="production-recorded-at"
-              type="datetime-local"
-              {...register('recordedAt')}
-              className="min-h-[44px] font-mono text-sm text-foreground focus-visible:ring-primary touch-manipulation"
-            />
-            {errors.recordedAt && (
-              <p className="text-xs font-semibold text-destructive">{errors.recordedAt.message}</p>
-            )}
+          {/* Horário do Apontamento Travado no Instante Atual (RN-09) */}
+          <div className="pt-1 border-t border-border/50">
+            <div className="flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3.5 text-xs">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Clock className="h-5 w-5" />
+              </div>
+              <div className="space-y-0.5">
+                <p className="font-bold text-foreground">Horário do Lançamento: Imediato (Agora)</p>
+                <p className="text-muted-foreground text-[11px]">
+                  O horário do apontamento é fixado automaticamente no instante da confirmação.
+                </p>
+              </div>
+            </div>
           </div>
 
           <SheetFooter className="pt-2 flex-col sm:flex-row gap-2">

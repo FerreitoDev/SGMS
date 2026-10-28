@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { OfflineStorage } from '@/lib/offline-storage';
 import { notifyStorageUpdated } from '@/hooks/use-offline-sync';
 import { downtimesService } from '@/services/downtimes-service';
+import { ProblemDetailsError, extractProblemDetail } from '@/lib/api-client';
 import {
   downtimeSchema,
   DOWNTIME_REASONS,
@@ -126,10 +127,6 @@ export function DowntimeModal({
         status: 'PENDING',
       });
 
-      notifyStorageUpdated();
-      onSuccess?.();
-      onOpenChange(false);
-
       // 2. Tenta envio HTTP imediato
       try {
         await downtimesService.createRetroactive({
@@ -143,8 +140,21 @@ export function DowntimeModal({
 
         await OfflineStorage.markAsSynced([clientUuid]);
         notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
         toast.success('Parada retroativa registrada com sucesso.');
-      } catch {
+      } catch (err: unknown) {
+        if (err instanceof ProblemDetailsError && err.status > 0) {
+          await OfflineStorage.deleteEvent(clientUuid);
+          notifyStorageUpdated();
+          toast.error('Não foi possível registrar a parada retroativa', {
+            description: extractProblemDetail(err),
+          });
+          return;
+        }
+        notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
         toast.info('Parada retroativa salva no dispositivo. Será enviada na reconexão.');
       }
     } else {
@@ -164,10 +174,6 @@ export function DowntimeModal({
         status: 'PENDING',
       });
 
-      notifyStorageUpdated();
-      onSuccess?.();
-      onOpenChange(false);
-
       // 2. Tenta envio HTTP imediato
       try {
         await downtimesService.start({
@@ -180,8 +186,21 @@ export function DowntimeModal({
 
         await OfflineStorage.markAsSynced([clientUuid]);
         notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
         toast.error(`Máquina paralisada: ${DOWNTIME_LABELS[data.reason]}.`);
-      } catch {
+      } catch (err: unknown) {
+        if (err instanceof ProblemDetailsError && err.status > 0) {
+          await OfflineStorage.deleteEvent(clientUuid);
+          notifyStorageUpdated();
+          toast.error('Não foi possível registrar a parada', {
+            description: extractProblemDetail(err),
+          });
+          return;
+        }
+        notifyStorageUpdated();
+        await onSuccess?.();
+        onOpenChange(false);
         toast.info('Parada registrada localmente no dispositivo (Modo Offline).');
       }
     }
@@ -235,7 +254,7 @@ export function DowntimeModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-5 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-5 space-y-4">
           {/* Seletor de Motivos de Parada em Grade Touch */}
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
