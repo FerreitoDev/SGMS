@@ -7,6 +7,7 @@ export const DOWNTIME_REASONS = [
   'MOLDE',
   'MECANICA',
   'ELETRICA',
+  'REFEICAO_INTERVALO',
   'OUTROS',
 ] as const;
 
@@ -17,6 +18,7 @@ export const DOWNTIME_LABELS: Record<(typeof DOWNTIME_REASONS)[number], string> 
   MOLDE: 'Defeito de Molde',
   MECANICA: 'Manutenção Mecânica',
   ELETRICA: 'Falha Elétrica',
+  REFEICAO_INTERVALO: 'Refeição / Intervalo',
   OUTROS: 'Outros Motivos',
 };
 

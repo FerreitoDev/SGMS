@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 5 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 5 (Unificação do Gatilho de Paradas, Travamento Temporal, Input Numérico Puro & Isolamento RBAC)  
-> **Status:** ⚪ A Iniciar (0 de 4 Tarefas Concluídas — 0%)  
+> **Status:** 🟡 Em Progresso (1 de 4 Tarefas Concluídas — 25%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zod)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [01-requisitos.md](file:///home/ferreito/SGMS/docs/01-requisitos.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [03-fluxos.md](file:///home/ferreito/SGMS/docs/03-fluxos.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -33,12 +33,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 5 (Frontend): [--------------------------------] 0% Concluído (0 de 4 tarefas)
+Progresso da Fase 5 (Frontend): [========------------------------] 25% Concluído (1 de 4 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **5.1** | Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels | ⚪ A Iniciar | `frontend/src/types/domain.ts`, `frontend/src/schemas/downtime-schema.ts`, `frontend/src/pages/operator/operator-console-page.tsx` |
+| **5.1** | Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels | 🟢 Concluída | `frontend/src/types/domain.ts`, `frontend/src/schemas/downtime-schema.ts`, `frontend/src/pages/operator/operator-console-page.tsx` |
 | **5.2** | Remoção do Botão Redundante & Travamento de Data/Hora no Tempo Real (`RN-09`) | ⚪ A Iniciar | `frontend/src/pages/operator/operator-console-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 | **5.3** | Remoção dos Botões de Adição Rápida & Setas (`Spinners`) em `ProductionDrawer` | ⚪ A Iniciar | `frontend/src/components/production/production-drawer.tsx` |
 | **5.4** | Isolamento Estrito de Rotas RBAC (`OPERADOR` vs `GERENTE`) no Login e Rotas | ⚪ A Iniciar | `frontend/src/routes/app-routes.tsx`, `frontend/src/components/auth/protected-route.tsx`, `frontend/src/pages/login-page.tsx` |
@@ -49,19 +49,19 @@ Progresso da Fase 5 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⬜ Tarefa 5.1: Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels
+### 🟢 Tarefa 5.1: Inclusão de `REFEICAO_INTERVALO` nos Contratos, Schema Zod & Labels
 - **Objetivo:** Atualizar o tipo `DowntimeReason`, a constante `DOWNTIME_REASONS` e o mapa `DOWNTIME_LABELS` no frontend para contemplar a parada planejada de refeição/almoço e exibir rótulos legíveis no console.
 - **Arquivos a Modificar / Criar:**
   - `frontend/src/types/domain.ts`
   - `frontend/src/schemas/downtime-schema.ts`
   - `frontend/src/pages/operator/operator-console-page.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Adicionar `'REFEICAO_INTERVALO'` ao type `DowntimeReason` em `frontend/src/types/domain.ts`
-  - [ ] Adicionar `'REFEICAO_INTERVALO'` ao array `DOWNTIME_REASONS` e mapear `REFEICAO_INTERVALO: 'Refeição / Intervalo'` em `DOWNTIME_LABELS` (`frontend/src/schemas/downtime-schema.ts`)
-  - [ ] Em `OperatorConsolePage`, exibir `DOWNTIME_LABELS[activeDowntime.reason]` no card de status quando a máquina estiver parada
+  - [x] Adicionar `'REFEICAO_INTERVALO'` ao type `DowntimeReason` em `frontend/src/types/domain.ts`
+  - [x] Adicionar `'REFEICAO_INTERVALO'` ao array `DOWNTIME_REASONS` e mapear `REFEICAO_INTERVALO: 'Refeição / Intervalo'` em `DOWNTIME_LABELS` (`frontend/src/schemas/downtime-schema.ts`)
+  - [x] Em `OperatorConsolePage`, exibir `DOWNTIME_LABELS[activeDowntime.reason]` no card de status quando a máquina estiver parada
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** O botão `"Refeição / Intervalo"` aparece na grade touch de motivos e pode ser selecionado sem exigir justificativa textual.
-  - [ ] **Zero Fallback:** Tipagem estrita garantida entre `DowntimeReason` e `DOWNTIME_LABELS` sem `any` ou fallback silencioso.
+  - [x] **Caminho Normal:** O botão `"Refeição / Intervalo"` aparece na grade touch de motivos e pode ser selecionado sem exigir justificativa textual.
+  - [x] **Zero Fallback:** Tipagem estrita garantida entre `DowntimeReason` e `DOWNTIME_LABELS` sem `any` ou fallback silencioso.
 
 ---
 

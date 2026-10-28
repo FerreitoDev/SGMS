@@ -28,6 +28,7 @@ import { ProductionSummaryCard } from '@/components/operator/production-summary-
 import { ProductionDrawer } from '@/components/production/production-drawer';
 import { DowntimeModal } from '@/components/downtime/downtime-modal';
 import { CloseShiftSheet } from '@/components/operator/close-shift-sheet';
+import { DOWNTIME_LABELS } from '@/schemas/downtime-schema';
 import type { ProductionEntry, DowntimeRecord } from '@/types/domain';
 import type { ProductionPayload } from '@/types/offline';
 
@@ -274,7 +275,7 @@ export function OperatorConsolePage(): React.ReactElement {
                 {isMachineStopped && activeDowntime ? (
                   <div className="mt-1.5 space-y-0.5">
                     <p className="text-sm font-bold text-foreground">
-                      Motivo: <span className="font-mono text-destructive">{activeDowntime.reason}</span>
+                      Motivo: <span className="font-semibold text-destructive">{DOWNTIME_LABELS[activeDowntime.reason]}</span>
                     </p>
                     <div className="flex items-center gap-1.5 font-mono text-xl sm:text-2xl font-black text-destructive">
                       <Clock className="h-5 w-5" />

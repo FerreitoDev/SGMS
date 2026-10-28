@@ -99,6 +99,7 @@ export type DowntimeReason =
   | 'MOLDE'
   | 'MECANICA'
   | 'ELETRICA'
+  | 'REFEICAO_INTERVALO'
   | 'OUTROS';
 
 export type DowntimeStatus = 'IN_PROGRESS' | 'RESOLVED';
