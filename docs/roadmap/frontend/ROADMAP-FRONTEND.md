@@ -116,4 +116,5 @@
   - [x] 5.2: Remoção do botão secundário `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` em `OperatorConsolePage` e travamento de data/hora na aba **Tempo Real (Agora)** em `DowntimeModal` (`RN-09`)
   - [x] 5.3: Remoção dos botões de adição rápida (`+50` a `+500`) e das setas incrementais (`spinners`) em `ProductionDrawer`
   - [x] 5.4: Correção do isolamento de rotas por perfil (`AppRoutes`, `ProtectedRoute` e `LoginPage`) impedindo que o `GERENTE` seja redirecionado para telas de `OPERADOR`
+  - [ ] 5.5: Travamento de data/hora no `ProductionDrawer` (`RN-09`), correção do submit/schema Zod (`noValidate` + `z.coerce.number`) e distinção entre erro HTTP 4xx e falha de rede offline
 - **Plano de Execução Vinculado:** [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md)
