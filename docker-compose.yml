@@ -1,0 +1,63 @@
+services:
+  sgms-db:
+    image: postgres:16-alpine
+    container_name: sgms-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Defina POSTGRES_USER no arquivo .env da raiz}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env da raiz}
+      POSTGRES_DB: ${POSTGRES_DB:?Defina POSTGRES_DB no arquivo .env da raiz}
+      TZ: ${TZ:-America/Sao_Paulo}
+    volumes:
+      - sgms_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sgms-network
+
+  sgms-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sgms-backend
+    restart: unless-stopped
+    depends_on:
+      sgms-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://${POSTGRES_USER:?Defina POSTGRES_USER}:${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}@sgms-db:5432/${POSTGRES_DB:?Defina POSTGRES_DB}?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET no arquivo .env da raiz}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:?Defina JWT_EXPIRES_IN no arquivo .env da raiz}
+      TZ: ${TZ:-America/Sao_Paulo}
+    networks:
+      - sgms-network
+
+  sgms-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sgms-web
+    restart: unless-stopped
+    depends_on:
+      - sgms-backend
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    environment:
+      TZ: ${TZ:-America/Sao_Paulo}
+    networks:
+      - sgms-network
+
+volumes:
+  sgms_pgdata:
+    name: sgms_pgdata
+
+networks:
+  sgms-network:
+    name: sgms-network
+    driver: bridge
+

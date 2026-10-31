@@ -137,6 +137,6 @@
 - **Dependências Bloqueantes:** Fases 1 a 6 do Backend concluídas.
 - **Checklist Técnico Sequencial:**
   - [x] 7.1: Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine com geração do Prisma Client, compilação `nest build` e entrypoint executando `npx prisma migrate deploy && node dist/main.js`) e `backend/.dockerignore`
-  - [ ] 7.2: Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 Alpine com volume nomeado e `healthcheck`), `sgms-backend` e `sgms-web`
+  - [x] 7.2: Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 Alpine com volume nomeado e `healthcheck`), `sgms-backend` e `sgms-web`
   - [ ] 7.3: Criação do `README.md` central na raiz do projeto documentando arquitetura, execução local (PC/WSL2 + celular na LAN), implantação em produção no Ubuntu Server 24.04 LTS (Docker Compose, Netplan IP Fixo e `avahi-daemon` `http://sgms.local`) e comandos de backup/restore
 - **Plano de Execução Vinculado:** [PLANO-FASE-7-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-7-BACKEND.md)

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 7 (Backend & Infraestrutura On-Premise)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 7 (Containerização Multi-Stage do Backend, Orquestração `docker-compose.yml` para Servidor Linux On-Premise e `README.md` Central)  
-> **Status:** 🟡 Em Execução (1 de 3 Tarefas Concluídas — 33%)  
+> **Status:** 🟡 Em Execução (2 de 3 Tarefas Concluídas — 67%)  
 > **Módulo:** Backend & Infraestrutura (NestJS 10 + Prisma ORM + PostgreSQL 16 + Docker Compose)  
 > **Data de Criação:** 2026-10-31  
 > **Fonte da Verdade:** [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,13 +29,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 7 (Backend): [===========---------------------] 33% Concluído (1 de 3 tarefas)
+Progresso da Fase 7 (Backend): [=====================-----------] 67% Concluído (2 de 3 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **7.1** | Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore` | 🟢 Concluída | `backend/Dockerfile`, `backend/.dockerignore` |
-| **7.2** | Criação de `docker-compose.yml` e `.env.production.example` na Raiz | ⚪ Pendente | `docker-compose.yml`, `.env.production.example` |
+| **7.2** | Criação de `docker-compose.yml` e `.env.production.example` na Raiz | 🟢 Concluída | `docker-compose.yml`, `.env.production.example` |
 | **7.3** | Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux | ⚪ Pendente | `README.md` |
 
 ---
@@ -59,19 +59,19 @@ Progresso da Fase 7 (Backend): [===========---------------------] 33% Concluído
 
 ---
 
-### ⬜ Tarefa 7.2: Criação de `docker-compose.yml` e `.env.production.example` na Raiz
+### 🟢 Tarefa 7.2: Criação de `docker-compose.yml` e `.env.production.example` na Raiz
 - **Objetivo:** Orquestrar os containers de banco de dados (`sgms-db`), API (`sgms-backend`) e servidor web/proxy (`sgms-web`) com persistência, healthcheck, reinício automático e falha explícita caso variáveis obrigatórias estejam ausentes.
 - **Arquivos a Criar:**
   - `docker-compose.yml`
   - `.env.production.example`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar `.env.production.example` documentando as variáveis obrigatórias (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `JWT_SECRET`, `JWT_EXPIRES_IN=12h`, `HTTP_PORT=80`)
-  - [ ] Criar `docker-compose.yml` na raiz do repositório com:
-    - [ ] Serviço `sgms-db` (`postgres:16-alpine`): `restart: unless-stopped`, volume persistente `sgms_pgdata:/var/lib/postgresql/data`, `healthcheck` com `pg_isready` e variáveis exigidas via sintaxe estrita `${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}` (Zero Fallback)
-    - [ ] Serviço `sgms-backend` (build `./backend`): `restart: unless-stopped`, `depends_on` aguardando `sgms-db` (`condition: service_healthy`), injetando `DATABASE_URL`, `JWT_SECRET` obrigatório (`${JWT_SECRET:?Defina JWT_SECRET no arquivo .env}`) e `PORT=3001`
-    - [ ] Serviço `sgms-web` (build `./frontend`): `restart: unless-stopped`, `depends_on: [sgms-backend]`, expondo a porta `80` da LAN (`"${HTTP_PORT:-80}:80"`)
+  - [x] Criar `.env.production.example` documentando as variáveis obrigatórias (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `JWT_SECRET`, `JWT_EXPIRES_IN=12h`, `HTTP_PORT=80`)
+  - [x] Criar `docker-compose.yml` na raiz do repositório com:
+    - [x] Serviço `sgms-db` (`postgres:16-alpine`): `restart: unless-stopped`, volume persistente `sgms_pgdata:/var/lib/postgresql/data`, `healthcheck` com `pg_isready` e variáveis exigidas via sintaxe estrita `${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}` (Zero Fallback)
+    - [x] Serviço `sgms-backend` (build `./backend`): `restart: unless-stopped`, `depends_on` aguardando `sgms-db` (`condition: service_healthy`), injetando `DATABASE_URL`, `JWT_SECRET` obrigatório (`${JWT_SECRET:?Defina JWT_SECRET no arquivo .env}`) e `PORT=3001`
+    - [x] Serviço `sgms-web` (build `./frontend`): `restart: unless-stopped`, `depends_on: [sgms-backend]`, expondo a porta `80` da LAN (`"${HTTP_PORT:-80}:80"`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Violação de Contrato (Zero Fallback):** Subir o `docker compose` sem definir `POSTGRES_PASSWORD` ou `JWT_SECRET` interrompe imediatamente a execução com mensagem explícita de erro, sem usar senhas padrão ocultas.
+  - [x] **Violação de Contrato (Zero Fallback):** Subir o `docker compose` sem definir `POSTGRES_PASSWORD` ou `JWT_SECRET` interrompe imediatamente a execução com mensagem explícita de erro, sem usar senhas padrão ocultas.
 
 ---
 
