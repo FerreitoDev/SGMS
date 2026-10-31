@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 7 (Backend & Infraestrutura On-Premise)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 7 (Containerização Multi-Stage do Backend, Orquestração `docker-compose.yml` para Servidor Linux On-Premise e `README.md` Central)  
-> **Status:** 🟡 Em Execução (2 de 3 Tarefas Concluídas — 67%)  
+> **Status:** 🟢 Concluído (3 de 3 Tarefas Concluídas — 100%)  
 > **Módulo:** Backend & Infraestrutura (NestJS 10 + Prisma ORM + PostgreSQL 16 + Docker Compose)  
 > **Data de Criação:** 2026-10-31  
 > **Fonte da Verdade:** [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,14 +29,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 7 (Backend): [=====================-----------] 67% Concluído (2 de 3 tarefas)
+Progresso da Fase 7 (Backend): [================================] 100% Concluído (3 de 3 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **7.1** | Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore` | 🟢 Concluída | `backend/Dockerfile`, `backend/.dockerignore` |
 | **7.2** | Criação de `docker-compose.yml` e `.env.production.example` na Raiz | 🟢 Concluída | `docker-compose.yml`, `.env.production.example` |
-| **7.3** | Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux | ⚪ Pendente | `README.md` |
+| **7.3** | Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux | 🟢 Concluída | `README.md` |
 
 ---
 
@@ -75,22 +75,22 @@ Progresso da Fase 7 (Backend): [=====================-----------] 67% Concluído
 
 ---
 
-### ⬜ Tarefa 7.3: Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux
+### 🟢 Tarefa 7.3: Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux
 - **Objetivo:** Criar o `README.md` principal na raiz do repositório explicando de ponta a ponta o funcionamento do SGMS, como rodar em desenvolvimento (PC/WSL2 + celular no Wi-Fi) e como instalar em produção em um servidor Linux (Ubuntu Server 24.04 LTS) no cliente.
 - **Arquivos a Criar:**
   - `README.md`
 - **Checklist de Execução Detalhado:**
-  - [ ] Estruturar `README.md` com:
-    - [ ] **1. Visão Geral & Arquitetura On-Premise:** Propósito do SGMS, diagrama de arquitetura LAN, stack tecnológica e regras de domínio principais (alocação 1:1, Local-First IndexedDB, OEE com segregação de refeição/intervalo)
-    - [ ] **2. Guia de Desenvolvimento Local (PC / WSL2 + Celular na Rede Wi-Fi):** Pré-requisitos, configuração de `.env`, `prisma migrate deploy` + `prisma db seed`, inicialização do backend/frontend e ponte de rede WSL2 para testar pelo smartphone
-    - [ ] **3. Guia de Implantação em Produção no Cliente (Servidor Linux Ubuntu 24.04 LTS):**
-      - [ ] Recomendação de distribuição e hardware mínimo
-      - [ ] Configuração de IP Estático na LAN via **Netplan** (`/etc/netplan/01-netcfg.yaml`)
-      - [ ] Configuração de URL fixa amigável (`http://sgms.local`) via **mDNS / Avahi** (`hostnamectl set-hostname sgms` + `avahi-daemon`)
-      - [ ] Subida em produção com **Docker Compose** (`cp .env.production.example .env`, `docker compose up -d --build` e execução do seed inicial)
-    - [ ] **4. Operação, Manutenção e Backup:** Credenciais iniciais do seed, comando de backup (`pg_dump`) e restauração do PostgreSQL, visualização de logs e atualização de versão
+  - [x] Estruturar `README.md` com:
+    - [x] **1. Visão Geral & Arquitetura On-Premise:** Propósito do SGMS, diagrama de arquitetura LAN, stack tecnológica e regras de domínio principais (alocação 1:1, Local-First IndexedDB, OEE com segregação de refeição/intervalo)
+    - [x] **2. Guia de Desenvolvimento Local (PC / WSL2 + Celular na Rede Wi-Fi):** Pré-requisitos, configuração de `.env`, `prisma migrate deploy` + `prisma db seed`, inicialização do backend/frontend e ponte de rede WSL2 para testar pelo smartphone
+    - [x] **3. Guia de Implantação em Produção no Cliente (Servidor Linux Ubuntu 24.04 LTS):**
+      - [x] Recomendação de distribuição e hardware mínimo
+      - [x] Configuração de IP Estático na LAN via **Netplan** (`/etc/netplan/01-netcfg.yaml`)
+      - [x] Configuração de URL fixa amigável (`http://sgms.local`) via **mDNS / Avahi** (`hostnamectl set-hostname sgms` + `avahi-daemon`)
+      - [x] Subida em produção com **Docker Compose** (`cp .env.production.example .env`, `docker compose up -d --build` e execução do seed inicial)
+    - [x] **4. Operação, Manutenção e Backup:** Credenciais iniciais do seed, comando de backup (`pg_dump`) e restauração do PostgreSQL, visualização de logs e atualização de versão
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Integridade Documental:** Todos os comandos, caminhos de arquivos, portas (`80` em produção via Nginx, `5173`/`3001` em dev) e links para a pasta `docs/` validados.
+  - [x] **Integridade Documental:** Todos os comandos, caminhos de arquivos, portas (`80` em produção via Nginx, `5173`/`3001` em dev) e links para a pasta `docs/` validados.
 
 ---
 

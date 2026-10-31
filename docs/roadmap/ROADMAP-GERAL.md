@@ -1,6 +1,6 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟡 Fase 7 em Planejamento (Fases 1 a 6 Concluídas)  
+> **Status Geral do Projeto:** 🟢 Fase 7 Concluída (Fases 1 a 7 Concluídas — 100%)  
 > **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md)  
 > **Última Atualização:** 2026-10-31  
 
@@ -16,7 +16,7 @@
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
 | **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟢 Concluída | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
 | **6** | Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas) | Backend + Frontend | 🟢 Concluída | BUG-01 a BUG-06, RN-01, RF-02, RF-05, RF-06, RF-07, RF-09, RNF-01, RNF-02 |
-| **7** | Empacotamento On-Premise Linux (Docker Compose, Nginx Porta 80) & `README.md` Central | Backend + Frontend | 🟡 Planejada | RNF-01, RNF-02, RNF-05, RNF-06, RNF-07 |
+| **7** | Empacotamento On-Premise Linux (Docker Compose, Nginx Porta 80) & `README.md` Central | Backend + Frontend | 🟢 Concluída | RNF-01, RNF-02, RNF-05, RNF-06, RNF-07 |
 
 ---
 
@@ -160,7 +160,7 @@
   - [x] Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine) e `backend/.dockerignore` com aplicação automática de migrations (`npx prisma migrate deploy`) na subida do container
   - [x] Criação de `frontend/Dockerfile` (multi-stage Node 20 Alpine $\rightarrow$ Nginx Alpine), `frontend/nginx.conf` (SPA routing `try_files` + proxy reverso `/api` $\rightarrow$ `sgms-backend:3001` + cache PWA) e `frontend/.dockerignore`
   - [x] Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 com `healthcheck` e volume persistente), `sgms-backend` e `sgms-web` (porta `80`) com `restart: unless-stopped`
-  - [ ] Elaboração do `README.md` central na raiz do projeto documentando arquitetura, guia passo a passo de desenvolvimento (Linux/WSL2 + teste no celular), guia de implantação em produção no Ubuntu Server 24.04 LTS (Docker, Netplan IP Fixo, `avahi-daemon` para `http://sgms.local`) e comandos de manutenção/backup
+  - [x] Elaboração do `README.md` central na raiz do projeto documentando arquitetura, guia passo a passo de desenvolvimento (Linux/WSL2 + teste no celular), guia de implantação em produção no Ubuntu Server 24.04 LTS (Docker, Netplan IP Fixo, `avahi-daemon` para `http://sgms.local`) e comandos de manutenção/backup
 - **Critérios de Conclusão da Fase:**
   - `docker compose config` e builds de produção (`backend` e `frontend`) validados sem erros.
   - `nginx.conf` configurado para responder na porta `80`, servir o SPA React sem erro 404 ao recarregar rotas (`/chao-de-fabrica/console`, `/admin/dashboard`) e encaminhar `/api/*` para o backend NestJS.

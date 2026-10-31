@@ -1,7 +1,7 @@
 # SGMS — Roadmap Técnico: Backend (Nível 2)
 
 > **Fase Geral Correspondente:** [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md)  
-> **Status:** 🟡 Planejamento Ativo (Fase 7)  
+> **Status:** 🟢 Concluído (Fases 1 a 7 Concluídas)  
 > **Última Atualização:** 2026-10-31  
 
 ---
@@ -16,7 +16,7 @@
 | **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | 🟢 Concluída |
 | **Fase 5** | Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE | [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md) | 🟢 Concluída |
 | **Fase 6** | Trava Física 1:1 de Máquina, Proteção de Inativação de Operador & Sync de Resolução de Parada | [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md) | 🟢 Concluída |
-| **Fase 7** | Containerização Backend (`Dockerfile`), Orquestração `docker-compose.yml` & `README.md` Central | [PLANO-FASE-7-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-7-BACKEND.md) | 🟡 Em Execução |
+| **Fase 7** | Containerização Backend (`Dockerfile`), Orquestração `docker-compose.yml` & `README.md` Central | [PLANO-FASE-7-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-7-BACKEND.md) | 🟢 Concluída |
 
 ---
 
@@ -138,5 +138,5 @@
 - **Checklist Técnico Sequencial:**
   - [x] 7.1: Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine com geração do Prisma Client, compilação `nest build` e entrypoint executando `npx prisma migrate deploy && node dist/main.js`) e `backend/.dockerignore`
   - [x] 7.2: Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 Alpine com volume nomeado e `healthcheck`), `sgms-backend` e `sgms-web`
-  - [ ] 7.3: Criação do `README.md` central na raiz do projeto documentando arquitetura, execução local (PC/WSL2 + celular na LAN), implantação em produção no Ubuntu Server 24.04 LTS (Docker Compose, Netplan IP Fixo e `avahi-daemon` `http://sgms.local`) e comandos de backup/restore
+  - [x] 7.3: Criação do `README.md` central na raiz do projeto documentando arquitetura, execução local (PC/WSL2 + celular na LAN), implantação em produção no Ubuntu Server 24.04 LTS (Docker Compose, Netplan IP Fixo e `avahi-daemon` `http://sgms.local`) e comandos de backup/restore
 - **Plano de Execução Vinculado:** [PLANO-FASE-7-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-7-BACKEND.md)
