@@ -1,8 +1,8 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟢 Fase 6 Concluída (Fases 1 a 6 Concluídas)  
+> **Status Geral do Projeto:** 🟡 Fase 7 em Planejamento (Fases 1 a 6 Concluídas)  
 > **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md)  
-> **Última Atualização:** 2026-10-28  
+> **Última Atualização:** 2026-10-31  
 
 ---
 
@@ -16,6 +16,7 @@
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
 | **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟢 Concluída | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
 | **6** | Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas) | Backend + Frontend | 🟢 Concluída | BUG-01 a BUG-06, RN-01, RF-02, RF-05, RF-06, RF-07, RF-09, RNF-01, RNF-02 |
+| **7** | Empacotamento On-Premise Linux (Docker Compose, Nginx Porta 80) & `README.md` Central | Backend + Frontend | 🟡 Planejada | RNF-01, RNF-02, RNF-05, RNF-06, RNF-07 |
 
 ---
 

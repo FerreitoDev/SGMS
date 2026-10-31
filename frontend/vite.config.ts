@@ -57,6 +57,7 @@ export default defineConfig({
   server: {
     port: 5173,
     host: '0.0.0.0', // Escuta explicitamente em IPv4 0.0.0.0 para funcionar em qualquer LAN e WSL2 portproxy
+    allowedHosts: true, // Permite acesso via mDNS (http://nome-do-pc.local:5173) ou qualquer hostname da LAN
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:3001',
@@ -67,6 +68,7 @@ export default defineConfig({
   preview: {
     port: 5173,
     host: '0.0.0.0',
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:3001',
