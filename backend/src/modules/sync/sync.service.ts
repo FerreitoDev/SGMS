@@ -162,6 +162,98 @@ export class SyncService {
             });
           }
 
+          // Buscar a alocação de turno antecipadamente para validar permissões e verificar paradas ativas
+          const allocation = await tx.shiftAllocation.findUnique({
+            where: { id: allocationId },
+            include: { machine: true },
+          });
+
+          if (!allocation) {
+            throw new NotFoundException(
+              `Alocação com identificador '${allocationId}' não encontrada.`,
+            );
+          }
+
+          // RN-06: Imutabilidade de turno fechado para operadores
+          if (
+            allocation.status === ShiftAllocationStatus.CLOSED &&
+            user.role !== UserRole.GERENTE
+          ) {
+            throw new ForbiddenException({
+              title: 'Acesso Proibido',
+              message: 'Este turno já foi encerrado e não aceita novos apontamentos.',
+              code: 'SHIFT_CLOSED',
+            });
+          }
+
+          // RN-08: Restrição ao operador alocado ou Gerente
+          const isOwner = allocation.operatorId === user.id;
+          const isManager = user.role === UserRole.GERENTE;
+
+          if (!isOwner && !isManager) {
+            throw new ForbiddenException({
+              title: 'Acesso Proibido',
+              message: 'Operador não possui alocação ativa nesta máquina.',
+              code: 'FORBIDDEN_ALLOCATION',
+            });
+          }
+
+          // Caso trate-se de resolução offline de uma parada IN_PROGRESS já existente na alocação (BUG-04)
+          if (endTime) {
+            const activeDowntimeOnAllocation = await tx.downtimeRecord.findFirst({
+              where: {
+                allocationId,
+                status: DowntimeStatus.IN_PROGRESS,
+              },
+            });
+
+            const matchesActiveStart =
+              activeDowntimeOnAllocation &&
+              (!startTime ||
+                activeDowntimeOnAllocation.startTime.getTime() ===
+                  new Date(startTime).getTime());
+
+            if (activeDowntimeOnAllocation && matchesActiveStart) {
+              const end = assertNotFutureDate(
+                endTime,
+                'O horário de término da parada',
+              );
+
+              if (end.getTime() < activeDowntimeOnAllocation.startTime.getTime()) {
+                throw new UnprocessableEntityException({
+                  title: 'Entidade Improcessável',
+                  message:
+                    'O horário de término da parada não pode ser anterior ao horário de início.',
+                  code: 'INVALID_DOWNTIME_RANGE',
+                });
+              }
+
+              const durationMinutes = Math.floor(
+                (end.getTime() - activeDowntimeOnAllocation.startTime.getTime()) /
+                  60000,
+              );
+
+              await tx.downtimeRecord.update({
+                where: { id: activeDowntimeOnAllocation.id },
+                data: {
+                  status: DowntimeStatus.RESOLVED,
+                  endTime: end,
+                  durationMinutes,
+                },
+              });
+
+              if (allocation.status === ShiftAllocationStatus.ACTIVE) {
+                await tx.machine.update({
+                  where: { id: allocation.machineId },
+                  data: { status: MachineStatus.RUNNING },
+                });
+              }
+
+              processedClientUuids.push(event.clientUuid);
+              continue;
+            }
+          }
+
           // Validar enum motivo de parada
           if (!reason || !Object.values(DowntimeReason).includes(reason)) {
             throw new BadRequestException({
@@ -200,18 +292,6 @@ export class SyncService {
           // 3. RN-05: Validar timestamps (bloqueio de data futura com tolerância máxima de 2 min)
           const start = assertNotFutureDate(startTime, 'O horário de início da parada');
 
-          // 4. Buscar a alocação de turno
-          const allocation = await tx.shiftAllocation.findUnique({
-            where: { id: allocationId },
-            include: { machine: true },
-          });
-
-          if (!allocation) {
-            throw new NotFoundException(
-              `Alocação com identificador '${allocationId}' não encontrada.`,
-            );
-          }
-
           // 4.1. RN-05: Validar consistência com a data do turno da alocação
           assertShiftDateWindow(
             start,
@@ -219,30 +299,6 @@ export class SyncService {
             'A parada',
             allocation.status === ShiftAllocationStatus.ACTIVE,
           );
-
-          // 5. RN-06: Imutabilidade de turno fechado para operadores
-          if (
-            allocation.status === ShiftAllocationStatus.CLOSED &&
-            user.role !== UserRole.GERENTE
-          ) {
-            throw new ForbiddenException({
-              title: 'Acesso Proibido',
-              message: 'Este turno já foi encerrado e não aceita novos apontamentos.',
-              code: 'SHIFT_CLOSED',
-            });
-          }
-
-          // 6. RN-08: Restrição ao operador alocado ou Gerente
-          const isOwner = allocation.operatorId === user.id;
-          const isManager = user.role === UserRole.GERENTE;
-
-          if (!isOwner && !isManager) {
-            throw new ForbiddenException({
-              title: 'Acesso Proibido',
-              message: 'Operador não possui alocação ativa nesta máquina.',
-              code: 'FORBIDDEN_ALLOCATION',
-            });
-          }
 
           // 7. Diferenciar parada consolidada (com endTime) ou em andamento (sem endTime)
           if (endTime) {

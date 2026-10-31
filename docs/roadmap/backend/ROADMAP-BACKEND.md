@@ -15,7 +15,7 @@
 | **Fase 3** | Apontamento de Produção, Paradas & Sincronização Idempotente | [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md) | 🟢 Concluída |
 | **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | 🟢 Concluída |
 | **Fase 5** | Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE | [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md) | 🟢 Concluída |
-| **Fase 6** | Trava Física 1:1 de Máquina, Proteção de Inativação de Operador & Sync de Resolução de Parada | [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md) | 🟡 Em Execução |
+| **Fase 6** | Trava Física 1:1 de Máquina, Proteção de Inativação de Operador & Sync de Resolução de Parada | [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md) | 🟢 Concluída |
 
 ---
 
@@ -122,5 +122,5 @@
 - **Referência Hierárquica:** Fase 6 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md).
 - **Checklist Técnico Sequencial:**
   - [x] 6.1: Trava física 1:1 de máquina em `AllocationsService.create` (`BUG-03`) e proteção contra inativação de operador com alocação ativa em `UsersService.updateStatus` (`BUG-05`)
-  - [ ] 6.2: Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` (`BUG-04`)
+  - [x] 6.2: Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` (`BUG-04`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md)

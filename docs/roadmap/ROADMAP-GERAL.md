@@ -1,6 +1,6 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟡 Fase 6 em Planejamento (Fases 1 a 5 Concluídas)  
+> **Status Geral do Projeto:** 🟢 Fase 6 Concluída (Fases 1 a 6 Concluídas)  
 > **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md)  
 > **Última Atualização:** 2026-10-28  
 
@@ -15,7 +15,7 @@
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟢 Concluída | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
 | **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟢 Concluída | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
-| **6** | Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas) | Backend + Frontend | 🟡 Planejada | BUG-01 a BUG-06, RN-01, RF-02, RF-05, RF-06, RF-07, RF-09, RNF-01, RNF-02 |
+| **6** | Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas) | Backend + Frontend | 🟢 Concluída | BUG-01 a BUG-06, RN-01, RF-02, RF-05, RF-06, RF-07, RF-09, RNF-01, RNF-02 |
 
 ---
 
@@ -141,6 +141,6 @@
   - [x] Gerador UUID v4 via `crypto.getRandomValues` em `OfflineStorage.generateUuid` para suporte a `http://<IP_DA_LAN>:5173` (`BUG-01`)
   - [x] Ordenação decrescente e listagem de pendentes offline em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` no Console Operacional (`BUG-02`)
   - [x] Bloqueio de segunda alocação `ACTIVE` na mesma máquina física no Backend (`AllocationsService.create`) e bloqueio de seleção de máquina `STOPPED` no Frontend (`MachineCard` / `AllocationPage`) (`BUG-03`)
-  - [ ] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
+  - [x] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
   - [x] Proteção contra inativação de operador com alocação `ACTIVE` em `UsersService.updateStatus` (`BUG-05`)
   - [x] Remoção do texto `'Modelo Padrão'` no Dashboard, distinção de erro 409 na Alocação e feedback inline no `DowntimeModal` (`BUG-06`)
