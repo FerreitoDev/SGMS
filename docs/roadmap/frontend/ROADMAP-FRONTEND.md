@@ -15,7 +15,7 @@
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟢 Concluída |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟢 Concluída |
 | **Fase 5** | Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição | [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md) | 🟢 Concluída |
-| **Fase 6** | UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback | [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md) | ⚪ A Iniciar |
+| **Fase 6** | UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback | [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md) | 🟡 Em Execução |
 
 ---
 
@@ -125,7 +125,7 @@
 ### Fase 6: UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback
 - **Referência Hierárquica:** Fase 6 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md).
 - **Checklist Técnico Sequencial:**
-  - [ ] 6.1: Gerador UUID v4 compatível com LAN HTTP em `OfflineStorage.generateUuid` (`BUG-01`)
+  - [x] 6.1: Gerador UUID v4 compatível com LAN HTTP em `OfflineStorage.generateUuid` (`BUG-01`)
   - [ ] 6.2: Ordenação decrescente + exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`) e correção de `handleResolveDowntime` (`BUG-04`)
   - [ ] 6.3: Bloqueio de seleção de máquina `STOPPED` na Alocação (`BUG-03`), remoção do fallback `'Modelo Padrão'` no Dashboard e feedback inline no `DowntimeModal` (`BUG-06`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md)

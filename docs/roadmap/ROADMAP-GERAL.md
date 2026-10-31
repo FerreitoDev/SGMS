@@ -138,7 +138,7 @@
 ### Fase 6: Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas)
 - **Objetivo Estratégico:** Saneamento integral dos 6 problemas diagnosticados em [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md): geração de UUID v4 compatível com rede local LAN HTTP sem HTTPS (`BUG-01`), ordenação decrescente e exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`), bloqueio de alocação concorrente em máquina `STOPPED` ou em turnos distintos (`BUG-03`), sincronização offline de resolução de parada (`BUG-04`), bloqueio de inativação de operador com alocação ativa (`BUG-05`) e eliminação de fallbacks no Dashboard/Alocação (`BUG-06`).
 - **Checklist Macro de Entregas:**
-  - [ ] Gerador UUID v4 via `crypto.getRandomValues` em `OfflineStorage.generateUuid` para suporte a `http://<IP_DA_LAN>:5173` (`BUG-01`)
+  - [x] Gerador UUID v4 via `crypto.getRandomValues` em `OfflineStorage.generateUuid` para suporte a `http://<IP_DA_LAN>:5173` (`BUG-01`)
   - [ ] Ordenação decrescente e listagem de pendentes offline em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` no Console Operacional (`BUG-02`)
   - [ ] Bloqueio de segunda alocação `ACTIVE` na mesma máquina física no Backend (`AllocationsService.create`) e bloqueio de seleção de máquina `STOPPED` no Frontend (`MachineCard` / `AllocationPage`) (`BUG-03`)
   - [ ] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
