@@ -157,7 +157,7 @@
   - `RNF-06`: Cabeçalhos de cache corretos no Nginx para Service Worker (`sw.js`, `manifest.webmanifest`) permitindo funcionamento PWA offline no chão de fábrica.
   - `RNF-07`: Isolamento de rede dos containers (PostgreSQL 16 acessível apenas na rede interna Docker ou localhost administrativo, expondo externamente na LAN apenas a porta `80` do Nginx).
 - **Checklist Macro de Entregas:**
-  - [ ] Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine) e `backend/.dockerignore` com aplicação automática de migrations (`npx prisma migrate deploy`) na subida do container
+  - [x] Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine) e `backend/.dockerignore` com aplicação automática de migrations (`npx prisma migrate deploy`) na subida do container
   - [ ] Criação de `frontend/Dockerfile` (multi-stage Node 20 Alpine $\rightarrow$ Nginx Alpine), `frontend/nginx.conf` (SPA routing `try_files` + proxy reverso `/api` $\rightarrow$ `sgms-backend:3001` + cache PWA) e `frontend/.dockerignore`
   - [ ] Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 com `healthcheck` e volume persistente), `sgms-backend` e `sgms-web` (porta `80`) com `restart: unless-stopped`
   - [ ] Elaboração do `README.md` central na raiz do projeto documentando arquitetura, guia passo a passo de desenvolvimento (Linux/WSL2 + teste no celular), guia de implantação em produção no Ubuntu Server 24.04 LTS (Docker, Netplan IP Fixo, `avahi-daemon` para `http://sgms.local`) e comandos de manutenção/backup

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 7 (Backend & Infraestrutura On-Premise)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 7 (Containerização Multi-Stage do Backend, Orquestração `docker-compose.yml` para Servidor Linux On-Premise e `README.md` Central)  
-> **Status:** ⚪ A Iniciar (0 de 3 Tarefas Concluídas — 0%)  
+> **Status:** 🟡 Em Execução (1 de 3 Tarefas Concluídas — 33%)  
 > **Módulo:** Backend & Infraestrutura (NestJS 10 + Prisma ORM + PostgreSQL 16 + Docker Compose)  
 > **Data de Criação:** 2026-10-31  
 > **Fonte da Verdade:** [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,12 +29,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 7 (Backend): [--------------------------------] 0% Concluído (0 de 3 tarefas)
+Progresso da Fase 7 (Backend): [===========---------------------] 33% Concluído (1 de 3 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **7.1** | Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore` | ⚪ Pendente | `backend/Dockerfile`, `backend/.dockerignore` |
+| **7.1** | Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore` | 🟢 Concluída | `backend/Dockerfile`, `backend/.dockerignore` |
 | **7.2** | Criação de `docker-compose.yml` e `.env.production.example` na Raiz | ⚪ Pendente | `docker-compose.yml`, `.env.production.example` |
 | **7.3** | Elaboração do `README.md` Central de Arquitetura, Dev Local e Deploy Linux | ⚪ Pendente | `README.md` |
 
@@ -44,18 +44,18 @@ Progresso da Fase 7 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⬜ Tarefa 7.1: Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore`
+### 🟢 Tarefa 7.1: Criação de `backend/Dockerfile` Multi-Stage e `backend/.dockerignore`
 - **Objetivo:** Empacotar o backend NestJS 10 + Prisma ORM em imagem Docker enxuta e segura (Node 20 Alpine), garantindo aplicação automática de migrations no boot.
 - **Arquivos a Criar:**
   - `backend/.dockerignore`
   - `backend/Dockerfile`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar `backend/.dockerignore` excluindo `node_modules`, `dist`, `.env`, `coverage` e `.git`
-  - [ ] Criar `backend/Dockerfile` em 2 estágios (`node:20-alpine`):
-    - [ ] Estágio `builder`: instalar `openssl`, copiar `package*.json` e `prisma/`, rodar `npm ci`, copiar código-fonte, executar `npx prisma generate` e `npm run build` (`nest build`), seguido de `npm prune --omit=dev`
-    - [ ] Estágio `runner`: instalar `openssl` (requerido pelo query engine do Prisma), definir `NODE_ENV=production`, copiar `node_modules`, `dist`, `package.json` e `prisma/` do `builder`, expor porta `3001` e definir `CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]`
+  - [x] Criar `backend/.dockerignore` excluindo `node_modules`, `dist`, `.env`, `coverage` e `.git`
+  - [x] Criar `backend/Dockerfile` em 2 estágios (`node:20-alpine`):
+    - [x] Estágio `builder`: instalar `openssl`, copiar `package*.json` e `prisma/`, rodar `npm ci`, copiar código-fonte, executar `npx prisma generate` e `npm run build` (`nest build`)
+    - [x] Estágio `runner`: instalar `openssl` (requerido pelo query engine do Prisma), definir `NODE_ENV=production`, copiar `node_modules`, `dist`, `package.json` e `prisma/` do `builder`, expor porta `3001` e definir `CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/main.js"]`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npm --prefix backend run build` continua 100% verde e `backend/Dockerfile` segue todas as dependências de runtime do Prisma + PDFKit.
+  - [x] **Caminho Normal:** `npm --prefix backend run build` continua 100% verde e `backend/Dockerfile` segue todas as dependências de runtime do Prisma + PDFKit.
 
 ---
 
