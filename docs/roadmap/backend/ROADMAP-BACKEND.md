@@ -14,7 +14,8 @@
 | **Fase 2** | Cadastros de Máquinas, Turnos & Alocação 1:1 com Trava ACID | [PLANO-FASE-2-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-2-BACKEND.md) | 🟢 Concluída |
 | **Fase 3** | Apontamento de Produção, Paradas & Sincronização Idempotente | [PLANO-FASE-3-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-3-BACKEND.md) | 🟢 Concluída |
 | **Fase 4** | Fechamento de Turno, Agregações & Relatórios (CSV/PDFKit) | [PLANO-FASE-4-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-4-BACKEND.md) | 🟢 Concluída |
-| **Fase 5** | Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE | [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md) | ⚪ A Iniciar |
+| **Fase 5** | Pausa Planejada (`REFEICAO_INTERVALO`) & Segregação Estatística OEE | [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md) | 🟢 Concluída |
+| **Fase 6** | Trava Física 1:1 de Máquina, Proteção de Inativação de Operador & Sync de Resolução de Parada | [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md) | ⚪ A Iniciar |
 
 ---
 
@@ -114,3 +115,12 @@
   - [x] 5.1: Atualização do `prisma/schema.prisma`, migration SQL para adicionar `REFEICAO_INTERVALO` ao enum `DowntimeReason` e atualização de `DOWNTIME_REASON_LABELS`
   - [x] 5.2: Refatoração de `ReportsService` (`getDashboardMetrics` e `getDetailedAllocationRows`) aplicando a segregação OEE (`RN-10`) e testes unitários/E2E
 - **Plano de Execução Vinculado:** [PLANO-FASE-5-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-5-BACKEND.md)
+
+---
+
+### Fase 6: Trava Física 1:1 de Máquina, Proteção de Inativação de Operador & Sync de Resolução de Parada
+- **Referência Hierárquica:** Fase 6 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md).
+- **Checklist Técnico Sequencial:**
+  - [ ] 6.1: Trava física 1:1 de máquina em `AllocationsService.create` (`BUG-03`) e proteção contra inativação de operador com alocação ativa em `UsersService.updateStatus` (`BUG-05`)
+  - [ ] 6.2: Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` (`BUG-04`)
+- **Plano de Execução Vinculado:** [PLANO-FASE-6-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/PLANO-FASE-6-BACKEND.md)

@@ -1,7 +1,7 @@
 # SGMS — Roadmap Geral Integrado (Nível 1)
 
-> **Status Geral do Projeto:** 🟡 Fase 5 em Planejamento (Fases 1 a 4 Concluídas)  
-> **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md)  
+> **Status Geral do Projeto:** 🟡 Fase 6 em Planejamento (Fases 1 a 5 Concluídas)  
+> **Fonte da Verdade:** [00-visao-e-post-mortems.md](file:///home/ferreito/SGMS/docs/00-visao-e-post-mortems.md) a [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md)  
 > **Última Atualização:** 2026-10-28  
 
 ---
@@ -14,7 +14,8 @@
 | **2** | Cadastros Operacionais e Alocação de Turno | Backend + Frontend | 🟢 Concluída | RF-03, RF-04, RF-05, RNF-01, RNF-02, RNF-03 |
 | **3** | Apontamentos Touch e Sincronização Offline | Backend + Frontend | 🟢 Concluída | RF-06, RF-07, RF-08, RF-09, RNF-03, RNF-04 |
 | **4** | Dashboard de Gargalos e Relatórios Gerenciais | Backend + Frontend | 🟢 Concluída | RF-10, RF-11, RNF-01, RNF-05 |
-| **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟡 Planejada | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
+| **5** | Refinamento de UX de Paradas e Pausa Planejada (OEE) | Backend + Frontend | 🟢 Concluída | RF-07, RF-08, RF-10, RF-11, RN-09, RN-10, RNF-01, RNF-03 |
+| **6** | Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas) | Backend + Frontend | 🟡 Planejada | BUG-01 a BUG-06, RN-01, RF-02, RF-05, RF-06, RF-07, RF-09, RNF-01, RNF-02 |
 
 ---
 
@@ -119,15 +120,27 @@
   - `RF-08` & `RN-09`: Bloqueio de edição do timestamp de início na aba **Tempo Real (Agora)**, mantendo edição livre de início e término apenas na aba **Lançamento Retroativo**.
   - `RF-10`, `RF-11` & `RN-10`: Exclusão de `REFEICAO_INTERVALO` do ranking/gráfico de Pareto de Gargalos e dedução do tempo de pausa planejada do Tempo Planejado do Turno ($T_{disp\_turno} = T_{planejado\_turno} - T_{pausa\_planejada}$) nos KPIs e relatórios.
 - **Checklist Macro de Entregas:**
-  - [ ] Migration Prisma adicionando `REFEICAO_INTERVALO` ao enum `DowntimeReason` no PostgreSQL
-  - [ ] Atualização das queries analíticas de Dashboard e Relatórios no Backend (exclusão de `REFEICAO_INTERVALO` do Pareto e ajuste da fórmula de Disponibilidade OEE)
-  - [ ] Remoção do botão secundário redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` no Console Operacional do Frontend
-  - [ ] Travamento do horário de início na aba **Tempo Real (Agora)** do `DowntimeModal` (RN-09) e inclusão da opção `"Refeição / Intervalo"` (`REFEICAO_INTERVALO`)
-  - [ ] Remoção dos botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e das setas (`spinners`) do input numérico no `ProductionDrawer`
-  - [ ] Correção do roteamento RBAC (`AppRoutes`, `ProtectedRoute` e `LoginPage`) para impedir que o `GERENTE` seja redirecionado para telas de `OPERADOR` após troca de conta
+  - [x] Migration Prisma adicionando `REFEICAO_INTERVALO` ao enum `DowntimeReason` no PostgreSQL
+  - [x] Atualização das queries analíticas de Dashboard e Relatórios no Backend (exclusão de `REFEICAO_INTERVALO` do Pareto e ajuste da fórmula de Disponibilidade OEE)
+  - [x] Remoção do botão secundário redundante `"Lançar Parada Ocorrida Anteriormente (Retroativa)"` no Console Operacional do Frontend
+  - [x] Travamento do horário de início na aba **Tempo Real (Agora)** do `DowntimeModal` (RN-09) e inclusão da opção `"Refeição / Intervalo"` (`REFEICAO_INTERVALO`)
+  - [x] Remoção dos botões de adição rápida (`+50`, `+100`, `+250`, `+500`) e das setas (`spinners`) do input numérico no `ProductionDrawer`
+  - [x] Correção do roteamento RBAC (`AppRoutes`, `ProtectedRoute` e `LoginPage`) para impedir que o `GERENTE` seja redirecionado para telas de `OPERADOR` após troca de conta
 - **Critérios de Conclusão da Fase:**
   - Console Operacional apresenta apenas o botão `"Registrar Parada de Linha"` para acionamento de paradas, e o `ProductionDrawer` exibe apenas o input numérico limpo (sem setas e sem botões `+50`/`+100`).
   - Ao fazer logout da conta de Operador e entrar na conta de Gerente, o sistema redireciona diretamente para `/admin/dashboard` e bloqueia acesso de Gerente às rotas `/chao-de-fabrica/*`.
   - Na aba **Tempo Real (Agora)**, o operador não consegue editar a data/hora de início; na aba **Lançamento Retroativo**, os campos de Início e Término são editáveis.
   - Paradas lançadas com motivo `REFEICAO_INTERVALO` param a máquina normalmente, mas não aparecem como gargalo no Gráfico de Pareto e não reduzem a disponibilidade operacional ($D$) do turno.
   - Compilação (`npm run build`) e testes unitários/integração passando no Backend e Frontend.
+
+---
+
+### Fase 6: Resolução de Bugs Críticos (LAN HTTP, Alocação Física 1:1, Últimos Lançamentos e Sync de Paradas)
+- **Objetivo Estratégico:** Saneamento integral dos 6 problemas diagnosticados em [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md): geração de UUID v4 compatível com rede local LAN HTTP sem HTTPS (`BUG-01`), ordenação decrescente e exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`), bloqueio de alocação concorrente em máquina `STOPPED` ou em turnos distintos (`BUG-03`), sincronização offline de resolução de parada (`BUG-04`), bloqueio de inativação de operador com alocação ativa (`BUG-05`) e eliminação de fallbacks no Dashboard/Alocação (`BUG-06`).
+- **Checklist Macro de Entregas:**
+  - [ ] Gerador UUID v4 via `crypto.getRandomValues` em `OfflineStorage.generateUuid` para suporte a `http://<IP_DA_LAN>:5173` (`BUG-01`)
+  - [ ] Ordenação decrescente e listagem de pendentes offline em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` no Console Operacional (`BUG-02`)
+  - [ ] Bloqueio de segunda alocação `ACTIVE` na mesma máquina física no Backend (`AllocationsService.create`) e bloqueio de seleção de máquina `STOPPED` no Frontend (`MachineCard` / `AllocationPage`) (`BUG-03`)
+  - [ ] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
+  - [ ] Proteção contra inativação de operador com alocação `ACTIVE` em `UsersService.updateStatus` (`BUG-05`)
+  - [ ] Remoção do texto `'Modelo Padrão'` no Dashboard, distinção de erro 409 na Alocação e feedback inline no `DowntimeModal` (`BUG-06`)

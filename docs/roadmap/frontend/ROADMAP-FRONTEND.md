@@ -15,6 +15,7 @@
 | **Fase 3** | Console Operacional Touch, Modal de Paradas & Persistência IndexedDB (PWA) | [PLANO-FASE-3-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-3-FRONTEND.md) | 🟢 Concluída |
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟢 Concluída |
 | **Fase 5** | Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição | [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md) | 🟢 Concluída |
+| **Fase 6** | UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback | [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md) | ⚪ A Iniciar |
 
 ---
 
@@ -118,3 +119,13 @@
   - [x] 5.4: Correção do isolamento de rotas por perfil (`AppRoutes`, `ProtectedRoute` e `LoginPage`) impedindo que o `GERENTE` seja redirecionado para telas de `OPERADOR`
   - [x] 5.5: Travamento de data/hora no `ProductionDrawer` (`RN-09`), correção do submit/schema Zod (`noValidate` + `z.preprocess`) e distinção entre erro HTTP 4xx e falha de rede offline
 - **Plano de Execução Vinculado:** [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md)
+
+---
+
+### Fase 6: UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback
+- **Referência Hierárquica:** Fase 6 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md).
+- **Checklist Técnico Sequencial:**
+  - [ ] 6.1: Gerador UUID v4 compatível com LAN HTTP em `OfflineStorage.generateUuid` (`BUG-01`)
+  - [ ] 6.2: Ordenação decrescente + exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`) e correção de `handleResolveDowntime` (`BUG-04`)
+  - [ ] 6.3: Bloqueio de seleção de máquina `STOPPED` na Alocação (`BUG-03`), remoção do fallback `'Modelo Padrão'` no Dashboard e feedback inline no `DowntimeModal` (`BUG-06`)
+- **Plano de Execução Vinculado:** [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md)
