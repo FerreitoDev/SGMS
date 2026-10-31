@@ -29,8 +29,8 @@ async function bootstrap() {
   );
 
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
-  await app.listen(port);
-  logger.log(`SGMS Backend em execução na porta ${port} com prefixo /api`);
+  await app.listen(port, '0.0.0.0');
+  logger.log(`SGMS Backend em execução na porta ${port} (0.0.0.0) com prefixo /api`);
 }
 
 void bootstrap();

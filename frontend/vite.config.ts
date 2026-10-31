@@ -56,7 +56,23 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    host: true, // Disponibiliza na rede local (LAN) para tablets e celulares industriais
+    host: '0.0.0.0', // Escuta explicitamente em IPv4 0.0.0.0 para funcionar em qualquer LAN e WSL2 portproxy
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+    },
+  },
+  preview: {
+    port: 5173,
+    host: '0.0.0.0',
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+    },
   },
 });
 
