@@ -18,7 +18,7 @@ import { Machine, Shift } from '@/types/domain';
 import { machinesService } from '@/services/machines-service';
 import { shiftsService } from '@/services/shifts-service';
 import { allocationsService } from '@/services/allocations-service';
-import { extractProblemDetail } from '@/lib/api-client';
+import { ProblemDetailsError, extractProblemDetail } from '@/lib/api-client';
 import { MachineCard } from '@/components/machines/machine-card';
 import { ShiftCard } from '@/components/shifts/shift-card';
 import { Button } from '@/components/ui/button';
@@ -118,20 +118,25 @@ export function AllocationPage(): React.ReactElement {
     } catch (err: unknown) {
       const detail = extractProblemDetail(err);
 
-      // Em caso de concorrência ou máquina ocupada (HTTP 409)
-      // Atualiza o card local para RUNNING e limpa seleção
-      setMachines((prev) =>
-        prev.map((m) =>
-          m.id === selectedMachine.id
-            ? { ...m, status: 'RUNNING' }
-            : m
-        )
-      );
-      setSelectedMachine(null);
+      if (err instanceof ProblemDetailsError && err.code === 'MACHINE_ALREADY_ALLOCATED') {
+        setMachines((prev) =>
+          prev.map((m) =>
+            m.id === selectedMachine.id
+              ? { ...m, status: 'RUNNING' }
+              : m
+          )
+        );
+        setSelectedMachine(null);
 
-      toast.error('Máquina já alocada por outro operador.', {
-        description: detail,
-      });
+        toast.error('Máquina já alocada por outro operador.', {
+          description: detail,
+        });
+      } else {
+        toast.error(
+          err instanceof ProblemDetailsError ? err.title : 'Não foi possível assumir a máquina',
+          { description: detail }
+        );
+      }
 
       // Recarrega lista para sincronizar estado em background
       loadData();
@@ -278,7 +283,7 @@ export function AllocationPage(): React.ReactElement {
               </h2>
             </div>
             <span className="text-xs text-muted-foreground">
-              {machines.filter((m) => m.isActive && m.status !== 'RUNNING' && m.status !== 'INACTIVE').length} disponíveis
+              {machines.filter((m) => m.isActive && m.status === 'IDLE').length} disponíveis
             </span>
           </div>
 

@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 6 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 6 (Resolução de Bugs Críticos: UUID v4 em Rede Local LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` e Integridade Zero Fallback)  
-> **Status:** 🟡 Em Execução (2 de 3 Tarefas Concluídas — 67%)  
+> **Status:** 🟢 Concluído (3 de 3 Tarefas Concluídas — 100%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + IndexedDB)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -30,14 +30,14 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 6 (Frontend): [=====================-----------] 67% Concluído (2 de 3 tarefas)
+Progresso da Fase 6 (Frontend): [================================] 100% Concluído (3 de 3 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **6.1** | Gerador UUID v4 Compatível com LAN HTTP em `OfflineStorage` (`BUG-01`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts` |
 | **6.2** | Ordenação Decrescente + Buffer em `"ÚLTIMOS LANÇAMENTOS"` (`BUG-02`) & Retomada de Produção (`BUG-04`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx` |
-| **6.3** | Bloqueio de Máquina `STOPPED` na Alocação (`BUG-03`), Zero Fallback no Dashboard & Erro Inline em `DowntimeModal` (`BUG-06`) | ⚪ Pendente | `frontend/src/components/machines/machine-card.tsx`, `frontend/src/pages/operator/allocation-page.tsx`, `frontend/src/pages/admin/dashboard-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
+| **6.3** | Bloqueio de Máquina `STOPPED` na Alocação (`BUG-03`), Zero Fallback no Dashboard & Erro Inline em `DowntimeModal` (`BUG-06`) | 🟢 Concluída | `frontend/src/components/machines/machine-card.tsx`, `frontend/src/pages/operator/allocation-page.tsx`, `frontend/src/pages/admin/dashboard-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 
 ---
 
@@ -71,7 +71,7 @@ Progresso da Fase 6 (Frontend): [=====================-----------] 67% Concluíd
 
 ---
 
-### ⬜ Tarefa 6.3: Bloqueio de Máquina `STOPPED` na Alocação (`BUG-03`), Zero Fallback no Dashboard & Erro Inline em `DowntimeModal` (`BUG-06`)
+### 🟢 Tarefa 6.3: Bloqueio de Máquina `STOPPED` na Alocação (`BUG-03`), Zero Fallback no Dashboard & Erro Inline em `DowntimeModal` (`BUG-06`)
 - **Objetivo:** Impedir seleção de máquina em parada ativa (`STOPPED`) na tela de alocação, eliminar o fallback `'Modelo Padrão'` no Dashboard Gerencial e exibir mensagens de erro da API diretamente dentro da gaveta `DowntimeModal`.
 - **Arquivos a Modificar:**
   - `frontend/src/components/machines/machine-card.tsx`
@@ -79,10 +79,10 @@ Progresso da Fase 6 (Frontend): [=====================-----------] 67% Concluíd
   - `frontend/src/pages/admin/dashboard-page.tsx`
   - `frontend/src/components/downtime/downtime-modal.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `MachineCard` (`machine-card.tsx`) e no contador de disponíveis de `AllocationPage` (`allocation-page.tsx`): alterar a condição de disponibilidade para `machine.isActive && machine.status === 'IDLE'`, bloqueando o clique em máquinas com status `STOPPED` (exibindo badge `"Parada (Em Uso)"`)
-  - [ ] Em `AllocationPage.handleConfirmAllocation`: marcar localmente a máquina como `'RUNNING'` somente quando o erro for `MACHINE_ALREADY_ALLOCATED` (HTTP 409); nos demais erros, exibir a descrição real retornada pela API
-  - [ ] Em `ManagerDashboardPage` (`dashboard-page.tsx`): substituir `'Modelo Padrão'` por `'Modelo não informado'` quando `machine.model` for `null`
-  - [ ] Em `DowntimeModal` (`downtime-modal.tsx`): adicionar estado `apiError: string | null` e renderizar o alerta de erro dentro do formulário do `Sheet` caso a chamada HTTP retorne `ProblemDetailsError`
+  - [x] Em `MachineCard` (`machine-card.tsx`) e no contador de disponíveis de `AllocationPage` (`allocation-page.tsx`): alterar a condição de disponibilidade para `machine.isActive && machine.status === 'IDLE'`, bloqueando o clique em máquinas com status `STOPPED` (exibindo badge `"Parada (Em Uso)"`)
+  - [x] Em `AllocationPage.handleConfirmAllocation`: marcar localmente a máquina como `'RUNNING'` somente quando o erro for `MACHINE_ALREADY_ALLOCATED` (HTTP 409); nos demais erros, exibir a descrição real retornada pela API
+  - [x] Em `ManagerDashboardPage` (`dashboard-page.tsx`): substituir `'Modelo Padrão'` por `'Modelo não informado'` quando `machine.model` for `null`
+  - [x] Em `DowntimeModal` (`downtime-modal.tsx`): adicionar estado `apiError: string | null` e renderizar o alerta de erro dentro do formulário do `Sheet` caso a chamada HTTP retorne `ProblemDetailsError`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Máquinas `STOPPED` ficam bloqueadas na tela de alocação; `SOPRO-04` exibe `'Modelo não informado'` no Dashboard; `npm --prefix frontend run build` compila sem erros.
+  - [x] **Caminho Normal:** Máquinas `STOPPED` ficam bloqueadas na tela de alocação; `SOPRO-04` exibe `'Modelo não informado'` no Dashboard; `npm --prefix frontend run build` compila sem erros.
 

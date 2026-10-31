@@ -59,6 +59,7 @@ export function DowntimeModal({
   onSuccess,
 }: DowntimeModalProps): React.ReactElement {
   const [isRetroactive, setIsRetroactive] = useState<boolean>(initialIsRetroactive);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -83,6 +84,7 @@ export function DowntimeModal({
   useEffect(() => {
     if (open) {
       setIsRetroactive(initialIsRetroactive);
+      setApiError(null);
       reset({
         reason: undefined,
         justification: '',
@@ -95,6 +97,7 @@ export function DowntimeModal({
 
   const handleToggleMode = (retroactive: boolean): void => {
     setIsRetroactive(retroactive);
+    setApiError(null);
     setValue('isRetroactive', retroactive, { shouldValidate: true });
     setValue('startTime', getCurrentLocalDateTime(), { shouldValidate: true });
     if (retroactive) {
@@ -103,6 +106,7 @@ export function DowntimeModal({
   };
 
   const onSubmit = async (data: DowntimeFormData): Promise<void> => {
+    setApiError(null);
     const clientUuid = OfflineStorage.generateUuid();
     const nowIso = new Date().toISOString();
     const startTimeIso = data.isRetroactive ? new Date(data.startTime).toISOString() : nowIso;
@@ -159,8 +163,10 @@ export function DowntimeModal({
             // Ignora
           }
           notifyStorageUpdated();
+          const detail = extractProblemDetail(err);
+          setApiError(detail);
           toast.error('Não foi possível registrar a parada retroativa', {
-            description: extractProblemDetail(err),
+            description: detail,
           });
           return;
         }
@@ -217,8 +223,10 @@ export function DowntimeModal({
             // Ignora
           }
           notifyStorageUpdated();
+          const detail = extractProblemDetail(err);
+          setApiError(detail);
           toast.error('Não foi possível registrar a parada', {
-            description: extractProblemDetail(err),
+            description: detail,
           });
           return;
         }
@@ -391,6 +399,15 @@ export function DowntimeModal({
               </div>
             )}
           </div>
+
+          {apiError && (
+            <div
+              role="alert"
+              className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs font-semibold text-destructive"
+            >
+              {apiError}
+            </div>
+          )}
 
           <SheetFooter className="pt-2 flex-col sm:flex-row gap-2">
             <Button

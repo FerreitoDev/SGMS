@@ -17,7 +17,7 @@
 | **BUG-03** | 🔴 Crítica | Máquina `STOPPED` ou em turno/data distinta aceita segunda alocação `ACTIVE` simultânea | Backend + Frontend | `RN-01`, `RF-05` | ⚪ Pendente |
 | **BUG-04** | 🔴 Crítica | Resolução de Parada Offline (`Retomar Produção`) incompatível com `SyncService.processBatch` | Backend + Frontend | `RF-07`, `RF-09`, `RNF-04` | ⚪ Pendente |
 | **BUG-05** | 🟠 Alta | Inativação de Operador com alocação `ACTIVE` deixa máquina presa em `RUNNING` (alocação órfã) | Backend | `RF-02`, `RN-01` | ⚪ Pendente |
-| **BUG-06** | 🟡 Média | Violação de Zero Fallback (`'Modelo Padrão'`), falso erro 409 na Alocação e falta de erro inline no `DowntimeModal` | Frontend | `RNF-01`, Zero Fallback | ⚪ Pendente |
+| **BUG-06** | 🟡 Média | Violação de Zero Fallback (`'Modelo Padrão'`), falso erro 409 na Alocação e falta de erro inline no `DowntimeModal` | Frontend | `RNF-01`, Zero Fallback | 🟢 Concluído |
 
 ---
 

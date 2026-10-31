@@ -17,10 +17,7 @@ export function MachineCard({
   onSelect,
   className,
 }: MachineCardProps): React.ReactElement {
-  const isAvailable =
-    machine.isActive &&
-    machine.status !== 'INACTIVE' &&
-    machine.status !== 'RUNNING';
+  const isAvailable = machine.isActive && machine.status === 'IDLE';
 
   const isRunning = machine.status === 'RUNNING';
   const isInactive = !machine.isActive || machine.status === 'INACTIVE';
@@ -105,9 +102,10 @@ export function MachineCard({
           ) : machine.status === 'STOPPED' ? (
             <Badge
               variant="warning"
-              className="border-amber-500/30 bg-amber-500/15 text-amber-700 dark:text-amber-400 font-semibold"
+              className="flex items-center gap-1 border-amber-500/30 bg-amber-500/15 text-amber-700 dark:text-amber-400 font-semibold"
             >
-              Parada
+              <AlertTriangle className="h-3 w-3" />
+              Parada (Em Uso)
             </Badge>
           ) : (
             <Badge

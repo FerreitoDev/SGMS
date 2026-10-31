@@ -143,4 +143,4 @@
   - [ ] Bloqueio de segunda alocação `ACTIVE` na mesma máquina física no Backend (`AllocationsService.create`) e bloqueio de seleção de máquina `STOPPED` no Frontend (`MachineCard` / `AllocationPage`) (`BUG-03`)
   - [ ] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
   - [ ] Proteção contra inativação de operador com alocação `ACTIVE` em `UsersService.updateStatus` (`BUG-05`)
-  - [ ] Remoção do texto `'Modelo Padrão'` no Dashboard, distinção de erro 409 na Alocação e feedback inline no `DowntimeModal` (`BUG-06`)
+  - [x] Remoção do texto `'Modelo Padrão'` no Dashboard, distinção de erro 409 na Alocação e feedback inline no `DowntimeModal` (`BUG-06`)

@@ -350,7 +350,7 @@ export function ManagerDashboardPage(): React.ReactElement {
                           {machine.name}
                         </span>
                         <span className="text-[11px] text-muted-foreground truncate">
-                          {machine.model ? machine.model : 'Modelo Padrão'}
+                          {machine.model ? machine.model : 'Modelo não informado'}
                         </span>
                       </div>
                     </CardContent>
