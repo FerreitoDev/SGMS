@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 7 (Frontend & Proxy Reverso Nginx)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 7 (Containerização Multi-Stage do Frontend React/Vite + Servidor Nginx Porta 80 com SPA Fallback, Cache PWA e Proxy Reverso `/api`)  
-> **Status:** ⚪ A Iniciar (0 de 1 Tarefa Concluída — 0%)  
+> **Status:** 🟢 Concluído (1 de 1 Tarefa Concluída — 100%)  
 > **Módulo:** Frontend & Servidor Web (React 18 + Vite + PWA + Nginx 1.27 Alpine)  
 > **Data de Criação:** 2026-10-31  
 > **Fonte da Verdade:** [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md) | [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -28,12 +28,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 7 (Frontend): [--------------------------------] 0% Concluído (0 de 1 tarefa)
+Progresso da Fase 7 (Frontend): [================================] 100% Concluído (1 de 1 tarefa)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **7.1** | Criação de `frontend/nginx.conf`, `frontend/Dockerfile` Multi-Stage e `frontend/.dockerignore` | ⚪ Pendente | `frontend/nginx.conf`, `frontend/Dockerfile`, `frontend/.dockerignore` |
+| **7.1** | Criação de `frontend/nginx.conf`, `frontend/Dockerfile` Multi-Stage e `frontend/.dockerignore` | 🟢 Concluída | `frontend/nginx.conf`, `frontend/Dockerfile`, `frontend/.dockerignore` |
 
 ---
 
@@ -41,26 +41,26 @@ Progresso da Fase 7 (Frontend): [--------------------------------] 0% Concluído
 
 ---
 
-### ⬜ Tarefa 7.1: Criação de `frontend/nginx.conf`, `frontend/Dockerfile` Multi-Stage e `frontend/.dockerignore`
+### 🟢 Tarefa 7.1: Criação de `frontend/nginx.conf`, `frontend/Dockerfile` Multi-Stage e `frontend/.dockerignore`
 - **Objetivo:** Construir a imagem de produção do Frontend servida por Nginx na porta `80` com roteamento SPA, cache PWA apropriado e proxy reverso transparente `/api` para o container `sgms-backend`.
 - **Arquivos a Criar:**
   - `frontend/.dockerignore`
   - `frontend/nginx.conf`
   - `frontend/Dockerfile`
 - **Checklist de Execução Detalhado:**
-  - [ ] Criar `frontend/.dockerignore` excluindo `node_modules`, `dist`, `.env` e `.git`
-  - [ ] Criar `frontend/nginx.conf` contendo:
-    - [ ] Escuta na porta `80` (`listen 80;`) e `root /usr/share/nginx/html;`
-    - [ ] Habilitação de compressão `gzip` para `text/plain`, `text/css`, `application/json`, `application/javascript`, `image/svg+xml`
-    - [ ] Bloco `location /api/` com `proxy_pass http://sgms-backend:3001/api/;` e repasse de headers (`Host`, `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`)
-    - [ ] Bloco para `index.html`, `sw.js`, `registerSW.js` e `manifest.webmanifest` com `add_header Cache-Control "no-cache, no-store, must-revalidate";`
-    - [ ] Bloco `location /assets/` com `expires 1y; add_header Cache-Control "public, immutable";`
-    - [ ] Bloco `location /` com `try_files $uri $uri/ /index.html;`
-  - [ ] Criar `frontend/Dockerfile` multi-stage:
-    - [ ] Estágio `builder` (`node:20-alpine`): definir `ENV VITE_API_URL=/api` e `ENV VITE_APP_NAME=SGMS`, rodar `npm ci` e `npm run build`
-    - [ ] Estágio `runner` (`nginx:1.27-alpine`): copiar `frontend/nginx.conf` para `/etc/nginx/conf.d/default.conf`, copiar `/app/dist` para `/usr/share/nginx/html` e expor porta `80`
+  - [x] Criar `frontend/.dockerignore` excluindo `node_modules`, `dist`, `.env` e `.git`
+  - [x] Criar `frontend/nginx.conf` contendo:
+    - [x] Escuta na porta `80` (`listen 80;`) e `root /usr/share/nginx/html;`
+    - [x] Habilitação de compressão `gzip` para `text/plain`, `text/css`, `application/json`, `application/javascript`, `image/svg+xml`
+    - [x] Bloco `location /api/` com `proxy_pass http://sgms-backend:3001/api/;` e repasse de headers (`Host`, `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`)
+    - [x] Bloco para `index.html`, `sw.js`, `registerSW.js` e `manifest.webmanifest` com `add_header Cache-Control "no-cache, no-store, must-revalidate";`
+    - [x] Bloco `location /assets/` com `expires 1y; add_header Cache-Control "public, immutable";`
+    - [x] Bloco `location /` com `try_files $uri $uri/ /index.html;`
+  - [x] Criar `frontend/Dockerfile` multi-stage:
+    - [x] Estágio `builder` (`node:20-alpine`): definir `ENV VITE_API_URL=/api` e `ENV VITE_APP_NAME=SGMS`, rodar `npm ci` e `npm run build`
+    - [x] Estágio `runner` (`nginx:1.27-alpine`): copiar `frontend/nginx.conf` para `/etc/nginx/conf.d/default.conf`, copiar `/app/dist` para `/usr/share/nginx/html` e expor porta `80`
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** `npm --prefix frontend run build` compila sem erros com `VITE_API_URL=/api` e o `nginx.conf` atende integralmente às rotas do SPA e ao proxy `/api`.
+  - [x] **Caminho Normal:** `npm --prefix frontend run build` compila sem erros com `VITE_API_URL=/api` e o `nginx.conf` atende integralmente às rotas do SPA e ao proxy `/api`.
 
 ---
 
