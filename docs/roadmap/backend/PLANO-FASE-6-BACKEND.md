@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 6 (Backend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 6 (Resolução de Bugs Críticos: Exclusividade Física de Alocação, Proteção de Inativação de Operador e Sincronização Offline de Resolução de Parada)  
-> **Status:** ⚪ A Iniciar (0 de 2 Tarefas Concluídas — 0%)  
+> **Status:** 🟡 Em Execução (1 de 2 Tarefas Concluídas — 50%)  
 > **Módulo:** Backend (NestJS 10 + TypeScript Estrito + Prisma ORM + PostgreSQL 16)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [ROADMAP-BACKEND.md](file:///home/ferreito/SGMS/docs/roadmap/backend/ROADMAP-BACKEND.md)  
@@ -29,12 +29,12 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 6 (Backend): [--------------------------------] 0% Concluído (0 de 2 tarefas)
+Progresso da Fase 6 (Backend): [================----------------] 50% Concluído (1 de 2 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
-| **6.1** | Trava Física 1:1 de Máquina (`BUG-03`) & Proteção de Inativação de Operador (`BUG-05`) | ⚪ Pendente | `backend/src/modules/allocations/allocations.service.ts`, `backend/src/modules/users/users.service.ts` |
+| **6.1** | Trava Física 1:1 de Máquina (`BUG-03`) & Proteção de Inativação de Operador (`BUG-05`) | 🟢 Concluída | `backend/src/modules/allocations/allocations.service.ts`, `backend/src/modules/users/users.service.ts` |
 | **6.2** | Resolução de Parada Ativa no `SyncService.processBatch` (`BUG-04`) | ⚪ Pendente | `backend/src/modules/sync/sync.service.ts` |
 
 ---
@@ -43,21 +43,21 @@ Progresso da Fase 6 (Backend): [--------------------------------] 0% Concluído 
 
 ---
 
-### ⬜ Tarefa 6.1: Trava Física 1:1 de Máquina (`BUG-03`) & Proteção de Inativação de Operador (`BUG-05`)
+### 🟢 Tarefa 6.1: Trava Física 1:1 de Máquina (`BUG-03`) & Proteção de Inativação de Operador (`BUG-05`)
 - **Objetivo:** Garantir em `AllocationsService.create` que uma máquina nunca receba segunda alocação `ACTIVE` simultânea (independentemente de turno/data ou se estiver `STOPPED`), e garantir em `UsersService.updateStatus` que um operador com alocação `ACTIVE` não possa ser inativado antes do encerramento/liberação da máquina.
 - **Arquivos a Modificar:**
   - `backend/src/modules/allocations/allocations.service.ts`
   - `backend/src/modules/users/users.service.ts`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `AllocationsService.create`:
-    - [ ] Verificar `where: { machineId: dto.machineId, status: ShiftAllocationStatus.ACTIVE }` (sem restringir por `shiftId` e `shiftDate`), garantindo que qualquer alocação `ACTIVE` aberta na máquina dispare `ConflictException` (`HTTP 409 MACHINE_ALREADY_ALLOCATED`)
-    - [ ] Caso `machine.status === MachineStatus.RUNNING || machine.status === MachineStatus.STOPPED`, lançar `ConflictException` (`HTTP 409 MACHINE_ALREADY_ALLOCATED`)
-  - [ ] Em `UsersService.updateStatus`:
-    - [ ] Validar se o usuário pertence ao perfil `UserRole.OPERADOR`
-    - [ ] Se `dto.isActive === false`, verificar `this.prisma.shiftAllocation.findFirst({ where: { operatorId: id, status: ShiftAllocationStatus.ACTIVE } })` e, caso exista, lançar `ConflictException` (`HTTP 409 USER_HAS_ACTIVE_ALLOCATION`)
+  - [x] Em `AllocationsService.create`:
+    - [x] Verificar `where: { machineId: dto.machineId, status: ShiftAllocationStatus.ACTIVE }` (sem restringir por `shiftId` e `shiftDate`), garantindo que qualquer alocação `ACTIVE` aberta na máquina dispare `ConflictException` (`HTTP 409 MACHINE_ALREADY_ALLOCATED`)
+    - [x] Caso `machine.status === MachineStatus.RUNNING || machine.status === MachineStatus.STOPPED`, lançar `ConflictException` (`HTTP 409 MACHINE_ALREADY_ALLOCATED`)
+  - [x] Em `UsersService.updateStatus`:
+    - [x] Validar se o usuário pertence ao perfil `UserRole.OPERADOR`
+    - [x] Se `dto.isActive === false`, verificar `this.prisma.shiftAllocation.findFirst({ where: { operatorId: id, status: ShiftAllocationStatus.ACTIVE } })` e, caso exista, lançar `ConflictException` (`HTTP 409 USER_HAS_ACTIVE_ALLOCATION`)
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal:** Máquina `IDLE` é alocada normalmente e transita para `RUNNING`.
-  - [ ] **Violação de Contrato (`BUG-03` e `BUG-05`):** Tentativa de alocar máquina já `ACTIVE` em outro turno ou tentar inativar operador com alocação `ACTIVE` retorna `HTTP 409 Conflict` no formato RFC 7807.
+  - [x] **Caminho Normal:** Máquina `IDLE` é alocada normalmente e transita para `RUNNING`.
+  - [x] **Violação de Contrato (`BUG-03` e `BUG-05`):** Tentativa de alocar máquina já `ACTIVE` em outro turno ou tentar inativar operador com alocação `ACTIVE` retorna `HTTP 409 Conflict` no formato RFC 7807.
 
 ---
 

@@ -54,6 +54,14 @@ export class AllocationsService {
           });
         }
 
+        if (machine.status !== MachineStatus.IDLE) {
+          throw new ConflictException({
+            title: 'Conflito de Alocação de Máquina',
+            message: 'Máquina já se encontra em operação ou em parada ativa por outro operador.',
+            code: 'MACHINE_ALREADY_ALLOCATED',
+          });
+        }
+
         // 2. Verificar se o turno existe e está ativo
         const shift = await tx.shift.findUnique({
           where: { id: dto.shiftId },
@@ -86,12 +94,10 @@ export class AllocationsService {
           });
         }
 
-        // 4. Verificar se a máquina já possui alocação ativa no turno/data (RN-01)
+        // 4. Verificar se a máquina física já possui qualquer alocação ativa (RN-01)
         const activeAllocation = await tx.shiftAllocation.findFirst({
           where: {
             machineId: dto.machineId,
-            shiftId: dto.shiftId,
-            shiftDate,
             status: ShiftAllocationStatus.ACTIVE,
           },
         });
@@ -99,7 +105,7 @@ export class AllocationsService {
         if (activeAllocation) {
           throw new ConflictException({
             title: 'Conflito de Alocação de Máquina',
-            message: 'Máquina já possui alocação ativa neste turno por outro operador.',
+            message: 'Máquina já possui alocação ativa em andamento por outro operador.',
             code: 'MACHINE_ALREADY_ALLOCATED',
           });
         }

@@ -8,7 +8,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { ListUsersQueryDto } from './dto/list-users-query.dto';
-import { UserRole } from '@prisma/client';
+import { ShiftAllocationStatus, UserRole } from '@prisma/client';
 
 const USER_SELECT_FIELDS = {
   id: true,
@@ -89,8 +89,26 @@ export class UsersService {
       where: { id },
     });
 
-    if (!user) {
+    if (!user || user.role !== UserRole.OPERADOR) {
       throw new NotFoundException(`Operador com identificador '${id}' não encontrado.`);
+    }
+
+    if (dto.isActive === false) {
+      const activeAllocation = await this.prisma.shiftAllocation.findFirst({
+        where: {
+          operatorId: id,
+          status: ShiftAllocationStatus.ACTIVE,
+        },
+      });
+
+      if (activeAllocation) {
+        throw new ConflictException({
+          title: 'Operador com Alocação Ativa',
+          message:
+            'Não é possível inativar um operador que possui uma alocação de máquina em andamento. Encerre o turno antes de inativar a conta.',
+          code: 'USER_HAS_ACTIVE_ALLOCATION',
+        });
+      }
     }
 
     return this.prisma.user.update({

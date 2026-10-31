@@ -27,6 +27,9 @@ describe('UsersService', () => {
         findMany: jest.fn(),
         update: jest.fn(),
       } as any,
+      shiftAllocation: {
+        findFirst: jest.fn(),
+      } as any,
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -112,8 +115,9 @@ describe('UsersService', () => {
   });
 
   describe('updateStatus', () => {
-    it('deve atualizar o status do operador com sucesso', async () => {
+    it('deve atualizar o status do operador com sucesso quando não houver alocação ativa', async () => {
       (prismaService.user!.findUnique as jest.Mock).mockResolvedValue(mockOperator);
+      (prismaService.shiftAllocation!.findFirst as jest.Mock).mockResolvedValue(null);
       (prismaService.user!.update as jest.Mock).mockResolvedValue({
         ...mockOperator,
         isActive: false,
@@ -129,6 +133,19 @@ describe('UsersService', () => {
         data: { isActive: false },
         select: expect.any(Object),
       });
+    });
+
+    it('deve lançar ConflictException quando o operador possuir alocação ACTIVE ao ser inativado', async () => {
+      (prismaService.user!.findUnique as jest.Mock).mockResolvedValue(mockOperator);
+      (prismaService.shiftAllocation!.findFirst as jest.Mock).mockResolvedValue({
+        id: 'alloc-active-1',
+        operatorId: mockOperator.id,
+        status: 'ACTIVE',
+      });
+
+      await expect(
+        usersService.updateStatus(mockOperator.id, { isActive: false }),
+      ).rejects.toThrow(ConflictException);
     });
 
     it('deve lançar NotFoundException quando o operador não for encontrado', async () => {
