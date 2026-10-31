@@ -145,3 +145,23 @@
   - [x] Suporte à resolução de parada `IN_PROGRESS` no `SyncService.processBatch` e correção de `handleResolveDowntime` (`BUG-04`)
   - [x] Proteção contra inativação de operador com alocação `ACTIVE` em `UsersService.updateStatus` (`BUG-05`)
   - [x] Remoção do texto `'Modelo Padrão'` no Dashboard, distinção de erro 409 na Alocação e feedback inline no `DowntimeModal` (`BUG-06`)
+
+---
+
+### Fase 7: Empacotamento On-Premise Linux (Docker Compose, Nginx Porta 80) & Documentação Operacional Central (`README.md`)
+- **Objetivo Estratégico:** Entregar a infraestrutura completa de implantação *on-premise* para servidor Linux industrial (Ubuntu Server 24.04 LTS / Debian 12) com inicialização automática pós-queda de energia (`restart: unless-stopped`), exposição unificada na porta `80` padrão via Nginx Reverse Proxy (eliminando digitação de portas nos celulares/tablets da fábrica) e elaboração do `README.md` central da raiz do projeto cobrindo arquitetura, desenvolvimento local (PC/WSL2 + Wi-Fi), deploy em produção Linux (IP estático Netplan + mDNS `http://sgms.local`) e rotinas de backup/restore do PostgreSQL 16.
+- **Requisitos Associados:**
+  - `RNF-01`: Validação estrita de variáveis de ambiente obrigatórias sem fallbacks silenciosos de credenciais.
+  - `RNF-02`: Execução 100% autônoma em rede local (LAN) na porta `80` padrão (`http://sgms.local` ou `http://<IP_FIXO>`), sem dependência de internet externa pós-build.
+  - `RNF-05`: Entrega de estáticos comprimidos via Nginx (`gzip`) e proxy reverso `/api` de baixa latência ($\le 100\text{ms}$).
+  - `RNF-06`: Cabeçalhos de cache corretos no Nginx para Service Worker (`sw.js`, `manifest.webmanifest`) permitindo funcionamento PWA offline no chão de fábrica.
+  - `RNF-07`: Isolamento de rede dos containers (PostgreSQL 16 acessível apenas na rede interna Docker ou localhost administrativo, expondo externamente na LAN apenas a porta `80` do Nginx).
+- **Checklist Macro de Entregas:**
+  - [ ] Criação de `backend/Dockerfile` (multi-stage Node 20 Alpine) e `backend/.dockerignore` com aplicação automática de migrations (`npx prisma migrate deploy`) na subida do container
+  - [ ] Criação de `frontend/Dockerfile` (multi-stage Node 20 Alpine $\rightarrow$ Nginx Alpine), `frontend/nginx.conf` (SPA routing `try_files` + proxy reverso `/api` $\rightarrow$ `sgms-backend:3001` + cache PWA) e `frontend/.dockerignore`
+  - [ ] Criação de `docker-compose.yml` e `.env.production.example` na raiz do repositório orquestrando `sgms-db` (PostgreSQL 16 com `healthcheck` e volume persistente), `sgms-backend` e `sgms-web` (porta `80`) com `restart: unless-stopped`
+  - [ ] Elaboração do `README.md` central na raiz do projeto documentando arquitetura, guia passo a passo de desenvolvimento (Linux/WSL2 + teste no celular), guia de implantação em produção no Ubuntu Server 24.04 LTS (Docker, Netplan IP Fixo, `avahi-daemon` para `http://sgms.local`) e comandos de manutenção/backup
+- **Critérios de Conclusão da Fase:**
+  - `docker compose config` e builds de produção (`backend` e `frontend`) validados sem erros.
+  - `nginx.conf` configurado para responder na porta `80`, servir o SPA React sem erro 404 ao recarregar rotas (`/chao-de-fabrica/console`, `/admin/dashboard`) e encaminhar `/api/*` para o backend NestJS.
+  - `README.md` central completo, autoexplicativo e fiel à arquitetura implementada.
