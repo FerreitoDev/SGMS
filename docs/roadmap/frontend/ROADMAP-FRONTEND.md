@@ -1,8 +1,8 @@
 # SGMS — Roadmap Técnico: Frontend (Nível 2)
 
 > **Fase Geral Correspondente:** [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md)  
-> **Status:** 🟡 Planejamento Ativo  
-> **Última Atualização:** 2026-10-19  
+> **Status:** 🟡 Planejamento Ativo (Fase 7)  
+> **Última Atualização:** 2026-10-31  
 
 ---
 
@@ -16,6 +16,7 @@
 | **Fase 4** | Fechamento de Turno, Dashboard de Gargalos & Extração de Relatórios | [PLANO-FASE-4-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-4-FRONTEND.md) | 🟢 Concluída |
 | **Fase 5** | Unificação do Gatilho de Paradas, Travamento Temporal & Pausa de Refeição | [PLANO-FASE-5-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-5-FRONTEND.md) | 🟢 Concluída |
 | **Fase 6** | UUID v4 em LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` & Zero Fallback | [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md) | 🟢 Concluída |
+| **Fase 7** | Containerização Frontend (`Dockerfile` Multi-Stage + `nginx.conf` Porta 80, SPA & Proxy `/api`) | [PLANO-FASE-7-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-7-FRONTEND.md) | ⚪ A Iniciar |
 
 ---
 
@@ -129,3 +130,16 @@
   - [x] 6.2: Ordenação decrescente + exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`) e correção de `handleResolveDowntime` (`BUG-04`)
   - [x] 6.3: Bloqueio de seleção de máquina `STOPPED` na Alocação (`BUG-03`), remoção do fallback `'Modelo Padrão'` no Dashboard e feedback inline no `DowntimeModal` (`BUG-06`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md)
+
+---
+
+### Fase 7: Containerização Frontend (`Dockerfile` Multi-Stage + `nginx.conf` Porta 80, SPA & Proxy `/api`)
+- **Referência Hierárquica:** Fase 7 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [05-arquitetura.md](file:///home/ferreito/SGMS/docs/05-arquitetura.md).
+- **Requisitos Técnicos e de Negócio:**
+  - `RNF-02`: Entrega da SPA/PWA na porta `80` padrão da rede local (`http://sgms.local` ou `http://<IP_DO_SERVIDOR>`) com `VITE_API_URL=/api`.
+  - `RNF-05`: Compressão `gzip` de assets estáticos e proxy reverso `/api` para `http://sgms-backend:3001/api` no Nginx.
+  - `RNF-06`: Diretivas `Cache-Control: no-cache` para `index.html`, `sw.js` e `manifest.webmanifest` (garantindo atualização imediata do PWA) e cache imutável (`1y`) para bundles com hash em `/assets/`.
+- **Dependências Bloqueantes:** Fases 1 a 6 do Frontend concluídas.
+- **Checklist Técnico Sequencial:**
+  - [ ] 7.1: Criação de `frontend/nginx.conf` (SPA fallback `try_files $uri $uri/ /index.html`, proxy reverso `/api/`, compressão `gzip` e headers de cache PWA), `frontend/Dockerfile` (multi-stage Node 20 Alpine $\rightarrow$ Nginx 1.27 Alpine) e `frontend/.dockerignore`
+- **Plano de Execução Vinculado:** [PLANO-FASE-7-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-7-FRONTEND.md)
