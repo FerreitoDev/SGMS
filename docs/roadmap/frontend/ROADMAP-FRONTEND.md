@@ -126,6 +126,6 @@
 - **Referência Hierárquica:** Fase 6 de [ROADMAP-GERAL.md](file:///home/ferreito/SGMS/docs/roadmap/ROADMAP-GERAL.md) e [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md).
 - **Checklist Técnico Sequencial:**
   - [x] 6.1: Gerador UUID v4 compatível com LAN HTTP em `OfflineStorage.generateUuid` (`BUG-01`)
-  - [ ] 6.2: Ordenação decrescente + exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`) e correção de `handleResolveDowntime` (`BUG-04`)
+  - [x] 6.2: Ordenação decrescente + exibição de buffer local em `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (`BUG-02`) e correção de `handleResolveDowntime` (`BUG-04`)
   - [ ] 6.3: Bloqueio de seleção de máquina `STOPPED` na Alocação (`BUG-03`), remoção do fallback `'Modelo Padrão'` no Dashboard e feedback inline no `DowntimeModal` (`BUG-06`)
 - **Plano de Execução Vinculado:** [PLANO-FASE-6-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/PLANO-FASE-6-FRONTEND.md)

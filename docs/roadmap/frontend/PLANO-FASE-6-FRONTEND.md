@@ -1,7 +1,7 @@
 # SGMS — Planejamento Detalhado: Fase 6 (Frontend)
 
 > **Documento:** Plano de Execução Técnica & Checklist Sequencial da Fase 6 (Resolução de Bugs Críticos: UUID v4 em Rede Local LAN HTTP, Lista de Últimos Lançamentos, Bloqueio de Máquina `STOPPED` e Integridade Zero Fallback)  
-> **Status:** 🟡 Em Execução (1 de 3 Tarefas Concluídas — 33%)  
+> **Status:** 🟡 Em Execução (2 de 3 Tarefas Concluídas — 67%)  
 > **Módulo:** Frontend (React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + IndexedDB)  
 > **Data de Criação:** 2026-10-28  
 > **Fonte da Verdade:** [06-auditoria-bugs-e-inconsistencias.md](file:///home/ferreito/SGMS/docs/06-auditoria-bugs-e-inconsistencias.md) | [02-regras-de-negocio.md](file:///home/ferreito/SGMS/docs/02-regras-de-negocio.md) | [ROADMAP-FRONTEND.md](file:///home/ferreito/SGMS/docs/roadmap/frontend/ROADMAP-FRONTEND.md)  
@@ -30,13 +30,13 @@
 ## 3. Status Geral da Fase
 
 ```
-Progresso da Fase 6 (Frontend): [===========---------------------] 33% Concluído (1 de 3 tarefas)
+Progresso da Fase 6 (Frontend): [=====================-----------] 67% Concluído (2 de 3 tarefas)
 ```
 
 | ID | Tarefa | Status | Módulo / Artefatos |
 | :---: | :--- | :---: | :--- |
 | **6.1** | Gerador UUID v4 Compatível com LAN HTTP em `OfflineStorage` (`BUG-01`) | 🟢 Concluída | `frontend/src/lib/offline-storage.ts` |
-| **6.2** | Ordenação Decrescente + Buffer em `"ÚLTIMOS LANÇAMENTOS"` (`BUG-02`) & Retomada de Produção (`BUG-04`) | ⚪ Pendente | `frontend/src/pages/operator/operator-console-page.tsx` |
+| **6.2** | Ordenação Decrescente + Buffer em `"ÚLTIMOS LANÇAMENTOS"` (`BUG-02`) & Retomada de Produção (`BUG-04`) | 🟢 Concluída | `frontend/src/pages/operator/operator-console-page.tsx` |
 | **6.3** | Bloqueio de Máquina `STOPPED` na Alocação (`BUG-03`), Zero Fallback no Dashboard & Erro Inline em `DowntimeModal` (`BUG-06`) | ⚪ Pendente | `frontend/src/components/machines/machine-card.tsx`, `frontend/src/pages/operator/allocation-page.tsx`, `frontend/src/pages/admin/dashboard-page.tsx`, `frontend/src/components/downtime/downtime-modal.tsx` |
 
 ---
@@ -58,16 +58,16 @@ Progresso da Fase 6 (Frontend): [===========---------------------] 33% Concluíd
 
 ---
 
-### ⬜ Tarefa 6.2: Ordenação Decrescente + Buffer em `"ÚLTIMOS LANÇAMENTOS"` (`BUG-02`) & Retomada de Produção (`BUG-04`)
+### 🟢 Tarefa 6.2: Ordenação Decrescente + Buffer em `"ÚLTIMOS LANÇAMENTOS"` (`BUG-02`) & Retomada de Produção (`BUG-04`)
 - **Objetivo:** Exibir sempre os apontamentos mais recentes no topo do card `"ÚLTIMOS LANÇAMENTOS DO TURNO"` (incluindo itens pendentes no buffer local) e corrigir o fluxo de resolução de parada ativa (`handleResolveDowntime`).
 - **Arquivos a Modificar:**
   - `frontend/src/pages/operator/operator-console-page.tsx`
 - **Checklist de Execução Detalhado:**
-  - [ ] Em `OperatorConsolePage`:
-    - [ ] Ordenar a exibição de lançamentos de produção em ordem decrescente de timestamp (`[...productions].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5)`) e incluir os apontamentos pendentes no buffer offline da alocação atual para que todo novo lançamento apareça imediatamente no topo
-    - [ ] Em `handleResolveDowntime`: se `downtimesService.resolve` lançar `ProblemDetailsError` com `status > 0`, exibir `toast.error(extractProblemDetail(err))` e não gravar no buffer offline; apenas em falha de conectividade (`status === 0`), gravar no `OfflineStorage` com payload completo (`allocationId`, `reason: activeDowntime.reason`, `justification: activeDowntime.justification`, `startTime: activeDowntime.startTime`, `endTime: resolvedAt`) e notificar sincronização
+  - [x] Em `OperatorConsolePage`:
+    - [x] Ordenar a exibição de lançamentos de produção em ordem decrescente de timestamp (`[...productions].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5)`) e incluir os apontamentos pendentes no buffer offline da alocação atual para que todo novo lançamento apareça imediatamente no topo
+    - [x] Em `handleResolveDowntime`: se `downtimesService.resolve` lançar `ProblemDetailsError` com `status > 0`, exibir `toast.error(extractProblemDetail(err))` e não gravar no buffer offline; apenas em falha de conectividade (`status === 0`), gravar no `OfflineStorage` com payload completo (`allocationId`, `reason: activeDowntime.reason`, `justification: activeDowntime.justification`, `startTime: activeDowntime.startTime`, `endTime: resolvedAt`) e notificar sincronização
 - **Critérios de Aceite e Verificação Obrigatória:**
-  - [ ] **Caminho Normal (`BUG-02`):** Ao realizar o 6º, 7º ou N-ésimo apontamento no turno, ele aparece imediatamente na 1ª posição de `"ÚLTIMOS LANÇAMENTOS DO TURNO"` e incrementa o total acumulado.
+  - [x] **Caminho Normal (`BUG-02`):** Ao realizar o 6º, 7º ou N-ésimo apontamento no turno, ele aparece imediatamente na 1ª posição de `"ÚLTIMOS LANÇAMENTOS DO TURNO"` e incrementa o total acumulado.
 
 ---
 

@@ -18,7 +18,8 @@ import { allocationsService } from '@/services/allocations-service';
 import { productionsService } from '@/services/productions-service';
 import { downtimesService } from '@/services/downtimes-service';
 import { OfflineStorage } from '@/lib/offline-storage';
-import { STORAGE_UPDATED_EVENT } from '@/hooks/use-offline-sync';
+import { STORAGE_UPDATED_EVENT, notifyStorageUpdated } from '@/hooks/use-offline-sync';
+import { ProblemDetailsError, extractProblemDetail } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -45,6 +46,9 @@ export function OperatorConsolePage(): React.ReactElement {
 
   const [productions, setProductions] = useState<ProductionEntry[]>([]);
   const [downtimes, setDowntimes] = useState<DowntimeRecord[]>([]);
+  const [pendingProductions, setPendingProductions] = useState<
+    Array<{ id: string; quantity: number; timestamp: string }>
+  >([]);
   const [pendingProductionsQty, setPendingProductionsQty] = useState<number>(0);
   const [isLoadingData, setIsLoadingData] = useState<boolean>(true);
   const [isReleasing, setIsReleasing] = useState<boolean>(false);
@@ -75,11 +79,21 @@ export function OperatorConsolePage(): React.ReactElement {
       setProductions(remoteProductions.entries);
       setDowntimes(remoteDowntimes.records);
 
-      // Quantidade pendente no buffer local pertencente a esta alocação
-      const offlineQty = offlineEvents
+      // Apontamentos pendentes no buffer local pertencentes a esta alocação
+      const pendingProdEvents = offlineEvents
         .filter((e) => e.type === 'PRODUCTION' && (e.payload as ProductionPayload).allocationId === allocation.id)
-        .reduce((acc, curr) => acc + (curr.payload as ProductionPayload).quantity, 0);
+        .map((e) => {
+          const payload = e.payload as ProductionPayload;
+          return {
+            id: e.clientUuid,
+            quantity: payload.quantity,
+            timestamp: payload.timestamp,
+          };
+        });
 
+      const offlineQty = pendingProdEvents.reduce((acc, curr) => acc + curr.quantity, 0);
+
+      setPendingProductions(pendingProdEvents);
       setPendingProductionsQty(offlineQty);
     } catch (err) {
       console.warn('[OperatorConsole] Erro ao carregar dados operacionais:', err);
@@ -162,20 +176,37 @@ export function OperatorConsolePage(): React.ReactElement {
 
       try {
         await downtimesService.resolve(activeDowntime.id, { endTime: resolvedAt });
-      } catch {
-        // Se offline, grava no buffer local de eventos
+        toast.success('Parada encerrada. Máquina em operação.');
+        void loadConsoleData();
+      } catch (err: unknown) {
+        if (err instanceof ProblemDetailsError && err.status > 0) {
+          toast.error('Não foi possível encerrar a parada', {
+            description: extractProblemDetail(err),
+          });
+          return;
+        }
+
+        // Falha real de conectividade (status === 0): grava no buffer local com payload completo
         await OfflineStorage.saveEvent({
           clientUuid: OfflineStorage.generateUuid(),
           type: 'DOWNTIME',
           endpoint: `/downtimes/${activeDowntime.id}/resolve`,
-          payload: { endTime: resolvedAt, allocationId: activeDowntime.allocationId },
+          payload: {
+            allocationId: activeDowntime.allocationId,
+            reason: activeDowntime.reason,
+            justification: activeDowntime.justification,
+            startTime: activeDowntime.startTime,
+            endTime: resolvedAt,
+            status: 'RESOLVED',
+          },
           createdAt: resolvedAt,
           status: 'PENDING',
         });
-      }
 
-      toast.success('Parada encerrada. Máquina em operação.');
-      void loadConsoleData();
+        notifyStorageUpdated();
+        toast.info('Retomada salva localmente no dispositivo. Será sincronizada ao restabelecer a rede.');
+        void loadConsoleData();
+      }
     } catch {
       toast.error('Erro ao encerrar parada.');
     } finally {
@@ -215,8 +246,26 @@ export function OperatorConsolePage(): React.ReactElement {
   }
 
   const totalQuantity = productions.reduce((acc, p) => acc + p.quantity, 0);
-  const entryCount = productions.length;
+  const entryCount = productions.length + pendingProductions.length;
   const isMachineStopped = Boolean(activeDowntime);
+
+  // Últimos 5 lançamentos ordenados do mais recente para o mais antigo (incluindo pendentes offline)
+  const recentEntries = [
+    ...productions.map((p) => ({
+      id: p.id,
+      quantity: p.quantity,
+      timestamp: p.timestamp,
+      isPending: false,
+    })),
+    ...pendingProductions.map((p) => ({
+      id: p.id,
+      quantity: p.quantity,
+      timestamp: p.timestamp,
+      isPending: true,
+    })),
+  ]
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 5);
 
   return (
     <div className="min-h-screen bg-background pb-12 flex flex-col">
@@ -353,22 +402,29 @@ export function OperatorConsolePage(): React.ReactElement {
             {isLoadingData && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
           </div>
 
-          {productions.length === 0 && pendingProductionsQty === 0 ? (
+          {recentEntries.length === 0 ? (
             <div className="py-6 text-center text-xs text-muted-foreground">
               Nenhum apontamento registrado neste turno ainda.
             </div>
           ) : (
             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-              {productions.slice(0, 5).map((prod) => (
+              {recentEntries.map((prod) => (
                 <div
                   key={prod.id}
                   className="flex items-center justify-between rounded-lg bg-muted/30 px-3 py-2 text-xs font-mono"
                 >
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                    <CheckCircle2
+                      className={`h-3.5 w-3.5 ${prod.isPending ? 'text-amber-500' : 'text-emerald-500'}`}
+                    />
                     <span className="font-bold text-foreground">
                       +{prod.quantity.toLocaleString('pt-BR')} garrafas
                     </span>
+                    {prod.isPending && (
+                      <Badge variant="warning" className="text-[10px] px-1.5 py-0 font-semibold">
+                        Offline
+                      </Badge>
+                    )}
                   </div>
                   <span className="text-muted-foreground">
                     {new Date(prod.timestamp).toLocaleTimeString('pt-BR', {
